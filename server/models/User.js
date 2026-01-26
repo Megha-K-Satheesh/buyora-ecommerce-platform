@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -22,6 +24,11 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Password is required'],
     minlength: [6, 'Password must be at least 6 characters long']
   },
+   addresses:[{
+     type:mongoose.Schema.Types.ObjectId,
+     ref:"Address",
+     default:[]
+   }],
   role: {
     type: String,
     enum: ['user', 'admin'],
@@ -44,22 +51,50 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     default: null
+  },
+  isVerified: {
+  type: Boolean,
+  default: false
+},
+otpDetails: {
+  code: {
+    type: String
+  },
+  expiresAt: {
+    type: Date
+  },
+  purpose: {
+    type: String,
+    enum: ['EMAIL_VERIFICATION', 'PASSWORD_RESET']
   }
+},
+
 }, {
   timestamps: true
 });
 
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
 
+userSchema.pre('save', async function (next) {
   try {
-    const hashedPassword = await bcrypt.hash(this.password, 12);
-    this.password = hashedPassword;
+    // Hash password
+    if (this.isModified('password')) {
+      this.password = await bcrypt.hash(this.password, 12);
+    }
+
+    // Hash OTP
+    if (this.isModified('otpDetails') && this.otpDetails?.code) {
+      this.otpDetails.code = await bcrypt.hash(this.otpDetails.code, 12);
+    }
+
     next();
   } catch (error) {
     next(error);
   }
 });
+userSchema.methods.compareOtp = async function (candidateOtp) {
+  return await bcrypt.compare(candidateOtp, this.otpDetails.code);
+};
+
 
 userSchema.methods.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);

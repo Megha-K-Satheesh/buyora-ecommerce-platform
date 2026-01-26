@@ -8,7 +8,12 @@ module.exports = {
     USER_SECRET: process.env.JWT_USER_SECRET || 'your_super_secret_user_jwt_key',
     ADMIN_SECRET: process.env.JWT_ADMIN_SECRET || 'your_super_secret_admin_jwt_key',
     EXPIRES_IN: process.env.JWT_EXPIRES_IN || '7d',
-    REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN || '30d'
+    REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN || '30d',
+    
+    JWT_RESET_SECRET: process.env.JWT_RESET_SECRET || 'your_super_secret_reset_jwt_key',
+
+    JWT_RESET_EXPIRES_IN: process.env.JWT_RESET_EXPIRES_IN || '15m'
+
   },
   
   BCRYPT_ROUNDS: 12,
@@ -27,8 +32,8 @@ module.exports = {
   },
   
   DEFAULT_ADMIN: {
-    EMAIL: process.env.ADMIN_EMAIL || 'admin@admin.com',
-    PASSWORD: process.env.ADMIN_PASSWORD || 'admin123',
+    EMAIL: process.env.ADMIN_EMAIL || 'admin@gmail.com',
+    PASSWORD: process.env.ADMIN_PASSWORD || 'AAAAAA123',
     NAME: 'Administrator'
   },
   
@@ -48,4 +53,7 @@ module.exports = {
     MAX_FILES: 5,
     MAX_SIZE: '20m'
   }
+  ,
+  EMAIL: process.env.EMAIL,
+  APP_PASSWORD: process.env.APP_PASSWORD
 };

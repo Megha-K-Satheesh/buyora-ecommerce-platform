@@ -1,11 +1,13 @@
+
 const logger = require('../utils/logger');
 const { sendError } = require('../utils/response');
 
 const errorHandler = (err, req, res, next) => {
   let error = { ...err };
-  error.message = err.message;
+  error.message = err.message || 'Server Error';
 
-  logger.error(`Error ${err.message}`, {
+  // Log full error details
+  logger.error(`Error: ${error.message}`, {
     stack: err.stack,
     url: req.originalUrl,
     method: req.method,
@@ -13,25 +15,30 @@ const errorHandler = (err, req, res, next) => {
     userAgent: req.get('User-Agent')
   });
 
+  // Mongoose bad ObjectId
   if (err.name === 'CastError') {
-    const message = 'Resource not found';
-    return sendError(res, message, 404);
+    return sendError(res, 'Resource not found', 404);
   }
 
+  // Duplicate key
   if (err.code === 11000) {
-    const field = Object.keys(err.keyValue)[0];
-    const message = `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
+    const field = Object.keys(err.keyValue || {})[0];
+    const message = `${field ? field.charAt(0).toUpperCase() + field.slice(1) : 'Field'} already exists`;
     return sendError(res, message, 400);
   }
 
+  // Mongoose validation error
   if (err.name === 'ValidationError') {
-    const errors = Object.values(err.errors).map(val => ({
-      field: val.path,
-      message: val.message
-    }));
+    const errors = err.errors
+      ? Object.values(err.errors).map(val => ({
+          field: val.path,
+          message: val.message
+        }))
+      : [{ message: err.message }];
     return sendError(res, 'Validation Error', 400, errors);
   }
 
+  // JWT errors
   if (err.name === 'JsonWebTokenError') {
     return sendError(res, 'Invalid token', 401);
   }
@@ -40,7 +47,8 @@ const errorHandler = (err, req, res, next) => {
     return sendError(res, 'Token expired', 401);
   }
 
-  return sendError(res, error.message || 'Server Error', error.statusCode || 500);
+  // Default fallback
+  return sendError(res, error.message, error.statusCode || 500);
 };
 
 const notFound = (req, res, next) => {

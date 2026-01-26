@@ -32,6 +32,7 @@ class BaseController {
     return sendError(res, message, statusCode, details);
   }
 
+  
   static logAction(action, user = null, details = {}) {
     const logData = {
       action,

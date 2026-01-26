@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const logger = require('./logger');
+const { ErrorFactory } = require('./errors');
 
 const generateUserToken = (payload) => {
   try {
@@ -23,6 +24,19 @@ const generateAdminToken = (payload) => {
   }
 };
 
+const generateResetToken = (payload) => {
+  try {
+    return jwt.sign(payload, process.env.JWT_RESET_SECRET, {
+      expiresIn:process.env.JWT_RESET_EXPIRES_IN ||'60m'
+    });
+  } catch (error) {
+    logger.error('Error generating user token:', error);
+    throw new Error('Token generation failed');
+  }
+};
+
+
+
 const verifyUserToken = (token) => {
   try {
     if (!process.env.JWT_USER_SECRET) {
@@ -45,9 +59,27 @@ const verifyAdminToken = (token) => {
   }
 };
 
+const verifyResetToken = (token) => {
+  try {
+    if(!token){
+       throw ErrorFactory.validation("NO Token")
+    }
+    if (!process.env.JWT_RESET_SECRET) {
+      throw new Error('JWT_RESET_SECRET not configured');
+    }
+    return jwt.verify(token,process.env.JWT_RESET_SECRET);
+  } catch (error) {
+    throw new Error('Token verification failed');
+  }
+};
+
+
 module.exports = {
   generateUserToken,
   generateAdminToken,
+  generateResetToken,
   verifyUserToken,
-  verifyAdminToken
+  verifyAdminToken,
+  verifyResetToken
+  
 };

@@ -50,12 +50,27 @@ class RateLimitError extends AppError {
   }
 }
 
+class InvalidOtpError extends AppError {
+  constructor(message = 'Invalid OTP') {
+    super(message, 400, 'INVALID_OTP');
+  }
+}
+
+class ExpiredOtpError extends AppError {
+  constructor(message = 'OTP expired') {
+    super(message, 410, 'OTP_EXPIRED');
+  }
+}
 class DatabaseError extends AppError {
   constructor(message = 'Database operation failed') {
     super(message, 500, 'DATABASE_ERROR');
   }
 }
-
+class UserBannedError extends AppError{
+  constructor(message='Your account has been banned. Please contact administrator'){
+     super(message, 403, 'USER_BANNED')
+  }
+}
 class ErrorFactory {
   static validation(message, details) {
     return new ValidationError(message, details);
@@ -87,6 +102,18 @@ class ErrorFactory {
 
   static generic(message, statusCode, code) {
     return new AppError(message, statusCode, code);
+  }
+
+   static invalidOtp(message) {
+    return new InvalidOtpError(message);
+  }
+
+  static expiredOtp(message) {
+    return new ExpiredOtpError(message);
+  }
+  
+    static userBanned(message) {
+    return new UserBannedError(message);
   }
 }
 
@@ -195,5 +222,7 @@ module.exports = {
   RateLimitError,
   DatabaseError,
   ErrorFactory,
-  ErrorUtils
+  ErrorUtils,
+  InvalidOtpError,
+  ExpiredOtpError,
 };
