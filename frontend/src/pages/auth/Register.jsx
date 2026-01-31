@@ -2,9 +2,10 @@ import { useForm, useWatch } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../components/ui/Button';
+import Footer from '../../components/ui/Footer';
 import FormCheckbox from '../../components/ui/FormCheckbox';
 import FormInput from '../../components/ui/FormInput';
-import Logo from '../../components/ui/Logo';
+import Navbar from '../../components/ui/Navbar';
 import { showError, showSuccess } from '../../components/ui/Toastify';
 import { registerUser } from '../../Redux/slices/authSlice';
 
@@ -24,6 +25,8 @@ const RegisterForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+    
+  
   const onSubmit = async (data) => {
     try {
       
@@ -34,26 +37,47 @@ const RegisterForm = () => {
     } catch (err) {
         showError(err)
     }
-
-   
+     
   };
 
   return (
-    <div className="min-h-screen flex justify-evenly bg-gradient-to-br from-sky-400 via-sky-300 to-amber-300 ">
-      
-        
+    <>
+ 
+    <Navbar/>
+    <div className=" flex h-[100vh]
 
-      <div className=" w-full md:w-2/5     p-6 m-10  rounded-lg shadow-md bg-white mt-10">
+    justify-center  items-start lg:bg-[#FFF1F6]
+     mt-20
+  ">
 
-            <Logo
+      <div className='   
+     lg:bg-gradient-to-b from-rose-500  to-pink-500 
+lg:shadow-[0_9px_20px_-10px_rgba(0,0,0,0.25)] 
+      flex lg:w-[40%] w-[90%] rounded-2xl mt-10'>
+
+      {/* <div className=' lg:flex lg:flex-1  justify-center lg:items-center  hidden  '>
+         <div className='flex '>
+
+        <WelcomeText
+      title={"Welcome To Buyora"}
+      subtitle={"Create Your Account Here"}
+      />
+      </div>
+      </div> */}
+
+      <div className="  md:w-2/5   lg:px-5  flex-1 bg-white   rounded-r-2xl ">
+
+            {/* <Logo
               
-              className="m-auto my-0"
-            />
+              className="mx-auto lg:mt-2  mb-6"
+            /> */}
         
 
-        <h1 className='text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center text-gray-700 font-medium  mt-5'>Create Your Account</h1>
-         <h6 className='text-sm sm:text-base md:text-sm lg:text-lg text-center text-sky-700 mt-2 mb-3 h'>Join Buyora and start shopping smarter</h6>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <h1 className='text-xl sm:text-2xl md:text-2xl lg:text-3xl text-center text-gray-700 font-medium  py-5'>Create Your Account</h1>
+         <h6 className='text-sm sm:text-base md:text-sm lg:text-lg text-center text-pink-600 font-medium mt-2 mb-3 h'>Join Buyora and start shopping smarter</h6>
+        <form onSubmit={handleSubmit(onSubmit)} className='mx-5 mt-10  '>
+          <div className='flex justify-between'>
+           <div className=' flex-1 mr-4 '>
 
           <FormInput
             label="First Name"
@@ -67,32 +91,36 @@ const RegisterForm = () => {
               }
             })}
             error={errors.firstName?.message}
-            
+           className="w-30"
             />
+           </div>
+           <div className=' flex-1'>
 
           <FormInput
             label="Last Name"
             placeholder="Enter last name"
-             required
+            required
             {...register('lastName', {
               required: 'Last name is required'
             })}
             error={errors.lastName?.message}
-          />
+            />
+           </div>
+          </div>
 
           <FormInput
             label="Email"
             type="email"
             placeholder="Enter your email"
              required
-            {...register('email', {
-              required: 'Email is required',
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: 'Invalid email address'
-              }
-            })}
-            error={errors.email?.message}
+             {...register('email', {
+               required: 'Email is required',
+               pattern: {
+                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                 message: 'Invalid email address'
+                }
+              })}
+              error={errors.email?.message}
           />
 
           <FormInput
@@ -117,7 +145,7 @@ const RegisterForm = () => {
           <FormInput
             label="Confirm Password"
             type="password"
-             required
+            required
             placeholder="Confirm password"
             {...register('confirmPassword', {
               required: 'Confirm password is required',
@@ -125,55 +153,59 @@ const RegisterForm = () => {
                 value === password || 'Passwords do not match'
             })}
             error={errors.confirmPassword?.message}
-          />
+            />
 
           <FormCheckbox
            required
             
-            {...register('agreeToTerms', {
-              required: 'You must agree to continue'
-              
+           {...register('agreeToTerms', {
+             required: 'You must agree to continue'
+             
             })}
             label={
               <span>
                 I agree to the{' '}
-                <Link to="/terms" className="text-blue-600">Terms</Link>
+                <Link to="/terms" className="text-pink-500 ">Terms</Link>
                 {' '}and{' '}
-                <Link to="/privacy" className="text-blue-600">Privacy Policy</Link>
+                <Link to="/privacy" className="text-pink-500 ">Privacy Policy</Link>
               </span>
             }
             error={errors.agreeToTerms?.message}
             />
 
-          <Button type="submit" fullWidth className='mt-3'>
+          <Button type="submit" fullWidth className='lg:text-lg'>
             Register
           </Button>
-            <div className="flex items-center my-4 sm:my-5 md:my-6">
+            <div className="flex items-center my-3">
               <hr className="flex-grow border-gray-200" />
-              <span className="mx-2 sm:mx-3 text-xs sm:text-sm text-gray-500">
+              <span className="lg:mx-2  sm:mx-3 text-xs sm:text-sm text-gray-500">
                               or
               </span>
               <hr className="flex-grow border-gray-200" />
             </div>
 
-          <Button type='button' fullWidth className='mt-4 text-black' variant='outline'>
+          <Button type='button' fullWidth className=' text-black lg:text-lg' variant='outline'>
             Continue with Google
 
           </Button>
-            <div className="mt-4 text-center text-sm text-gray-600">
+            <div className="mt-4 mb-4 text-center lg:text-lg text-gray-600">
                 Already have an account?{" "}
                 <Link
                   to="/login"
-                  className="text-blue-600 font-medium hover:underline"
-                >
+                  className="text-pink-600 font-medium hover:underline"
+                  >
                   Sign in
                 </Link>
             </div>
 
         </form>
       </div>
+    </div>
       </div>
-    
+      <Footer>
+        <Footer/>
+      </Footer>
+     </>
   );
 };
 

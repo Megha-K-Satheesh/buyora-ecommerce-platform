@@ -71,6 +71,7 @@ class AuthController extends BaseController {
                                      
 
          static login = BaseController.asyncHandler(async (req, res) => {
+          console.log(req.body)
            const validatedData = BaseController.validateRequest(loginValidation, req.body);
            const result = await AuthService.login(validatedData);
            BaseController.logAction('USER_LOGIN', result.user);

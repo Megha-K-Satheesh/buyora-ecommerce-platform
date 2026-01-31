@@ -7,7 +7,7 @@ const menuItems =[
   {
     icons:<FiUser className="text-white text-xl sm:text-lg md:text-xl lg:text-2xl"/>
     ,lable:"Profile"
-    ,path: "/profile/",
+    ,path: "/profile",
   },
   {
     icons:<FiMapPin className="text-white text-xl sm:text-lg md:text-xl lg:text-2xl"/>
@@ -17,7 +17,7 @@ const menuItems =[
   {
     icons:<FiLock className="text-white text-xl sm:text-lg md:text-xl lg:text-2xl"/>
     ,lable:"Password"
-    ,path: "/profile/password",
+    ,path: "/profile/change-password",
   }
 
 

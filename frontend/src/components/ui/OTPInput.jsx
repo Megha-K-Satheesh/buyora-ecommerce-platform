@@ -57,8 +57,8 @@ useImperativeHandle(ref, () => ({
               text-lg sm:text-xl
               text-center
               border rounded-md
-              border-sky-500
-              focus:outline-none focus:ring-2 focus:ring-blue-500
+              border-pink-400
+              focus:outline-none focus:ring-2 focus:ring-pink-500
               ${error ? "border-red-500" : "border-gray-300"}
             `}
           />

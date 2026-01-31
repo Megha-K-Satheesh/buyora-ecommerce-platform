@@ -1,5 +1,5 @@
 import UserService from "../services/UserService.js";
-import { addAddressValidation, updateAddressValidation } from "../utils/validation.js";
+import { addAddressValidation } from "../utils/validation.js";
 
 import BaseController from "./BaseController.js";
 
@@ -51,8 +51,8 @@ class UserController extends BaseController{
      const {addressId} = req.params;
      const userId = req.user._id;
      
-           const validateData = BaseController.validateRequest(updateAddressValidation,req.body)
-      const result = await UserService.updateAddress(userId,addressId,validateData)
+          // const validateData = BaseController.validateRequest(updateAddressValidation,req.body)
+      const result = await UserService.updateAddress(userId,addressId,req.body)
        
      BaseController.logAction("ADDRESS UPDATED",req.user);
      BaseController.sendSuccess(res,"Address updated sucessfully",result)

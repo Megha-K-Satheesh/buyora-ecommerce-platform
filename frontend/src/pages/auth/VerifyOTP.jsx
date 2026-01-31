@@ -2,10 +2,15 @@
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+
+
 import Button from "../../components/ui/Button";
 import OtpInput from "../../components/ui/OTPInput";
 import { showError, showSuccess } from "../../components/ui/Toastify";
 import { clearAuthError, resendOtp, verifyOtp } from "../../Redux/slices/authSlice";
+
+
 const VerifyOtpPage = () => {
   const [otpValue, setOtpValue] = useState("");
   const dispatch = useDispatch();
@@ -31,17 +36,14 @@ const VerifyOtpPage = () => {
     }
 
     if (otpValue.length !== 6) return;
-
     try {
-     const res= await dispatch(
-        verifyOtp({ userId, otp: otpValue, purpose: "EMAIL_VERIFICATION" }),
-      ).unwrap();
-      console.log(res)
-      navigate("/home");
-    } catch {
-         otpRef.current?.reset();
-         setOtpValue("") 
-    } 
+        await dispatch(verifyOtp({ userId, otp: otpValue, purpose:"EMAIL_VERIFICATION"})).unwrap()
+        showSuccess("verification successful");
+        navigate("/home")
+    } catch (err) {
+         showError(err)
+    }
+
   };
   const handleResendClick = async () => {
   if (!userId) {
@@ -67,7 +69,7 @@ const VerifyOtpPage = () => {
 };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-400 via-sky-300 to-amber-300">
+    <div className="min-h-screen flex items-center justify-center bg-[#FFF1F6]">
       <div className="card bg-white shadow-lg p-6 rounded-md w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl ">
        <h1 className='text-3xl sm:text-3xl md:text-4xl lg:text-5xl text-center font-bold mt-6 mb-10'>Verify OTP</h1>
 
@@ -99,7 +101,7 @@ const VerifyOtpPage = () => {
                 onClick={handleResendClick}
                 disabled={loading}
                 
-                className="pl-0 text-lg"
+                className="pl-0 text-lg text-pink-500"
                 >
                   Resend OTP
                 </Button>

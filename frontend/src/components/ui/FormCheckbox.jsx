@@ -20,7 +20,7 @@ const FormCheckbox = memo(
 
         <div className="flex flex-col">
           {label && (
-            <label className={`text-sm ${labelClassName}`}>
+            <label className={`lg:text-lg ${labelClassName}`}>
               {label}
             </label>
           )}

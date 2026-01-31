@@ -1,13 +1,14 @@
 import { Outlet } from "react-router-dom";
-import Footer from "./Footer";
-import Sidebar from "./Sidebar";
+import Footer from "../components/ui/Footer";
+import Navbar from "../components/ui/Navbar";
+import Sidebar from "../components/ui/Sidebar";
 
 const ProfileLayout = () => {
   return (
     <> 
-    <div className=" flex min-h-screen bg-amber-950 flex-col ">
-      
-      <div className="flex flex-1 max-h-full bg-amber-500">
+    <div className=" flex min-h-screen  flex-col ">
+      <Navbar/>
+      <div className="flex flex-1 max-h-full  mt-20">
        
         <Sidebar   />
 

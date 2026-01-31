@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { getUserProfile } from "../../Redux/slices/userSlice"
-import Button from "../../components/ui/Button"
+import { getUserProfile } from "../../../Redux/slices/userSlice"
+import Button from "../../../components/ui/Button"
 
 
 

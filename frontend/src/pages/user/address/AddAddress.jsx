@@ -1,65 +1,34 @@
 
 
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import Button from "../../components/ui/Button";
-import FormCheckbox from "../../components/ui/FormCheckbox";
-import FormInput from "../../components/ui/FormInput";
-import { showError, showSuccess } from "../../components/ui/Toastify";
-import { getAddressById, updateAddress } from "../../Redux/slices/userSlice";
+import { useNavigate } from "react-router-dom";
+import Button from "../../../components/ui/Button";
+import FormCheckbox from "../../../components/ui/FormCheckbox";
+import FormInput from "../../../components/ui/FormInput";
+import { showError, showSuccess } from "../../../components/ui/Toastify";
+import { addAddress } from "../../../Redux/slices/userSlice";
 
-const EditAddress = () => {
+const AddAddress = ({ defaultValues }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const {addressId} = useParams()
-  const {loading,address} = useSelector((state)=>state.user)
+  const dispatch = useDispatch()
+  const {loading} = useSelector((state)=>state.user)
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors }
   } = useForm({
-    defaultValues:{
-      fullName: '',
-    houseNumber: '',
-    addressLine: '',
-    locality: '',
-    city: '',
-    pinCode: '',
-    state: '',
-    phone: '',
-    label: '',
-    isDefault: false
-    }
+    defaultValues: defaultValues || {}
   });
 
   
   const handleCancel = () => {
     navigate("/profile/address");
   };
-
-  useEffect(()=>{
-    if(addressId){
-
-      dispatch(getAddressById(addressId))
-    }
-  },[addressId,dispatch])
-
-  useEffect(()=>{
-    if(address){
-   reset(address)
-    
-    }
-
-  },[address,reset])
-
   const onSubmit = async (data)=>{
-   
     try {
-    
-      await dispatch(updateAddress({addressId,data})).unwrap()
+      console.log(data)
+      await dispatch(addAddress(data)).unwrap()
          showSuccess("Address added")
      } catch (err) {
         showError(err)
@@ -69,7 +38,7 @@ const EditAddress = () => {
      <div className="  lg:w-3/5 md:w-3/5       rounded-lg shadow-md bg-white mt-10">
 
     
-        <h1 className='text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center text-gray-700 font-medium  mt-5'>Update Your Address</h1>
+        <h1 className='text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center text-gray-700 font-medium  mt-5'>Add Your Address</h1>
 
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4  rounded ">
       
@@ -215,7 +184,7 @@ required
       {/* Buttons */}
       <div className="flex space-x-3 mt-4">
         <Button type="submit" fullWidth >
-          Update Address
+          Save Address
         </Button>
         <Button type="button" fullWidth variant="outline" onClick={handleCancel}>
           Cancel
@@ -226,4 +195,6 @@ required
   );
 };
 
-export default EditAddress;
+export default AddAddress;
+
+

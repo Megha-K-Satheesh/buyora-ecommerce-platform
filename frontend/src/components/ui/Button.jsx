@@ -17,10 +17,11 @@ const Button = memo(
       "inline-flex items-center justify-center gap-2 rounded-md font-medium transition focus:outline-none";
 
     const variants = {
-      primary: "bg-blue-600 text-white hover:bg-blue-700",
+      // primary: "bg-blue-600 text-white hover:bg-blue-700",
+        primary: "bg-[#E91E63] text-white hover:bg-[#C2185B]",
       secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
       danger: "bg-red-600 text-white hover:bg-red-700",
-      outline:"border border-blue-600 text-black hover:bg-blue-50",
+      outline:"border border-pink-600 text-black hover:bg-pink-100",
       text:"bg-transparent text-blue-600 hover:underline",
      };
 
@@ -39,6 +40,7 @@ const Button = memo(
         type={type}
         disabled={disabled || loading}
         className={`
+          h-11
         ${baseStyle}
         ${variants[variant]}
         ${sizes[size]}

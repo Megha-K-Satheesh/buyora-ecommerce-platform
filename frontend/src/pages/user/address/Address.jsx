@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Button from "../../components/ui/Button";
-import { showError, showSuccess } from "../../components/ui/Toastify";
-import { deleteAddress, getAddresses } from "../../Redux/slices/userSlice";
+import Button from "../../../components/ui/Button";
+import { showError, showSuccess } from "../../../components/ui/Toastify";
+import { deleteAddress, getAddresses } from "../../../Redux/slices/userSlice";
 
 import Swal from "sweetalert2";
 
