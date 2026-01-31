@@ -1,5 +1,7 @@
 import { useEffect } from "react"
+import { MdArrowBack } from "react-icons/md"
 import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
 import { getUserProfile } from "../../../Redux/slices/userSlice"
 import Button from "../../../components/ui/Button"
 
@@ -8,7 +10,7 @@ import Button from "../../../components/ui/Button"
 const Profile = ()=>{
      const {loading,error,user} = useSelector((state)=>state.user)
      const dispatch = useDispatch()
-
+     const navigate = useNavigate()
   useEffect(()=>{
      dispatch(getUserProfile())
   },[dispatch])
@@ -24,40 +26,45 @@ const Profile = ()=>{
       
         
       
- <div className=" lg:px-30  text-xl lg:m-20 ">
-
-  <h1 className="text-2xl mb-10  lg:text-4xl font-bold ml-0">Profile Information</h1>
+ <div className="">
+  <div className=" p-10 flex overflow-hidden mt- ">
+    <MdArrowBack  className="lg:hidden text-2xl mt-1" 
+     onClick={()=>navigate('/account')}
+    />
+  <h1 className="text-2xl md:text-2xl  lg:text-2xl font-semibold ml-3">Profile </h1>
+  </div>
+ 
   
-  <table className="  table-auto sm:m-0  text-sm sm:text-xs md:text-sm lg:text-xl ">
+  <table className=" lg:w-[80%] w-[80%] ml-20 mt-20   text-xl  md:text-xl lg:text-xl bg-white  p-5 ">
  
     <tbody>
       <tr>
-        <td className="py-2 font-semibold">Full Name</td>
-        <td className="py-2 lg:pl-20">{user?.name || "- not added -"}</td>
+        <td className=" font-semibold bg-amber-700">Full Name</td>
+        <td className=" py-3 pl-20 lg:pl-20">{user?.name || "- not added -"}</td>
       </tr>
       <tr>
         <td className="py-2 font-semibold">Mobile Number</td>
-        <td className="py-2 lg:pl-20">{user?.mobile || "-not added"}</td>
+        <td className="py-3 pl-20 lg:pl-20">{user?.mobile || "-not added"}</td>
       </tr>
       <tr>
         <td className="py-2  font-semibold">Email ID</td>
-        <td className="py-2 lg:pl-20">{user?.email || "- not added -"}</td>
+        <td className="py-3  pl-20 lg:pl-20">{user?.email || "- not added -"}</td>
       </tr>
       <tr>
         <td className="py-2  font-semibold">Gender</td>
-        <td className="py-2 lg:pl-20">{user?.gender || "- not added -"}</td>
+        <td className="py-3  pl-20 lg:pl-20">{user?.gender || "- not added -"}</td>
       </tr>
       <tr>
         <td className="py-2 font-semibold">Date of Birth</td>
-        <td className="py-2 lg:pl-20">{user?.dob || "- not added -"}</td>
+        <td className="py-3  pl-20 lg:pl-20">{user?.dob || "- not added -"}</td>
       </tr>
       <tr>
         <td className="py-2 font-semibold">Location</td>
-        <td className="py-2 lg:pl-20">{user?.location || "- not added -"}</td>
+        <td className="py-3  pl-20 lg:pl-20">{user?.location || "- not added -"}</td>
       </tr>
       <tr>
         <td className="py-2 font-semibold">Alternate Mobile</td>
-        <td className="py-2 lg:pl-20">{user?.altMobile || "- not added -"}</td>
+        <td className="py-3  pl-20 lg:pl-20">{user?.altMobile || "- not added -"}</td>
       </tr>
       {/* <tr>
         <td className="py-2 font-semibold">Hint Name</td>
@@ -65,7 +72,7 @@ const Profile = ()=>{
       </tr> */}
     </tbody>
   </table>
-       <Button variant='outline' className="mt-10">
+       <Button variant='primary'  className="mt-10 ml-20  ">
         Edit
        </Button>
       </div>

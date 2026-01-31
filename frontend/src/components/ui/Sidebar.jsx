@@ -29,7 +29,7 @@ const Sidebar=()=> {
     
     <>
     <div className={`min-h-screen  flex flex-col duration-500  bg-black 
-     ${open ? 'lg:w-70' : 'lg:w-20'}
+     ${open ? 'lg:w-100' : 'lg:0'}
       w-16 mt-`}>
       <div className="px-3 py-2 h-20 mt-1  
       

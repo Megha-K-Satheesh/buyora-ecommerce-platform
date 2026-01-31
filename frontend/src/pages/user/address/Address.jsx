@@ -53,31 +53,36 @@ const Address =()=>{
   if (loading) return <p>Loading addresses...</p>;
 
   return(
-   
-       <div className="w-full">
-         <h1 className="text-3xl font-bold mb-8">My Address </h1>
-         <div className="flex justify-end">
+       <>
+          <div className="flex flex-col lg:flex-row  md:flex-row lg:justify-between w-[80%]">
+
+         <h1 className="text-2xl font-semibold  ml-10 mb-8">My Address </h1>
+         
 
            <Button
-       variant='primary'
-       onClick={() => navigate("/profile/address/add")}
-       className="mb-10 "
+       variant="text"
+       onClick={() => navigate("/account/address/add-address")}
+       className=" "
        >
-        Add Address
+       + Add Address
       </Button>
          </div>
+       
+
+
+       <div className="w-[80%] bg-amber-800 ">
       {addresses.length === 0 ? (
         <p> No addresses found</p>
       ) : (
         
         (addresses|| []).map((addr) => (
           <div
-            key={addr._id}
-            className=" border rounded m-10    px-3 py-2
-  sm:px-4 sm:py-3
+          key={addr._id}
+          className=" border rounded m-10    px-3 py-2
+          sm:px-4 sm:py-3
   md:px-6 md:py-4
   lg:px-8 lg:py-6 flex flex-col text-sm
-              md:text-lg "
+  md:text-lg "
           >
             <div className=" text-xl">
               <p><strong>{addr.fullName}</strong></p>
@@ -102,12 +107,12 @@ const Address =()=>{
             <div className="mt-5">
              <Button  variant='text'
                  onClick={()=>handleEdit(addr._id)}
-             >
+                 >
               Edit
              </Button>
              <Button variant='text'
               onClick={()=>handleDelete(addr._id)}
-             >
+              >
               delete
              </Button>
             </div>
@@ -117,6 +122,7 @@ const Address =()=>{
      
     </div>
    
+    </>
   )
 }
 export default Address

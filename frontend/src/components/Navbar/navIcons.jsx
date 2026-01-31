@@ -1,16 +1,15 @@
 
-import { FiHeart, FiShoppingBag, FiUser } from "react-icons/fi";
+import { FiHeart, FiShoppingBag } from "react-icons/fi";
+import ProfileDropdown from "./ProfileDropdown";
 
 const NavbarIcons = ()=>{
   return(
     <>
       <div className="flex flex-row h-full">
-        <div className=" flex flex-1 flex-col justify-center items-center">
-            <FiUser className="text-2xl lg:text-3xl" />
-            <span className="text-sm font-medium">
-              Profile
-            </span>
-        </div>
+       
+        
+        <ProfileDropdown/>
+
         <div className=" flex flex-1 justify-center items-center flex-col ">
           <FiHeart className="text-2xl  "/>
           <span className="text-sm mt-1 font-medium">

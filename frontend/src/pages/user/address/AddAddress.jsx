@@ -23,7 +23,7 @@ const AddAddress = ({ defaultValues }) => {
 
   
   const handleCancel = () => {
-    navigate("/profile/address");
+    navigate("/account/address");
   };
   const onSubmit = async (data)=>{
     try {
@@ -35,12 +35,12 @@ const AddAddress = ({ defaultValues }) => {
      }
   }
   return (
-     <div className="  lg:w-3/5 md:w-3/5       rounded-lg shadow-md bg-white mt-10">
+     <div className="  lg:w-3/5 md:w-3/5       rounded-lg shadow-md bg-white  lg:ml-40 lg:mt-10  ">
 
     
-        <h1 className='text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center text-gray-700 font-medium  mt-5'>Add Your Address</h1>
+        <h1 className='text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center text-gray-700 font-medium  mt-8 '>Add Your Address</h1>
 
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4  rounded ">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-10  rounded ">
       
       <FormInput
       required

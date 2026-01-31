@@ -19,7 +19,6 @@ import Profile from './pages/user/profile/Profile';
 
 
 
-
 function App() {
  
 
@@ -45,9 +44,10 @@ function App() {
        
        
 
-       <Route path="/profile" element={<ProfileLayout />}>
+       <Route path="/account" element={<ProfileLayout />}>
 
-        <Route index element={<Profile />} />
+        <Route index  element={<Profile />} />
+        <Route  path='profile' element={<Profile />} />
         <Route path="address" element={<Address />} />
         <Route path="address/add-address" element={<AddAddress/>  } />
         <Route path="address/edit-address/:addressId" element={<EditAddress />  } />
