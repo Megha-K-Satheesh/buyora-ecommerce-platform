@@ -27,7 +27,7 @@ const Profile = ()=>{
         
       
  <div className="">
-  <div className=" p-10 flex overflow-hidden mt- ">
+  <div className=" lg:ml-30 flex overflow-hidden lg:mt-10 ">
     <MdArrowBack  className="lg:hidden text-2xl mt-1" 
      onClick={()=>navigate('/account')}
     />
@@ -35,35 +35,35 @@ const Profile = ()=>{
   </div>
  
   
-  <table className=" lg:w-[80%] w-[80%] ml-20 mt-20   text-xl  md:text-xl lg:text-xl bg-white  p-5 ">
+  <table className=" lg:w-[80%] w-[80%] mx-auto mt-10   text-xl  md:text-xl lg:text-xl bg-white  p-5 ">
  
     <tbody>
       <tr>
-        <td className=" font-semibold bg-amber-700">Full Name</td>
+        <td className="  ">Full Name</td>
         <td className=" py-3 pl-20 lg:pl-20">{user?.name || "- not added -"}</td>
       </tr>
       <tr>
-        <td className="py-2 font-semibold">Mobile Number</td>
+        <td className="py-2 ">Mobile Number</td>
         <td className="py-3 pl-20 lg:pl-20">{user?.mobile || "-not added"}</td>
       </tr>
       <tr>
-        <td className="py-2  font-semibold">Email ID</td>
+        <td className="py-2  ">Email ID</td>
         <td className="py-3  pl-20 lg:pl-20">{user?.email || "- not added -"}</td>
       </tr>
       <tr>
-        <td className="py-2  font-semibold">Gender</td>
+        <td className="py-2  ">Gender</td>
         <td className="py-3  pl-20 lg:pl-20">{user?.gender || "- not added -"}</td>
       </tr>
       <tr>
-        <td className="py-2 font-semibold">Date of Birth</td>
+        <td className="py-2 ">Date of Birth</td>
         <td className="py-3  pl-20 lg:pl-20">{user?.dob || "- not added -"}</td>
       </tr>
       <tr>
-        <td className="py-2 font-semibold">Location</td>
+        <td className="py-2 ">Location</td>
         <td className="py-3  pl-20 lg:pl-20">{user?.location || "- not added -"}</td>
       </tr>
       <tr>
-        <td className="py-2 font-semibold">Alternate Mobile</td>
+        <td className="py-2 ">Alternate Mobile</td>
         <td className="py-3  pl-20 lg:pl-20">{user?.altMobile || "- not added -"}</td>
       </tr>
       {/* <tr>

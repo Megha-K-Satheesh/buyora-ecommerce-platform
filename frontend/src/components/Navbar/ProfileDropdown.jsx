@@ -1,14 +1,24 @@
-import { FiUser } from "react-icons/fi"
-import { Link, useNavigate } from "react-router-dom"
+import { FiUser } from "react-icons/fi";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../../Redux/slices/authSlice";
 
 
 
 
 const ProfileDropdown = ()=>{
   const navigate = useNavigate()
+ const dispatch = useDispatch()
+  const {isAuthenticated,user} = useSelector((state)=>state.auth)
+
+  const handleLogout = ()=>{
+     dispatch(logout())
+     navigate('/login')
+  }
+
   return(
-    <>
-     <div className=" relative group flex flex-1 flex-col justify-center items-center">
+    
+     <div className=" relative group flex flex-1 flex-col justify-center items-center cursor-pointer">
             <FiUser className="text-2xl lg:text-3xl" />
             <span className="text-sm font-medium">
               Profile
@@ -22,11 +32,15 @@ const ProfileDropdown = ()=>{
             top-full -left-10 mt-2 shadow-lg w-80 
             transform-all duration-200
             ">
+                     
+                
+            {isAuthenticated?(<> 
+            
                      <div className="shadow-sm px-10 py-5  text-xl"
                      onClick={()=>navigate("/account")}
                      >
                       
-                      Hello Buyora User
+                      Hello {user?.name ||"Buyora User"}
                       
                      </div>
                     <ul className="flex flex-col py-2 pl-6 text-lg text-gray-600
@@ -74,13 +88,32 @@ const ProfileDropdown = ()=>{
                                  hover:text-xl
                                  hover:text-black
                                     transform-all duration-200
-                                 ">Logout</li>
+                                 "
+                                 onClick={handleLogout}
+                                 >Logout</li>
                     
                    
                   </ul>
+            </>
+          ):(
+             <div className="px-6 py-4 text-center">
+            <Link
+              to="/login"
+              className="text-pink-500 font-medium hover:underline text-lg"
+            >
+              Login
+            </Link>
+          </div>
+
+          )}        
+
+                
+               
+                 
+              
             </div>
         </div>
-    </>
+    
   )
 }
 export default ProfileDropdown

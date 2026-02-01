@@ -40,7 +40,7 @@ const Button = memo(
         type={type}
         disabled={disabled || loading}
         className={`
-          h-11
+          
         ${baseStyle}
         ${variants[variant]}
         ${sizes[size]}

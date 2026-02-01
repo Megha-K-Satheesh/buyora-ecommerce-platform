@@ -3,9 +3,10 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom';
 import Button from "../../components/ui/Button";
+import Footer from "../../components/ui/Footer";
 import FormCheckbox from "../../components/ui/FormCheckbox";
 import FormInput from "../../components/ui/FormInput";
-import Logo from "../../components/ui/Logo";
+import Navbar from "../../components/ui/Navbar";
 import { showError, showSuccess } from "../../components/ui/Toastify";
 import { login } from "../../Redux/slices/authSlice";
 
@@ -30,23 +31,27 @@ const LoginForm = ()=>{
       try {
           const res = await dispatch(login({email:data.email,password:data.password})).unwrap()
           showSuccess("Successfully logined")
-          navigate('/profile')
+          navigate('/')
       } catch (err) {
         showError(err)
       }
   }
    
 return(
-  <div className="min-h-screen flex justify-evenly bg-gradient-to-br from-sky-400 via-sky-300 to-amber-300 ">
+  <>
+  <div className=" min-h-screen flex justify-evenly bg-[#FFF1F6] ">
       
-   
+    <Navbar/>
 
-      <div className=" w-full md:w-1/3     p-10 m-10  rounded-lg shadow-md bg-white mt-10">
+      <div className=" w-full md:w-1/3  h   p-10 m-10  rounded-lg shadow-md bg-white mt-35">
         
-         <Logo className="m-auto my-0"/>
-        <h1 className='text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center font-bold mt-6'>Welcome Back !</h1>
-         <h6 className='text-sm sm:text-base md:text-lg lg:text-xl text-center text-sky-400 mt-2 mb-6'>Sign in to Buyora and start shopping smarter</h6>
-       
+         {/* <Logo className="m-auto my-0"/> */}
+        <h1 className='text-xl sm:text-2xl md:text-2xl lg:text-3xl text-center text-gray-700 font-medium mt-6'>Welcome Back !</h1>
+         <h6 className='text-sm sm:text-base md:text-lg lg:text-xl text-center text-pink-600 mt-2 mb-6'>Sign in to Buyora and start shopping smarter</h6>
+
+
+        
+
          <form onSubmit={handleSubmit(onSubmit)}>
 
              <FormInput
@@ -97,7 +102,7 @@ return(
             error={errors.agreeToTerms?.message}
             />
 
-            <p className="text-sm text-blue-600"><Link to='/forgetpassword'>Forget Password?</Link></p>
+            <p className="text-sm text-pink-600"><Link to='/forgetpassword'>Forget Password?</Link></p>
                   </div>
 
 
@@ -111,8 +116,8 @@ return(
                     <div className="mt-4 text-center text-sm text-gray-600">
                         Don't have an account?{" "}
                         <Link
-                          to="/"
-                          className="text-blue-600 font-medium hover:underline"
+                          to="/register"
+                          className="text-pink-600  font-medium hover:underline"
                         >
                           Sign Up
                         </Link>
@@ -120,8 +125,10 @@ return(
 
          </form>
                    
+         </div>
       </div>
-    </div>
+      <Footer/>
+      </>
   );
 }
 

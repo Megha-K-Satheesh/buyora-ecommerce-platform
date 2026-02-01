@@ -27,7 +27,7 @@ export const verifyOtp = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       const res = await authService.verifyOtp(data);
-      setAuthToken(res.data.token);
+      // setAuthToken(res.data.token);
       return res.data.data;
     } catch (err) {
         //     const message =
@@ -266,4 +266,4 @@ const authSlice = createSlice({
 
 export default authSlice.reducer;
 
-export const { clearAuthError } = authSlice.actions;
+export const { clearAuthError ,logout} = authSlice.actions;

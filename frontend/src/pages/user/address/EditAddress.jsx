@@ -66,10 +66,10 @@ const EditAddress = () => {
      }
   }
   return (
-     <div className="  lg:w-3/5 md:w-3/5       rounded-lg shadow-md bg-white mt-10">
+     <div className="  lg:w-3/5 md:w-3/5       rounded-lg s bg-white  lg:ml-40 lg:mt-10 mb-20 px-20">
 
     
-        <h1 className='text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center text-gray-700 font-medium  mt-5'>Update Your Address</h1>
+        <h1 className='text-xl sm:text-xl md:text-2xl lg:text-2xl ml-10 text-gray-700 font-medium  mt-8 '>Update Your Address</h1>
 
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4  rounded ">
       
@@ -83,21 +83,29 @@ const EditAddress = () => {
 
      
 
-      <FormInput
-      required
-        label="House Number"
-        placeholder="Enter house number"
-        {...register("houseNumber", { required: "House number is required" })}
-        error={errors.houseNumber?.message}
-      />
-
-      <FormInput
-       required
-        label="Address Line"
-        placeholder="Enter address line"
-        {...register("addressLine", { required: "Address Line is required" })}
-        error={errors.addressLine?.message}
-      />
+     
+        <div className="flex ">
+           <div className="flex-1 mr-10">
+      
+            <FormInput
+            required
+              label="House Number"
+              placeholder="Enter house number"
+              {...register("houseNumber", { required: "House number is required" })}
+              error={errors.houseNumber?.message}
+            />
+            </div>
+            <div className="flex-1">
+            <FormInput
+             required
+              label="Address Line"
+              placeholder="Enter address line"
+              {...register("addressLine", { required: "Address Line is required" })}
+              error={errors.addressLine?.message}
+            />
+      
+               </div>
+            </div>
 
 
    <div className="flex ">

@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import { Outlet, useMatch } from 'react-router-dom';
 import Footer from '../components/ui/Footer';
 import Navbar from '../components/ui/Navbar';
@@ -7,29 +8,38 @@ const ProfileLayout = () => {
 
   const isAccountRoot = useMatch('/account/*')
   const isAccountHome = useMatch('/account')
-  
+    const {loading} = useSelector(state=>state.auth)
+
+
+     if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
   return (
     <> 
     <div className='hidden md:block lg:block '>
      <Navbar/>
     </div>
       
-    <div className=" min-h-screen   bg-amber-200 md:mt-22 lg:mt-22">
+    <div className=" min-h-screen   md:mt-22 lg:mt-22">
 
   <div className="hidden lg:block">
 
      {isAccountRoot && (<>
 
       
-      <div className=' h-[10] lg:h-[15vh]  bg-amber-700 lg:mx-[10%] '>
+      <div className=' h-[10vh] lg:h-[15vh]   lg:mx-[10%]  border-b border-gray-200 '>
         <AccountHaad/>
       </div> 
-      <div className=' flex min-h-screen bg-amber-500'>
+      <div className=' flex min-h-screen '>
            {/* sideMenu */}
-          <div className='flex-1  bg-red-100 flex justify-end'>
+          <div className='flex-1   flex justify-end'>
              <SideMenu/>
           </div>
-          <div className='lg:flex  lg:flex-3  lg:flex-col hidden bg-red-200 '>
+          <div className='lg:flex  lg:flex-3  lg:flex-col hidden  '>
 
                 <Outlet/>
                

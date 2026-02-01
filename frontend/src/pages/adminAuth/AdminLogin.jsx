@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import Button from "../../components/ui/Button";
 import FormCheckbox from "../../components/ui/FormCheckbox";
 import FormInput from "../../components/ui/FormInput";
-import Logo from "../../components/ui/Logo";
 import { showError, showSuccess } from "../../components/ui/Toastify";
 import { adminLogin } from "../../Redux/slices/adminAuthSlice";
 
@@ -30,22 +29,24 @@ const  AdminLoginForm = ()=>{
           const res = await dispatch(adminLogin({email:data.email,password:data.password})).unwrap()
           showSuccess("Successfully logined")
          
-         navigate('/AdminDashBoard')
+         navigate('/admin-dashBoard')
       } catch (err) {
         showError(err)
       }
   }
    
 return(
-  <div className="min-h-screen flex justify-evenly bg-gradient-to-br from-sky-400 via-sky-300 to-amber-300 ">
+  <div className="min-h-screen flex justify-evenly bg-gradient-to-br  bg-[#FFF1F6]  ">
       
    
 
       <div className=" w-full md:w-1/3     p-10 m-10  rounded-lg shadow-md bg-white mt-10">
-        
-         <Logo className="m-auto my-0"/>
+      
+         
+         {/* <Logo className="m-auto my-0"/>  */}
+
         <h1 className='text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center font-bold mt-6'>Welcome Back Admin !</h1>
-         <h6 className='text-sm sm:text-base md:text-lg lg:text-xl text-center text-sky-400 mt-2 mb-6'>  Sign in to your admin dashboard to manage users and products </h6>
+         <h6 className='text-sm sm:text-base md:text-lg lg:text-xl text-center text-pink-600 mt-2 mb-6'>  Sign in to your admin dashboard to manage users and products </h6>
        
          <form onSubmit={handleSubmit(onSubmit)}>
 

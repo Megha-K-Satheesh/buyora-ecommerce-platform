@@ -17,7 +17,7 @@ class UserController extends BaseController{
 
 
     static addAddress = BaseController.asyncHandler(async (req, res) => {
-
+     console.log(req.body)
     const validateData = BaseController.validateRequest(addAddressValidation,req.body)
 
     const address = await UserService.addAddress(req.user._id, validateData);

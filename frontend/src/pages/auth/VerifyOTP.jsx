@@ -39,7 +39,7 @@ const VerifyOtpPage = () => {
     try {
         await dispatch(verifyOtp({ userId, otp: otpValue, purpose:"EMAIL_VERIFICATION"})).unwrap()
         showSuccess("verification successful");
-        navigate("/home")
+        navigate("/login")
     } catch (err) {
          showError(err)
     }
@@ -48,7 +48,7 @@ const VerifyOtpPage = () => {
   const handleResendClick = async () => {
   if (!userId) {
     showError("Session expired. Please register again.");
-    navigate("/");
+    navigate("/register");
     return;
   }
 

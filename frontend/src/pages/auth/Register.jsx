@@ -49,23 +49,14 @@ const RegisterForm = () => {
     justify-center  items-start lg:bg-[#FFF1F6]
      mt-20
   ">
-
+{/* 
       <div className='   
      lg:bg-gradient-to-b from-rose-500  to-pink-500 
 lg:shadow-[0_9px_20px_-10px_rgba(0,0,0,0.25)] 
-      flex lg:w-[40%] w-[90%] rounded-2xl mt-10'>
+      flex lg:w-[40%] w-[90%] rounded-2xl mt-10'> */}
 
-      {/* <div className=' lg:flex lg:flex-1  justify-center lg:items-center  hidden  '>
-         <div className='flex '>
 
-        <WelcomeText
-      title={"Welcome To Buyora"}
-      subtitle={"Create Your Account Here"}
-      />
-      </div>
-      </div> */}
-
-      <div className="  md:w-2/5   lg:px-5  flex-1 bg-white   rounded-r-2xl ">
+      <div className="     lg:px-5   bg-white   rounded-r-2xl  lg:w-[40%] w-[90%] rounded-2xl mt-10">
 
             {/* <Logo
               
@@ -201,7 +192,7 @@ lg:shadow-[0_9px_20px_-10px_rgba(0,0,0,0.25)]
         </form>
       </div>
     </div>
-      </div>
+      {/* </div> */}
       <Footer>
         <Footer/>
       </Footer>

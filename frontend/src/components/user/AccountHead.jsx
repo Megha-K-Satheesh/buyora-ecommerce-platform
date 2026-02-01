@@ -7,7 +7,7 @@ const AccountHaad = ()=>{
   const navigate = useNavigate()
   return(
     <>
-      <div className="flex bg-amber-500 pt-10 " >
+      <div className="flex  pt-10 " >
         {/* <FaUserCircle size={40} /> */}
         <FaArrowLeft  className=" block lg:hidden text-2xl cursor-pointer   ml-5 mt-2"
          onClick={()=>navigate('/')}
@@ -17,6 +17,7 @@ const AccountHaad = ()=>{
        <h1 className="font-semibold text-2xl">Account</h1> 
         <p className="text-xl font-light">Buyora User</p>
         </div>
+        
       </div>
     </>
   )

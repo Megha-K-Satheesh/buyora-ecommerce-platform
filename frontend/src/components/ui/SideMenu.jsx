@@ -7,12 +7,12 @@ const SideMenu = ()=>{
   //    `my-20`
   // )
   const linkClass = ({isActive})=>(
-    `  text-xl   hover:text-pink-600   transition
+    ` text-xl    hover:text-pink-600   transition
     ${isActive?"text-green-500":""} `
   )
   return(
     <>
-      <div className="bg-amber-300 pl-20 lg:w-70 w-full  ">
+      <div className=" pl-20 lg:w-70 w-full  border-r   border-gray-200 ">
         <ul className="">
             <li className=" lg:text-xl   text-gray-300  my-4">ACCOUNT</li>
               <li className="my-1 ">

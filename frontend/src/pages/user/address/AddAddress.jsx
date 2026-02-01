@@ -35,10 +35,10 @@ const AddAddress = ({ defaultValues }) => {
      }
   }
   return (
-     <div className="  lg:w-3/5 md:w-3/5       rounded-lg shadow-md bg-white  lg:ml-40 lg:mt-10  ">
+     <div className="  lg:w-3/5 md:w-3/5       rounded-lg s bg-white  lg:ml-40 lg:mt-10 mb-20 px-20">
 
     
-        <h1 className='text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center text-gray-700 font-medium  mt-8 '>Add Your Address</h1>
+        <h1 className='text-xl sm:text-xl md:text-2xl lg:text-2xl ml-10 text-gray-700 font-medium  mt-8 '>Add Your Address</h1>
 
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-10  rounded ">
       
@@ -50,7 +50,8 @@ const AddAddress = ({ defaultValues }) => {
         error={errors.fullName?.message}
       />
 
-     
+       <div className="flex ">
+     <div className="flex-1 mr-10">
 
       <FormInput
       required
@@ -59,7 +60,8 @@ const AddAddress = ({ defaultValues }) => {
         {...register("houseNumber", { required: "House number is required" })}
         error={errors.houseNumber?.message}
       />
-
+      </div>
+      <div className="flex-1">
       <FormInput
        required
         label="Address Line"
@@ -68,7 +70,8 @@ const AddAddress = ({ defaultValues }) => {
         error={errors.addressLine?.message}
       />
 
-
+         </div>
+      </div>
    <div className="flex ">
      <div className="flex-1 mr-10">
 

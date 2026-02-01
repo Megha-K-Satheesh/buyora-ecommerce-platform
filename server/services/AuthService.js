@@ -62,16 +62,16 @@ class AuthService {
   user.isVerified = true;
   user.otpDetails = undefined;
   await user.save();
-  const token = generateUserToken({
-    id: user._id,
-    email: user.email,
-    role: user.role
-  });
+  // const token = generateUserToken({
+  //   id: user._id,
+  //   email: user.email,
+  //   role: user.role
+  // });
 
   return {
     message: 'Email verified successfully',
     user: user.getPublicProfile(),
-    token
+   
   };
 }
   

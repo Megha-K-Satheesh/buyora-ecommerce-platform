@@ -3,6 +3,7 @@ const { verifyUserToken, verifyAdminToken } = require('../utils/jwt');
 const { sendError } = require('../utils/response');
 
 const checkUserStatus = async (req, res, next) => {
+  
   try {
     const authHeader = req.headers.authorization;
 
@@ -15,6 +16,7 @@ const checkUserStatus = async (req, res, next) => {
     let decoded;
     try {
       decoded = verifyUserToken(token);
+      console.log(decoded)
     } catch (error) {
       try {
         decoded = verifyAdminToken(token);
@@ -24,8 +26,10 @@ const checkUserStatus = async (req, res, next) => {
     }
 
     const user = await User.findById(decoded.id);
+       console.log(user)
     if (!user) {
       return sendError(res, 'User not found', 404);
+
     }
 
     if (user.status === 'banned') {
