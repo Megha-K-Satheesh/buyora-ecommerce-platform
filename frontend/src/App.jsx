@@ -5,6 +5,15 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 import Home from "./pages/auth/Home";
+const AdminLayouts = lazy(() => import("./layouts/AdminLayouts"));
+const Banners = lazy(() => import("./pages/admin/banner/Banners"));
+const Category = lazy(() => import("./pages/admin/category/Categories"));
+const Coupons = lazy(() => import("./pages/admin/coupons/Coupons"));
+const Dashboard = lazy(() => import("./pages/admin/dashboard/Dashboard"));
+const Orders = lazy(() => import("./pages/admin/orders/Orders"));
+const Products = lazy(() => import("./pages/admin/products/Products"));
+const Report = lazy(() => import("./pages/admin/report/Report"));
+const Users = lazy(() => import("./pages/admin/user/Users"));
 
 const RegisterForm = lazy(() => import("./pages/auth/Register"));
 const LoginForm = lazy(() => import("./pages/auth/Login"));
@@ -15,9 +24,7 @@ const VerifyPasswordOtp = lazy(() =>
   import("./pages/auth/PasswordResetOTP")
 );
 
-const AdminDashBoard = lazy(() =>
-  import("./pages/adminAuth/AdminDashbord")
-);
+
 const AdminLoginForm = lazy(() =>
   import("./pages/adminAuth/AdminLogin")
 );
@@ -52,14 +59,26 @@ function App() {
           />
           <Route path="/terms" element={<div>Terms Page</div>} />
           <Route path="/privacy" element={<div>Privacy Policy</div>} />
-          <Route
-            path="/admin-dashBoard"
-            element={<AdminDashBoard />}
-          />
+          
           <Route
             path="/admin-login"
             element={<AdminLoginForm />}
           />
+
+
+           <Route path="/admin-dashboard" element={<AdminLayouts />}>
+          <Route index element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="products" element={<Products />} />
+          <Route path="categories" element={<Category />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="coupons" element={<Coupons />} />
+          <Route path="users" element={<Users />} />
+          <Route path="banners" element={<Banners />} />
+          <Route path="sales-report" element={<Report />} />
+        
+        </Route>
+
           <Route path="/account" element={<ProfileLayout />}>
             <Route index element={<Profile />} />
             <Route path="profile" element={<Profile />} />

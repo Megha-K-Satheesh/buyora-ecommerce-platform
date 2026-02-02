@@ -1,11 +1,11 @@
-import Logo from "./Logo"
+import Logo from "../ui/Logo"
 
 
 
 const AdminNavbar=()=>{
    return(
     <>
-     <div className="flex lg:h-[10vh] h-[6vh] mb-16 fixed top-0 left-0 w-full bg-white shadow">
+     <div className="flex  lg:h-[10vh] h-[6vh] mb-16 fixed top-0 left-0 w-full bg-white shadow">
         <div className="flex-1 ">
           <Logo/>
         </div>
