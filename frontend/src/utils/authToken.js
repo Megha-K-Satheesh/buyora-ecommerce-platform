@@ -10,16 +10,16 @@ export const getAuthToken = () => {
 };
 
 export const clearAuthToken = () => {
-  localStorage.removeItem(TOKEN_KEY);
+ return localStorage.removeItem(TOKEN_KEY);
 };
 
 export const setAdminToken=(token)=>{
-   localStorage.setItem(ADMIN_TOKEN_KEY,token)
+   return localStorage.setItem(ADMIN_TOKEN_KEY,token)
 }
 
 export const getAdminToken= ()=>{
-  localStorage.getItem(ADMIN_TOKEN_KEY)
+ return localStorage.getItem(ADMIN_TOKEN_KEY)
 }
 export const clearAdminToken=()=>{
-  localStorage.removeItem(ADMIN_TOKEN_KEY)
+return  localStorage.removeItem(ADMIN_TOKEN_KEY)
 }

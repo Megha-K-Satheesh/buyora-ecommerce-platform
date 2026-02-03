@@ -12,7 +12,7 @@ const setupRoutes = (app) => {
     app.use('/api/auth',shouldUseAuthLimiter ? authLimiter : [] ,authRoutes); 
     app.use('/api/admin', adminRoutes);
     app.use('/api/user',userRoutes);
-    app.use('/api/category',categoryRoutes)
+    app.use('/api/admin/category',categoryRoutes)
 };
 
 module.exports = {

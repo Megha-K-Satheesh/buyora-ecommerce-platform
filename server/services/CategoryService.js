@@ -5,7 +5,7 @@ const Category = require('../models/Category');
 class CategoryService{
     static async addCategory(data){
        
-    const {name,parentId} = data;
+    const {name,parentId,status,isVisible} = data;
     let level = 1;
     let isLeaf = false;
 
@@ -36,10 +36,28 @@ class CategoryService{
       name,
       parentId:parentId || null,
       level,
-      isLeaf
+      isLeaf,
+       status: status || "active",
+      isVisible: isVisible !== undefined ? isVisible : true
     })
 
    return category
     }
+       
+     static makeTree(list, parentId = null) {
+    return list
+      .filter(item => String(item.parentId) === String(parentId) || (parentId === null && !item.parentId))
+      .map(item => ({
+        ...item,
+        children: this.makeTree(list, item._id)
+      }));
+  }
+     
+
+    static async getCategories() {
+    const categories = await Category.find().lean();
+    return this.makeTree(categories);
+  }
+   
 }
 module.exports = CategoryService
