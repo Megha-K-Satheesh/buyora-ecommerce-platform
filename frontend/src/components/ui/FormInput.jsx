@@ -17,7 +17,7 @@ const FormInput = memo(
     return (
       <div className={`flex flex-col gap-1 pb-1.5 ${containerClassName}`}>
         {label && (
-          <label className="text-xs lg:text-sm  font-medium text-gray-900">
+          <label className="text-xs lg:text-lg  text-black">
             {label}{required && <span className="text-red-500 ml-1">*</span>}
           </label>
         )}

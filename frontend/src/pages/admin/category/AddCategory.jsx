@@ -4,16 +4,15 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import AdminOutletHead from "../../../components/Admin/AdminOutletHead";
 import Button from "../../../components/ui/Button";
-import Footer from "../../../components/ui/Footer";
 import FormInput from "../../../components/ui/FormInput";
-import Navbar from "../../../components/ui/Navbar";
 import { showError, showSuccess } from "../../../components/ui/Toastify";
-import { addCategory, getCategory } from "../../../Redux/slices/adminSlice";
+import { addCategory, getCategory } from "../../../Redux/slices/admin/categorySlice";
 
 const AddCategoryForm = () => {
   const dispatch = useDispatch();
-  const { categories, loading,loadingCategory } = useSelector((state) => state.admin);
+  const { categories, loading,loadingCategory } = useSelector((state) => state.category);
 
   const {
     register,
@@ -24,7 +23,7 @@ const AddCategoryForm = () => {
     defaultValues: {
       name: "",
       parentId: "",
-      isActive: true,
+      status:"active",
       isVisible: true
     }
   });
@@ -50,6 +49,7 @@ const AddCategoryForm = () => {
   const onSubmit = async (data) => {
     try {
       await dispatch(addCategory(data)).unwrap();
+        dispatch(getCategory());
       showSuccess("Category added successfully");
       reset();
     } catch (err) {
@@ -59,7 +59,7 @@ const AddCategoryForm = () => {
 
   return (
     <>
-      <Navbar />
+      <AdminOutletHead heading={"CATEGORIES"}/>
 
       <div className="flex justify-center items-start lg:bg-[#FFF1F6] mt-20 min-h-screen">
         <div className="bg-white rounded-2xl lg:w-[40%] w-[90%] mt-10 px-5 py-6">
@@ -85,41 +85,49 @@ const AddCategoryForm = () => {
             />
 
             <div className="flex flex-col gap-1 pb-3">
-              <label className="text-xs lg:text-sm font-medium text-gray-900">
+              <label className="text-sm md:text-lg lg:text-lg text-gray-900">
                 Parent Category
               </label>
               <select
                 {...register("parentId")}
-                className="w-full border rounded-md px-3 py-2 lg:h-11 text-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 lg:h-11 text-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
               >
                 <option value="">None (Top Level)</option>
                 {buildCategoryOptions(categories)}
               </select>
             </div>
+            
+            <div className="flex flex-col gap-1 pb-3">
+              <label className="text-sm md:text-lg lg:text-lg text-gray-900">
+                Status
+              </label>
 
-            <div className="flex items-center justify-between pb-4">
-              <span className="text-sm font-medium text-gray-900">
-                Active Status
+          <select
+              {...register("status")}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 lg:h-11 text-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+              
+              >
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+          </select>
+            </div>
+
+            <div className="flex items-center justify-between pb-4 mt-5">
+              <span className="text-lg font-medium text-gray-900">
+                Visible to Users
               </span>
+
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
-                  {...register("isActive")}
+                  {...register("isVisible")}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-pink-500 transition"></div>
+                <div className="w-11 h-6 bg-gray-300 rounded-full peer-checked:bg-pink-600 transition-colors"></div>
+                <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform
+                  peer-checked:translate-x-5">
+                </div>
               </label>
-            </div>
-
-            <div className="flex items-center gap-2 pb-4">
-              <input
-                type="checkbox"
-                {...register("isVisible")}
-                className="w-4 h-4"
-              />
-              <span className="text-sm text-gray-800">
-                Visible to Users
-              </span>
             </div>
 
             <Button type="submit" fullWidth disabled={loadingCategory}>
@@ -130,7 +138,6 @@ const AddCategoryForm = () => {
         </div>
       </div>
 
-      <Footer/>
     </>
   );
 };
