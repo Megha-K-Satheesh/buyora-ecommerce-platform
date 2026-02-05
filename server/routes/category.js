@@ -10,4 +10,5 @@ router.get('/get-category',authenticateAdmin,CategoryController.getCategories)
 router.get('/categories-table',authenticateAdmin,CategoryController.categoriesTable);
 router.put('/update-category/:categoryId',authenticateAdmin,CategoryController.updateCategory)
 router.delete('/delete-category/:categoryId',authenticateAdmin,CategoryController.deleteCategory)
+router.get('/get-category-by-id/:categoryId',authenticateAdmin,CategoryController.getCategoryById)
 module.exports= router

@@ -59,13 +59,28 @@ class CategoryService{
     return this.makeTree(categories);
   }
 
-  static async categories(page=1,limit=10){
+  static async categories(page=1,limit=10,level,status,search){
      page = parseInt(page)
      limit = parseInt(limit)
      const skip = (page-1)*limit
-     const totalCategories = await Category.countDocuments()
+    
+     const filter ={}
 
-     const categories = await Category.find()
+     if(level){
+      filter.level = parseInt(level)
+     }
+     if(status){
+      filter.status = status;
+     }
+     if(search){
+      filter.name = {$regex:search,$options:"i"}
+     }
+
+
+
+     const totalCategories = await Category.countDocuments(filter)
+
+     const categories = await Category.find(filter)
      .populate('parentId','name')
      .skip(skip)
      .limit(limit)
@@ -131,6 +146,11 @@ class CategoryService{
   return true;
 };
 
+  static getCategoryById = async(categoryId)=>{
+    const category = await Category.findById(categoryId);
+    if(!category) throw ErrorFactory.notFound("Category not found")
+      return category
+  }
 
 }
 module.exports = CategoryService

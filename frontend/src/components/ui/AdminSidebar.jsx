@@ -6,7 +6,7 @@ const AdminSidebar = () => {
 
   return (
     <>
-      {/* SIDEBAR */}
+  
       <div
         className={`
           fixed top-0 left-0 min-h-screen
@@ -18,7 +18,7 @@ const AdminSidebar = () => {
           z-40
         `}
       >
-        {/* TOGGLE ICON (mobile only, INSIDE sidebar) */}
+       
         <button
           onClick={() => setOpen(!open)}
           className="lg:hidden absolute -right-2 top-4 p-2 rounded-full z-50"
@@ -29,8 +29,8 @@ const AdminSidebar = () => {
             <FaArrowAltCircleRight size={24} />
           )}
         </button>
-      )}
-        {/* MENU */}
+      
+       
         <ul className="p-4 space-y-4 mt-10">
           <li>DASHBOARD</li>
           <li>ORDERS</li>
@@ -49,10 +49,13 @@ const AdminSidebar = () => {
         >
           <IoIosArrowDropright size={24} />
         </button>
-    </>
-  )
-}
+          
+          
+        )
 
+}
+        </>)
+        }
 export default AdminSidebar
 
 

@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 import AddCategoryForm from "./pages/admin/category/AddCategory";
+import UpdateCategoryForm from "./pages/admin/category/UpdateCategory";
 import Home from "./pages/auth/Home";
 const AdminLayouts = lazy(() => import("./layouts/AdminLayouts"));
 const Banners = lazy(() => import("./pages/admin/banner/Banners"));
@@ -73,6 +74,7 @@ function App() {
           <Route path="products" element={<Products />} />
           <Route path="categories" element={<Category />} />
           <Route path = "/admin-dashboard/categories/add-category" element={<AddCategoryForm/>}/>
+           <Route path ="/admin-dashboard/categories/update-category/:categoryId" element={<UpdateCategoryForm/>}/> 
           <Route path="orders" element={<Orders />} />
           <Route path="coupons" element={<Coupons />} />
           <Route path="users" element={<Users />} />

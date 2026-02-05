@@ -22,7 +22,7 @@ const Pagination = React.memo(({ currentPage, totalPages, onPageChange }) => {
       <button
         disabled={currentPage === 1}
         onClick={handlePrev}
-        className="px-3 py-1 border rounded disabled:opacity-50"
+        className="px-3 py-1 border  border-gray-500  rounded disabled:opacity-50"
       >
         Prev
       </button>
@@ -31,8 +31,8 @@ const Pagination = React.memo(({ currentPage, totalPages, onPageChange }) => {
         <button
           key={page}
           onClick={() => handlePageClick(page)}
-          className={`px-3 py-1 border rounded ${
-            page === currentPage ? "bg-blue-500 text-white" : ""
+          className={`px-3 py-1 border  border-gray-500  rounded ${
+            page === currentPage ? "bg-pink-600 text-white" : ""
           }`}
         >
           {page}
@@ -42,7 +42,7 @@ const Pagination = React.memo(({ currentPage, totalPages, onPageChange }) => {
       <button
         disabled={currentPage === totalPages}
         onClick={handleNext}
-        className="px-3 py-1 border rounded disabled:opacity-50"
+        className="px-3 py-1 border border-gray-500 rounded disabled:opacity-50"
       >
         Next
       </button>

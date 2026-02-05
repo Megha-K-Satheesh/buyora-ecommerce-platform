@@ -20,9 +20,13 @@ export const getCategory = createAsyncThunk('admin/getCategory',async(_,thunkApi
   }
 })
 
-export const categoriesTable =createAsyncThunk('category/categoriesTable',async({page=1,limit=2},thunkApi)=>{
+export const categoriesTable =createAsyncThunk('category/categoriesTable',async({page=1,limit=2,
+    level="",
+    status="",
+    search="",
+},thunkApi)=>{
    try {
-       const res = await adminService.categoriesTable(page,limit);
+       const res = await adminService.categoriesTable(page,limit,level,status,search);
        return res.data.data
    } catch (err) {
        return thunkApi.rejectWithValue(err.response?.data?.error?.message || "Get category for Table Failed")
@@ -46,6 +50,17 @@ export const deleteCategory = createAsyncThunk('category/deleteCategory',async(c
     }
 })
 
+
+ export const getCategoryById = createAsyncThunk('category/getCategoryById',async(categoryId,thunkApi)=>{
+     try {
+         const res = await adminService.getCategoryById(categoryId);
+         return res.data.data
+     } catch (err) {
+        return thunkApi.rejectWithValue(err.response?.data?.error?.message ||"Failed to get category by id")
+     }
+ })
+
+
 const categorySlice = createSlice({
   name:"category",
   initialState:{
@@ -53,12 +68,18 @@ const categorySlice = createSlice({
     loadingCategory:false,
     error:null,
     categories:[],
+    selectedCategory:null,
       categoriesTable: [],
       currentPage:1,
       totalPages:1,
       totalCategories:0
   },
-  reducers:{},
+  reducers:{
+
+    setCurrentPage(state, action) {
+      state.currentPage = action.payload;
+    }
+  },
   extraReducers:(builder)=>{
      builder
      .addCase(addCategory.pending,(state)=>{
@@ -128,6 +149,7 @@ const categorySlice = createSlice({
        state.categoriesTable = state.categoriesTable.map((cat) =>
         cat._id === action.payload._id ? action.payload : cat
       ); 
+        state.selectedCategory = action.payload;
      })
      .addCase(updateCategory.rejected,(state,action)=>{
       state.loadingCategory = false;
@@ -154,6 +176,20 @@ const categorySlice = createSlice({
         state.error = action.payload
         
      })
+     .addCase(getCategoryById.pending,(state)=>{
+        state.loadingCategory = true;
+        state.error = null
+     })
+     .addCase(getCategoryById.fulfilled,(state,action)=>{
+        state.loadingCategory = false;
+        state.error = null;
+        state.selectedCategory = action.payload
+     })
+     .addCase(getCategoryById.rejected,(state,action)=>{
+        state.loadingCategory = false;
+        state.error = action.payload
+     })
   }
 })
+export const { setCurrentPage } = categorySlice.actions;
 export default categorySlice.reducer

@@ -3,19 +3,22 @@ import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import AdminOutletHead from "../../../components/Admin/AdminOutletHead"
 import Button from "../../../components/ui/Button"
-import { categoriesTable, deleteCategory } from "../../../Redux/slices/admin/categorySlice"
+import { categoriesTable, deleteCategory, setCurrentPage } from "../../../Redux/slices/admin/categorySlice"
 
-import { FiEdit, FiTrash2 } from "react-icons/fi"
 import Swal from "sweetalert2"
+import CategoryTable from "../../../components/Admin/CategoryTable"
 import Pagination from "../../../components/ui/Pagination"
+import SearchInput from "../../../components/ui/SearchInput"
 import { showError, showSuccess } from "../../../components/ui/Toastify"
 
 
 const Category = ()=>{
   const navigate = useNavigate()
   const dispatch = useDispatch()
-   const [currentPagePage,setCurrentPage] = useState(1)
-    const { categoriesTable: tableData, loading,currentPage,totalPages,totalCategories } = useSelector(
+  const [level,setLevel] = useState("");
+  const [status,setStatus] = useState("");
+  const [search,setSearch] = useState("");
+    const { categoriesTable: tableData, loading,currentPage,totalPages,totalCategories:Total } = useSelector(
     (state) => state.category
     )
  const handleClick = ()=>{
@@ -23,7 +26,7 @@ const Category = ()=>{
  }
 
   const handleEdit = (id) => {
-  navigate(`/admin-dashboard/categories/edit-category/${id}`);
+  navigate(`/admin-dashboard/categories/update-category/${id}`);
 };
 
 const handleDelete = async (categoryId) => {
@@ -48,97 +51,73 @@ const handleDelete = async (categoryId) => {
 };
 
 const handlePageChange = (page) => {
-  setCurrentPage(page)
-  dispatch(categoriesTable({ page, limit:10 }));
+
+  dispatch(categoriesTable({ page, limit:10,
+      level,
+      status,search }));
 };
 
 
-  useEffect(()=>{
-     dispatch(categoriesTable({page:currentPage,limit:10}))
-  },[dispatch,currentPage])
 
+  useEffect(()=>{
+     dispatch(categoriesTable({page:currentPage,limit:10,level,
+      status,
+      search}))
+  },[dispatch,currentPage,level,status,search])
+ useEffect(() => {
+  dispatch(setCurrentPage(1));
+}, [level, status, search]);
   return(
     <>
     <AdminOutletHead heading={"CATEGORIES"}/>
-    <div>
+    <div className="flex justify-end mr-20 mt-10">
       <Button 
        onClick = {handleClick}
       >ADD CATEGORY</Button>
     </div>
      
-    <div className="mx-10 mt-10">
-        <table className="w-full border border-gray-300 border-collapse">
-          <thead>
-            <tr className="bg-white text-black">
-              <th className="border p-2 text-center">Category</th>
-              <th className="border p-2 text-center">Parent</th>
-              <th className="border p-2 text-center">Level</th>
-              <th className="border p-2 text-center">Active</th>
-              <th className="border p-2 text-center">Visible</th>
-              <th className="border p-2 text-center">Actions</th>
-              
-            </tr>
-          </thead>
+    <div className="flex ml-20   gap-5 mt-10">
+        <div className="flex-1 ">
+          <SearchInput
+           value={search}
+           onChange={(e)=>setSearch(e.target.value)}
+           placeholder="Search Category ..."
+          />
+        </div>
+        <div className=" flex-2 flex gap-5 ">
+            <select
+              value={level}
+              onChange={(e) => setLevel(e.target.value)}
+              className=" px-3 py-2 rounded-lg shadow-sm bg-white w-[25%] font-medium"
+            >
+              <option value="">All Levels</option>
+              <option value="1">Level 1</option>
+              <option value="2">Level 2</option>
+              <option value="3">Level 3</option>
+            </select>
+       
+             <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className=" bg-white shadow px-3 py-2 rounded-lg w-[25%] font-medium"
+              >
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
 
-          <tbody>
-            {loading && (
-              <tr>
-                <td colSpan="5" className="text-center p-4">
-                  Loading...
-                </td>
-              </tr>
-            )}
+        </div>
+    </div>
 
-            {!loading && tableData.length === 0 && (
-              <tr>
-                <td colSpan="6" className="text-center p-4">
-                  No categories found
-                </td>
-              </tr>
-            )}
 
-            {!loading &&
-              tableData.map((cat) => (
-                <tr key={cat._id} className="hover:bg-gray-50 bg-white ">
-                  <td className="border p-3 text-center">
-                    {cat.name}
-                  </td>
-
-                  <td className="border p-2 text-center">
-                    {cat.parentId?.name || "—"}
-                  </td>
-
-                  <td className="border p-2 text-center">
-                    {cat.parentId ? "Child" : "Parent"}
-                  </td>
-
-                  <td className="border p-2 text-center">
-                    {cat.status==="active"? "Active" : "Inactive"}
-                  </td>
-
-                  <td className="border p-2 text-center">
-                    {cat.isVisible ? "Yes" : "No"}
-                  </td>
-                  <td className="border p-2 text-center">
-                    <div className="flex justify-around">
-
-                    <FiEdit
-                      className="text-black cursor-pointer hover:text-blue-700"
-                      size={20}
-                      onClick={() => handleEdit(cat._id)}
-                   />
-                    <FiTrash2
-                      className="text-red-500 cursor-pointer hover:text-red-700"
-                      size={20}
-                      onClick={() => handleDelete(cat._id)}
-                    />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-         <div className=" shadow-t">
+          <CategoryTable
+          loading={loading}
+          tableData={tableData}
+          total={Total}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+         <div className=" my-10">
 
         <Pagination
         totalPages={totalPages}
@@ -146,7 +125,7 @@ const handlePageChange = (page) => {
         onPageChange={handlePageChange}
         />
          </div>
-      </div>
+      
     </>
   )
 }

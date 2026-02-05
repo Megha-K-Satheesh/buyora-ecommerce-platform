@@ -14,7 +14,7 @@ const AdminLayouts = ()=>{
         <div className="flex bg-amber-500">
           <Sidebar />
           </div>
-        <div className="flex-4 bg-pink-50">
+        <div className="flex-4 min-h-screen bg-pink-50">
           
           
           <Outlet/>
