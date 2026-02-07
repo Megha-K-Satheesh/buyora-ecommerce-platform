@@ -6,6 +6,7 @@ import "./App.css";
 
 import AddCategoryForm from "./pages/admin/category/AddCategory";
 import UpdateCategoryForm from "./pages/admin/category/UpdateCategory";
+// import AddProducts from "./pages/admin/products/AddProducts";
 import Home from "./pages/auth/Home";
 const AdminLayouts = lazy(() => import("./layouts/AdminLayouts"));
 const Banners = lazy(() => import("./pages/admin/banner/Banners"));
@@ -14,6 +15,9 @@ const Coupons = lazy(() => import("./pages/admin/coupons/Coupons"));
 const Dashboard = lazy(() => import("./pages/admin/dashboard/Dashboard"));
 const Orders = lazy(() => import("./pages/admin/orders/Orders"));
 const Products = lazy(() => import("./pages/admin/products/Products"));
+const AddProducts = lazy(() => import("./pages/admin/products/AddProducts"));
+
+
 const Report = lazy(() => import("./pages/admin/report/Report"));
 const Users = lazy(() => import("./pages/admin/user/Users"));
 
@@ -72,6 +76,9 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="products" element={<Products />} />
+          <Route path="/admin-dashboard/products/add-products" element={<AddProducts/>}/>
+
+
           <Route path="categories" element={<Category />} />
           <Route path = "/admin-dashboard/categories/add-category" element={<AddCategoryForm/>}/>
            <Route path ="/admin-dashboard/categories/update-category/:categoryId" element={<UpdateCategoryForm/>}/> 

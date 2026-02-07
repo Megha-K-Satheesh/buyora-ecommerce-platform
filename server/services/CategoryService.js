@@ -1,11 +1,11 @@
 const mongoose  = require("mongoose");
 const { ErrorFactory } = require("../utils/errors");
-const Category = require('../models/Category');
+const Category = require('../models/admin/Category');
 
 class CategoryService{
     static async addCategory(data){
        
-    const {name,parentId,status,isVisible} = data;
+    const {name,parentId,status,isVisible,allowedAttributes} = data;
     let level = 1;
     let isLeaf = false;
 
@@ -32,13 +32,29 @@ class CategoryService{
        }
     }
 
+    let validatedAttributes = [];
+    if(level ===2){
+       if(!allowedAttributes || allowedAttributes.length === 0){
+         throw ErrorFactory.validation("Level 2 categories must have Attributes")
+       }
+
+       allowedAttributes.forEach(attr=>{
+         if(!attr.name || !attr.values || attr.values.length === 0){
+             throw ErrorFactory.validation("Each attribute must have a name and at least one value")
+         }
+       });
+
+       validatedAttributes = allowedAttributes;
+    }
+
     const category = await Category.create({
       name,
       parentId:parentId || null,
       level,
       isLeaf,
        status: status || "active",
-      isVisible: isVisible !== undefined ? isVisible : true
+      isVisible: isVisible !== undefined ? isVisible : true,
+      allowedAttributes : validatedAttributes
     })
 
    return category
@@ -152,5 +168,30 @@ class CategoryService{
       return category
   }
 
+  static async getCategoryAttributes(categoryId){
+     const category = await Category.findById(categoryId)
+     if(!category) throw ErrorFactory.notFound("Category not Found")
+
+        if (category.level === 1) {
+      return [];
+    }
+      if (category.level === 2) {
+      return category.allowedAttributes || [];
+    }
+
+    if (category.level === 3) {
+      if (!category.parentId) {
+        return [];
+      }
+      const parentCategory = await Category.findById(category.parentId);
+
+      if (!parentCategory) {
+        throw ErrorFactory.notFound("Parent category not found");
+      }
+         return parentCategory.allowedAttributes || [];
+    }
+    return [];
+  }
+   
 }
 module.exports = CategoryService

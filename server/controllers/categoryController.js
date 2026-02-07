@@ -43,5 +43,12 @@ class CategoryController extends BaseController {
          BaseController.logAction("CATEGORY FETCHED",result);
           BaseController.sendSuccess(res,"CATEGORY FETCHED",result)
    })
+
+   static getCategoryAttribute = BaseController.asyncHandler(async(req,res)=>{
+      const {categoryId} = req.params;
+       const result = await CategoryService.getCategoryAttributes(categoryId)
+        BaseController.logAction("CATEGORY ATTRIBUTE FETCHED",result);
+          BaseController.sendSuccess(res,"CATEGORY ATTRIBUTE FETCHED",result)
+   })
 }
 module.exports=CategoryController

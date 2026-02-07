@@ -1,8 +1,8 @@
 
 
 
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import AdminOutletHead from "../../../components/Admin/AdminOutletHead";
 import Button from "../../../components/ui/Button";
@@ -13,10 +13,11 @@ import { addCategory, getCategory } from "../../../Redux/slices/admin/categorySl
 const AddCategoryForm = () => {
   const dispatch = useDispatch();
   const { categories, loading,loadingCategory } = useSelector((state) => state.category);
-
+  const [parentLevel,setParentLevel] = useState(0)
   const {
     register,
     handleSubmit,
+    control,
     reset,
     formState: { errors }
   } = useForm({
@@ -24,10 +25,22 @@ const AddCategoryForm = () => {
       name: "",
       parentId: "",
       status:"active",
-      isVisible: true
+      isVisible: true,
+      allowedAttributes: []
     }
   });
 
+   const  selectedParentId = useWatch({
+    control,
+    name:"parentId",
+    defaultValue:""
+   })
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "allowedAttributes"
+  });
+ 
   useEffect(() => {
     dispatch(getCategory());
   }, [dispatch]);
@@ -47,8 +60,26 @@ const AddCategoryForm = () => {
     ]});
 
   const onSubmit = async (data) => {
+
     try {
-      await dispatch(addCategory(data)).unwrap();
+          const formattedData = {
+      ...data,
+      allowedAttributes:
+        parentLevel === 1
+          ? data.allowedAttributes.map(attr => ({
+              name: attr.name.trim(),
+              values: attr.values
+                .split(",")
+                .map(v => v.trim())
+                .filter(Boolean)
+            }))
+          : []
+    };
+
+
+
+
+      await dispatch(addCategory(formattedData)).unwrap();
         dispatch(getCategory());
       showSuccess("Category added successfully");
       reset();
@@ -56,6 +87,20 @@ const AddCategoryForm = () => {
       showError(err);
     }
   };
+  
+  useEffect(() => {
+  
+    if (selectedParentId) {
+      const parent = categories.find(cat => cat._id === selectedParentId);
+      setParentLevel(parent ? parent.level : 0);
+    } else {
+      setParentLevel(0); 
+    }
+  }, [selectedParentId, categories]);
+
+
+   
+
 
   return (
     <>
@@ -129,6 +174,44 @@ const AddCategoryForm = () => {
                 </div>
               </label>
             </div>
+               
+
+
+
+                          {parentLevel === 1 && (
+                    <div className="border p-3 rounded space-y-3">
+                      <h3 className="font-semibold">Allowed Attributes</h3>
+
+                      {fields.map((field, index) => (
+                        <div key={field.id} className="flex gap-2">
+                          <input
+                            placeholder="Attribute name (Size / Volume)"
+                            {...register(`allowedAttributes.${index}.name`, { required: true })}
+                            className="border p-2 flex-1"
+                          />
+
+                          <input
+                            placeholder="Values (comma separated)"
+                            {...register(`allowedAttributes.${index}.values`, { required: true })}
+                            className="border p-2 flex-1"
+                          />
+
+                          <button type="button" onClick={() => remove(index)}>
+                            remove
+                          </button>
+                        </div>
+                      ))}
+
+                      <button
+                        type="button"
+                        onClick={() => append({ name: "", values: "" })}
+                        className="text-blue-600"
+                      >
+                        + Add Attribute
+                      </button>
+                    </div>
+                  )}
+
 
             <Button type="submit" fullWidth disabled={loadingCategory}>
               {loadingCategory ? "Adding..." : "Add Category"}

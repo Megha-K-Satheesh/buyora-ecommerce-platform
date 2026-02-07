@@ -1,4 +1,4 @@
-const Admin = require('../models/Admin');
+const Admin = require('../models/admin/Admin');
 const { generateAdminToken } = require('../utils/jwt');
 const { sendSuccess, sendError, sendValidationError } = require('../utils/response');
 const { adminLoginValidation, statusUpdateValidation } = require('../utils/validation');

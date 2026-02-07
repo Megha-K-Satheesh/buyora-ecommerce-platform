@@ -2,7 +2,7 @@ const { verifyUserToken, verifyAdminToken } = require('../utils/jwt');
 const { sendError } = require('../utils/response');
 const User = require('../models/User');
 const logger = require('../utils/logger');
-const Admin = require('../models/Admin');
+const Admin = require('../models/admin/Admin');
 
 
 const authenticateUser = async (req, res, next) => {

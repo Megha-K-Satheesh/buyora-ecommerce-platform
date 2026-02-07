@@ -1,4 +1,4 @@
-const Admin = require('../models/Admin');
+const Admin = require('../models/admin/Admin');
 const User = require('../models/User');
 const { ErrorFactory } = require('../utils/errors');
 const { generateAdminToken } = require('../utils/jwt');

@@ -24,5 +24,10 @@ search=""){
    },
    getCategoryById(categoryId){
       return adminApiClient.get(`/category/get-category-by-id/${categoryId}`)
-   }
+   },
+   addProduct(formData) {
+  return adminApiClient.post("/product/add-product",formData, {
+    headers: { "Content-Type": "multipart/form-data" }
+  })
+},
 }
