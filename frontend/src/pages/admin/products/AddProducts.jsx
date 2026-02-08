@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
-import { useForm, useWatch } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import AdminOutletHead from "../../../components/Admin/AdminOutletHead"
+import CategoryAttributeSelect from "../../../components/Admin/CategoryAttributeSelect"
+import ProductImageUpload from "../../../components/Admin/ProductImageUpload"
 import Button from "../../../components/ui/Button"
 import FormInput from "../../../components/ui/FormInput"
 import { showError, showSuccess } from "../../../components/ui/Toastify"
@@ -15,42 +17,18 @@ const AddProducts = ()=>{
    const dispatch = useDispatch()
    const {register,handleSubmit,control,formState:{errors}} = useForm()
    const {categories} = useSelector((state)=>state.category)
-   const [leafCategories,setLeafCategories]= useState([]);
+  //  const [leafCategories,setLeafCategories]= useState([]);
    const [files, setFiles] = useState([]);
 
 
 
-    const  selectedCategoryId = useWatch({
-       control,
-       name:"category",
-       
-      })
-    const selectedCategory = leafCategories.find(cat => cat._id === selectedCategoryId);
-
-   //extractLefeFuntion
-  const extractLeafCategories = (data) => {
-  const result = [];
-
-  data.forEach(level1 => {
-    level1.children?.forEach(level2 => {
-      level2.children?.forEach(level3 => {
-        if (level3.level === 3 && level3.isLeaf) {
-          result.push({
-            _id: level3._id,
-            name: `${level1.name} → ${level2.name} → ${level3.name}`,
-            allowedAttributes: level2.allowedAttributes || []
-          });
-        }
-      });
-    });
-  });
-
-  return result;
-};
-
-
 
    const onSubmit =async(data)=>{
+
+      if (files.length === 0) {
+    showError(" Product image is required");
+    return;
+  }
    try{
 
      const formData = new FormData();
@@ -97,14 +75,7 @@ const AddProducts = ()=>{
       dispatch(getCategory())
    },[dispatch])
   
-   useEffect(()=>{
-      if(categories && categories.length>0){
-         const leafCats = extractLeafCategories(categories);
-         setLeafCategories(leafCats)
-      }
-   },[categories])
-
-  // console.log(leafCategories);
+ 
   return(
     <>
     <AdminOutletHead heading={"PRODUCTS"}/>
@@ -146,73 +117,61 @@ const AddProducts = ()=>{
 
          {/* select level 3 category dropdown  */}
         <div className="flex flex-col gap-1 pb-3">
-        <label className="text-sm md:text-lg text-gray-900">Category</label>
-        <select
-          {...register("category", { required: "Category is required" })}
-          className="w-full border border-gray-300 rounded-md px-3 py-2 lg:h-11 text-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-        >
-          <option value="">Select Category</option>
-          {leafCategories.map(cat => (
-            <option key={cat._id} value={cat._id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
-        {errors.category && <p className="text-red-600">{errors.category.message}</p>}
-      </div>
-{/* 
-      //atribute */}
-              {selectedCategory?.allowedAttributes?.map(attr => (
-                <div key={attr._id} className="mb-4">
-                <label className="block font-medium mb-1">{attr.name}</label>
-                <div className="flex gap-3 flex-wrap">
-                  {attr.values.map(value => (
-                    <label key={value} className="flex items-center gap-1">
-                      <input
-                        type="checkbox"
-                        value={value}
-                        {...register(`attributes.${attr.name}`, { required: true })}
-                      />
-                      {value}
-                    </label>
-                  ))}
-                </div>
+          <CategoryAttributeSelect
+            categories={categories}
+            control={control}
+            register={register}
+            errors={errors}
+          />
+
+       
               </div>
-            ))}
             
               {/* Price fields */}
             <FormInput
               label="MRP"
               type="number"
               placeholder="Enter MRP"
-              required
-              {...register("mrp", { required: true, min: 0 })}
+              {...register("mrp", {
+                required: "MRP is required",
+                min: {
+                value: 0,
+                message: "MRP cannot be negative",
+                },
+              })}
               error={errors.mrp?.message}
-            />
+              />
 
-            <FormInput
-              label="Selling Price"
-              type="number"
-              placeholder="Enter Selling Price"
-              required
-              {...register("sellingPrice", { required: true, min: 0 })}
-              error={errors.sellingPrice?.message}
-            />
-{/* 
-            <FormInput
-              label="Discount %"
-              type="number"
-              placeholder="Enter Discount %"
-              {...register("discountPercentage")}
-            /> */}
+                <FormInput
+                  label="Selling Price"
+                  type="number"
+                  placeholder="Enter Selling Price"
+                  {...register("sellingPrice", {
+                    required: "Selling price is required",
+                    min: {
+                      value: 0,
+                      message: "Selling price cannot be negative",
+                    },
+                  })}
+                  error={errors.sellingPrice?.message}
+                />
+            
 
             
             <FormInput
-              label="Default Stock"
-              type="number"
-              placeholder="Enter stock for all variants"
-              {...register("stock", { min: 0 })}
-            />
+                label="Default Stock"
+                type="number"
+                placeholder="Enter stock for all variants"
+                {...register("stock", {
+                  required:"Default stock is required",
+                  min: {
+                    value: 0,
+                    message: "Stock cannot be negative",
+                  },
+                })}
+                error={errors.stock?.message}
+              />
+
               <div className="flex flex-col gap-1 pb-3">
               <label className="text-sm md:text-lg lg:text-lg text-gray-900">
                 Status
@@ -247,34 +206,14 @@ const AddProducts = ()=>{
             </div>
 
              <div className="mb-4">
-              <label className="block font-medium mb-1">Product Images (Max 5)</label>
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={(e) => {
-                  const selectedFiles = Array.from(e.target.files);
-                  const totalFiles = [...files, ...selectedFiles];
-                  if (totalFiles.length > 5 ) {
-                    alert("You can only upload  5 images");
-                    return;
-                  }
-                  setFiles(totalFiles);
-                }}
-                className="border p-2 rounded-md w-full"
-              />
 
-              {/* Preview */}
-              <div className="flex gap-2 flex-wrap mt-2">
-                {files.map((file, idx) => (
-                  <img
-                    key={idx}
-                    src={URL.createObjectURL(file)}
-                    alt="preview"
-                    className="w-20 h-20 object-cover rounded-md"
-                  />
-                ))}
-              </div>
+              <ProductImageUpload
+                  files={files}
+               setFiles={setFiles}
+                max={5}
+                 />
+
+           
             </div>
 
 

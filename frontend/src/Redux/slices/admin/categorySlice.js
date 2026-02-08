@@ -33,7 +33,7 @@ export const categoriesTable =createAsyncThunk('category/categoriesTable',async(
    }
 })
 
-export const updateCategory = createAsyncThunk('category/updataCategory',async({categoryId,data},thunkApi)=>{
+export const updateCategory = createAsyncThunk('category/updateCategory',async({categoryId,data},thunkApi)=>{
    try {
        const res = await adminService.updateCategory(categoryId,data)
        return res.data.data

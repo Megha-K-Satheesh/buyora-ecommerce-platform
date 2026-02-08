@@ -109,7 +109,7 @@ class CategoryService{
      }
   }
   static async updateCategory (categoryId,data){
-     const {name,parentId,status,isVisible} = data;
+     const {name,parentId,status,isVisible, allowedAttributes } = data;
      const category = await Category.findById(categoryId)
      if(!category){
       throw ErrorFactory.notFound("Category Not Found")
@@ -141,7 +141,12 @@ class CategoryService{
     category.isLeaf = isLeaf;
     category.status = status !== undefined ? status : category.status;
     category.isVisible = isVisible !== undefined ? isVisible : category.isVisible;
-
+      if (level === 2 && Array.isArray(allowedAttributes)) {
+    category.allowedAttributes = allowedAttributes.map(attr => ({
+      name: attr.name,
+      values: attr.values
+    }));
+  }
     await category.save();
     return category;
 

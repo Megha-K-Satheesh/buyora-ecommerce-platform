@@ -1,8 +1,8 @@
 
 
 
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import AdminOutletHead from "../../../components/Admin/AdminOutletHead";
@@ -13,6 +13,7 @@ import { getCategory, getCategoryById, updateCategory } from "../../../Redux/sli
 
 const UpdateCategoryForm = () => {
   const dispatch = useDispatch();
+  const [parentLevel, setParentLevel] = useState(0);
   const { categories, loading,loadingCategory,selectedCategory } = useSelector((state) => state.category);
       const {categoryId} = useParams()
   
@@ -21,9 +22,26 @@ const UpdateCategoryForm = () => {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors }
   } = useForm({
-    
+       defaultValues: {
+      name: "",
+      parentId: "",
+      status: "active",
+      isVisible: true,
+      allowedAttributes: []
+    }
+  });
+
+    const selectedParentId = useWatch({
+    control,
+    name: "parentId",
+    defaultValue: ""
+  });
+   const { fields, append, remove,replace } = useFieldArray({
+    control,
+    name: "allowedAttributes"
   });
   useEffect(() => {
   if (categoryId) {
@@ -32,21 +50,46 @@ const UpdateCategoryForm = () => {
 }, [categoryId, dispatch]);
 
   
-  useEffect(()=>{
-     if(selectedCategory){
-       reset({
-        name:selectedCategory.name,
-        parentId:selectedCategory.parentId,
-        status:selectedCategory.status,
-        isVisible:selectedCategory.isVisible
-       })
-     }
+ useEffect(() => {
+  if (selectedCategory) {
+    let level = selectedCategory.level;
+    if (selectedCategory.parentId) {
+      const parent = categories.find((c) => c._id === selectedCategory.parentId);
+      if (parent) level = parent.level;
+    }
+    setParentLevel(level);
 
-  },[selectedCategory,reset])
+    reset(
+      {
+        name: selectedCategory.name,
+        parentId: selectedCategory.parentId || "",
+        status: selectedCategory.status,
+        isVisible: selectedCategory.isVisible,
+        allowedAttributes:
+          selectedCategory.allowedAttributes?.map((attr) => ({
+            name: attr.name,
+            values: attr.values.join(", ")
+          })) || []
+      },
+      { replace: true }
+    );
+  }
+}, [selectedCategory, categories, reset]);
 
   useEffect(() => {
     dispatch(getCategory());
   }, [dispatch]);
+
+
+    useEffect(() => {
+    if (selectedParentId) {
+      const parent = categories.find((c) => c._id === selectedParentId);
+      setParentLevel(parent ? parent.level : 0);
+    } else {
+      setParentLevel(0);
+    }
+  }, [selectedParentId, categories]);
+
 
   const buildCategoryOptions = (cats, prefix = "") =>
     cats.flatMap((cat) =>{
@@ -64,9 +107,25 @@ const UpdateCategoryForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(updateCategory({categoryId,data})).unwrap();
+         
+        const formattedData = {
+        ...data,
+        allowedAttributes:
+          parentLevel === 1
+            ? data.allowedAttributes.map((attr) => ({
+                name: attr.name.trim(),
+                values: attr.values
+                  .split(",")
+                  .map((v) => v.trim())
+                  .filter(Boolean)
+              }))
+            : []
+      };
+
+
+      await dispatch(updateCategory({categoryId,data:formattedData})).unwrap();
         dispatch(getCategory());
-      showSuccess("Category added successfully");
+      showSuccess("Category updated successfully");
       reset();
     } catch (err) {
       showError(err);
@@ -145,6 +204,49 @@ const UpdateCategoryForm = () => {
                 </div>
               </label>
             </div>
+
+             {parentLevel === 1 && (
+              <div className="border p-3 rounded space-y-3">
+                <h3 className="font-semibold">Allowed Attributes</h3>
+
+                {fields.map((field, index) => (
+                  <div key={field.id} className="flex gap-2">
+                    <input
+                      placeholder="Attribute name"
+                      {...register(`allowedAttributes.${index}.name`, {
+                        required: true
+                      })}
+                      className="border p-2 flex-1"
+                    />
+
+                    <input
+                      placeholder="Values (comma separated)"
+                      {...register(`allowedAttributes.${index}.values`, {
+                        required: true
+                      })}
+                      className="border p-2 flex-1"
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => remove(index)}
+                      className="text-red-500"
+                    >
+                      remove
+                    </button>
+                  </div>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={() => append({ name: "", values: "" })}
+                  className="text-blue-600"
+                >
+                  + Add Attribute
+                </button>
+              </div>
+            )}
+
 
             <Button type="submit" fullWidth disabled={loadingCategory}>
               {loadingCategory ? "Updating..." : "Update Category"}
