@@ -1,27 +1,43 @@
-import { useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
+import { useEffect, useMemo, useState } from "react"
+import { Controller, useForm, useWatch } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
+import Select from "react-select"
 import AdminOutletHead from "../../../components/Admin/AdminOutletHead"
 import CategoryAttributeSelect from "../../../components/Admin/CategoryAttributeSelect"
 import ProductImageUpload from "../../../components/Admin/ProductImageUpload"
 import Button from "../../../components/ui/Button"
 import FormInput from "../../../components/ui/FormInput"
 import { showError, showSuccess } from "../../../components/ui/Toastify"
+import { getBrandsByCategoryId } from "../../../Redux/slices/admin/brandSlice"
 import { getCategory } from "../../../Redux/slices/admin/categorySlice"
 import { addProduct } from "../../../Redux/slices/admin/productSlice"
-
+import { CategoryUtils } from "../../../utils/categoryUtiles"
 
 
 const AddProducts = ()=>{
 
    const dispatch = useDispatch()
-   const {register,handleSubmit,control,formState:{errors}} = useForm()
    const {categories} = useSelector((state)=>state.category)
-  //  const [leafCategories,setLeafCategories]= useState([]);
+   //  const [leafCategories,setLeafCategories]= useState([]);
    const [files, setFiles] = useState([]);
+   const {brands} =useSelector((state)=>state.brand)
+   
+   const {register,handleSubmit,control,formState:{errors}} = useForm()
+
+   const selectedCategoryId = useWatch({
+    control,
+    name:'category'
+   })
+   const brandsForSelectedCategory = useMemo(() => {
+  return CategoryUtils.getBrandsForCategory(categories, brands, selectedCategoryId);
+}, [categories, brands, selectedCategoryId]);
 
 
-
+  useEffect(()=>{
+    if(selectedCategoryId){
+      dispatch(getBrandsByCategoryId(selectedCategoryId))
+    }
+  },[selectedCategoryId])
 
    const onSubmit =async(data)=>{
 
@@ -107,25 +123,54 @@ const AddProducts = ()=>{
           error={errors.description?.message}
           {...register("description", { required: "Description is required" })}
          />
-          <FormInput
-        label="Brand"
-        required
-        error={errors.brand?.message}
-        {...register("brand", { required: "Brand is required" })}
+
+
+  {/* select level 3 category dropdown  */}
+  <div className="flex flex-col gap-1 pb-3">
+   <CategoryAttributeSelect
+     categories={categories}
+     control={control}
+     register={register}
+     errors={errors}
+   />
+</div>
+<div className="flex flex-col gap-1 pb-3">
+  <label className="text-sm md:text-lg text-gray-900">Brands</label>
+
+ <div className="flex flex-col gap-1 pb-3">
+  <label className="text-sm md:text-lg text-gray-900">Brand</label>
+
+  <Controller
+    name="brand"
+    control={control}
+    rules={{ required: "Please select a brand" }}
+    render={({ field }) => (
+      <Select
+        {...field}
+        options={brandsForSelectedCategory.map((b) => ({
+          value: b._id,
+          label: b.name,
+        }))}
+        isMulti={false} // single selection
+        onChange={(selectedOption) => field.onChange(selectedOption?.value)} // send only ID
+        value={
+          brandsForSelectedCategory
+            .filter((b) => b._id === field.value)
+            .map((b) => ({ value: b._id, label: b.name }))
+        }
+        closeMenuOnSelect={true}
+        className="basic-single-select"
+        classNamePrefix="select"
       />
-       
+    )}
+  />
 
-         {/* select level 3 category dropdown  */}
-        <div className="flex flex-col gap-1 pb-3">
-          <CategoryAttributeSelect
-            categories={categories}
-            control={control}
-            register={register}
-            errors={errors}
-          />
+  {errors.brand && (
+    <p className="text-red-600">{errors.brand.message}</p>
+  )}
 
-       
-              </div>
+
+ </div>
             
               {/* Price fields */}
             <FormInput
@@ -209,6 +254,7 @@ const AddProducts = ()=>{
 
               <ProductImageUpload
                   files={files}
+                 
                setFiles={setFiles}
                 max={5}
                  />
@@ -221,11 +267,15 @@ const AddProducts = ()=>{
            <Button type='submit'>
             Add product
            </Button>
-
+           </div>
        </form>
+     </div>
     </div>
-    </div>
+    
+  
+   
     </>
   )
+
 }
 export default AddProducts

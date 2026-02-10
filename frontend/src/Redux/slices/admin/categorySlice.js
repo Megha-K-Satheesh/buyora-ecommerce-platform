@@ -36,7 +36,7 @@ export const categoriesTable =createAsyncThunk('category/categoriesTable',async(
 export const updateCategory = createAsyncThunk('category/updateCategory',async({categoryId,data},thunkApi)=>{
    try {
        const res = await adminService.updateCategory(categoryId,data)
-       return res.data.data
+       return res.data
    } catch (err) {
     return thunkApi.rejectWithValue(err.response?.data?.error?.message ||"Failed to update category")
    }  
@@ -44,7 +44,7 @@ export const updateCategory = createAsyncThunk('category/updateCategory',async({
 export const deleteCategory = createAsyncThunk('category/deleteCategory',async(categoryId,thunkApi)=>{
     try {
          const res = await adminService.deleteCategory(categoryId)
-         return categoryId
+         return res.data.data
     } catch (err) {
        return thunkApi.rejectWithValue(err.response?.data?.error?.message ||"Failed to Delete category")
     }

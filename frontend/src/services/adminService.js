@@ -1,4 +1,4 @@
-import adminApiClient from "../utils/adminApiClient"
+import adminApiClient from "../utils/adminApiClient";
 
 
 
@@ -30,4 +30,22 @@ search=""){
     headers: { "Content-Type": "multipart/form-data" }
   })
 },
+getProducts({ category, status, priceSort, page = 1, limit = 10 }) {
+  return adminApiClient.get("/product/get-products", {
+    params: {
+      category,
+      status,
+      priceSort,
+      page,
+      limit,
+    },
+  });
+},
+
+addBrand(data){
+  return adminApiClient.post('/brand/add-brand',data)
+},
+getBrands(categoryId){
+  return adminApiClient.get(`/brand/get-brands/${categoryId}`)
+}
 }

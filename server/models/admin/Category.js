@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const  slugify  = require("slugify");
 
 const allowedAttributeSchema = new mongoose.Schema(
   {
@@ -21,6 +22,13 @@ const categorySchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true
+    },
+     slug: {
+      type: String,
+      
+    
+      lowercase: true,
+      index: true
     },
     parentId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -62,7 +70,29 @@ const categorySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-categorySchema.index({ parentId: 1 });
+categorySchema.index({ parentId: 1, slug: 1 }, { unique: true });
+categorySchema.pre('save',function(next){
+  if(!this.isModified("name")) return next();
+  this.slug = slugify(this.name,{
+    lower:true,
+    strict:true
+  })
+  next()
+})
+
+
+categorySchema.pre("findOneAndUpdate", function (next) {
+  const update = this.getUpdate();
+  const name = update.name || update?.$set?.name;
+
+  if (name) {
+    const newSlug = slugify(name, { lower: true, strict: true });
+    if (update.$set) update.$set.slug = newSlug;
+    else update.slug = newSlug;
+  }
+
+  next();
+});
 
 module.exports = mongoose.model("Category", categorySchema);
 

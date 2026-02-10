@@ -64,9 +64,13 @@ const handlePageChange = (page) => {
       status,
       search}))
   },[dispatch,currentPage,level,status,search])
+
+
  useEffect(() => {
   dispatch(setCurrentPage(1));
 }, [level, status, search]);
+
+
   return(
     <>
     <AdminOutletHead heading={"CATEGORIES"}/>

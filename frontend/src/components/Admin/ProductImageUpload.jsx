@@ -2,7 +2,7 @@ import { memo } from "react";
 
 
 
-const ProductImageUpload =memo(({files,setFiles,max=5})=>{
+const ProductImageUpload =memo(({files,setFiles,max=2})=>{
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);

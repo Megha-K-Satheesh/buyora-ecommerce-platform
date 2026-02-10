@@ -11,10 +11,36 @@ export const addProduct = createAsyncThunk('product/addProducts',async(formData,
       }
 })
 
+export const getProducts = createAsyncThunk(
+  'product/getProducts',
+  async (params, thunkAPI) => {
+    try {
+      const res = await adminService.getProducts(params);
+      return res.data.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || "Get Products failed"
+      );
+    }
+  }
+);
+
+
 const productSlice = createSlice({
   name:"product",
-   initialState: { products: [], loading: false, error: null },
-  reducers:{},
+   initialState: { products: [],
+     loading: false, 
+     error: null,
+     totalPages: 0, 
+  currentPage: 1, 
+  totalProducts: 0 
+    },
+  reducers:{
+
+    setCurrentPage(state, action) {
+      state.currentPage = action.payload;
+    }
+  },
   extraReducers:(builder)=>{
       builder
       .addCase(addProduct.pending, (state) => {
@@ -28,9 +54,26 @@ const productSlice = createSlice({
       .addCase(addProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
-
+      })
+      .addCase(getProducts.pending,(state)=>{
+        state.loading = true;
+        state.error = null
+      })
+      .addCase(getProducts.fulfilled
+        ,(state,action)=>{
+        state.loading = false;
+        state.error = null;
+       state.products = action.payload.data;
+      state.totalPages = action.payload.totalPages;
+      state.currentPage = action.payload.currentPage;
+      state.totalProducts = action.payload.totalProducts;
+      })
+      .addCase(getProducts.rejected,(state,action)=>{
+        state.loading = false;
+        state.error = action.payload;
+      })
+     
   }
 })
-
+export const { setCurrentPage } = productSlice.actions
 export default productSlice.reducer;

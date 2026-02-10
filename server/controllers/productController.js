@@ -9,5 +9,22 @@ class ProductController extends BaseController{
          BaseController.logAction("PRODUCT ADDED",result);
           BaseController.sendSuccess(res,"PRODUCT ADDED",result)
     })
+
+    static getProducts = BaseController.asyncHandler(async (req, res) => {
+  const { page, limit, category, status, search = "", priceSort } = req.query;
+
+  const result = await ProductService.getProducts({
+    page,
+    limit,
+    category,
+    status,
+    search,
+    priceSort,
+  });
+
+  BaseController.logAction("PRODUCTS FETCHED TABLE", result);
+  BaseController.sendSuccess(res, "PRODUCTS FETCHED TABLE", result);
+});
+
 }
 module.exports = ProductController

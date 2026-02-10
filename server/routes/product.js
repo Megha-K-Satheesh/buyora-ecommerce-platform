@@ -8,4 +8,6 @@ const router = express.Router()
 
 
 router.post('/add-product',authenticateAdmin,upload.array('images',5),ProductController.addProduct)
+router.get('/get-products',authenticateAdmin,ProductController.getProducts)
+
 module.exports = router;
