@@ -5,6 +5,8 @@ import userReducer from '../Redux/slices/userSlice';
 import brandReducer from './slices/admin/brandSlice';
 import categoryReducer from './slices/admin/categorySlice';
 import productReducer from './slices/admin/productSlice';
+
+import productsReducer from './slices/general/productSlice';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -13,5 +15,6 @@ export const store = configureStore({
     category:categoryReducer,
     product:productReducer,
     brand:brandReducer,
+    generalProducts:productsReducer
   },
 });

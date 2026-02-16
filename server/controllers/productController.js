@@ -10,10 +10,10 @@ class ProductController extends BaseController{
           BaseController.sendSuccess(res,"PRODUCT ADDED",result)
     })
 
-    static getProducts = BaseController.asyncHandler(async (req, res) => {
+    static getProductsList = BaseController.asyncHandler(async (req, res) => {
   const { page, limit, category, status, search = "", priceSort } = req.query;
 
-  const result = await ProductService.getProducts({
+  const result = await ProductService.getProductsList({
     page,
     limit,
     category,
@@ -25,6 +25,50 @@ class ProductController extends BaseController{
   BaseController.logAction("PRODUCTS FETCHED TABLE", result);
   BaseController.sendSuccess(res, "PRODUCTS FETCHED TABLE", result);
 });
+
+ static getProducts = BaseController.asyncHandler(async(req,res)=>{
+
+      const {
+    category,
+    brand,
+    minPrice,
+    maxPrice,
+    size,
+    color,
+    discount,
+    search,
+    page,
+    limit,
+    sort,
+  } = req.query;
+
+    const result = await ProductService.getProducts({ category,
+    brand,
+    minPrice,
+    maxPrice,
+    size,
+    color,
+    discount,
+    search,
+    page,
+    limit,
+    sort})
+      BaseController.logAction("PRODUCTS FETCHED PLP", result);
+  BaseController.sendSuccess(res, "PRODUCTS FETCHED", result);
+
+ })
+
+
+   static getSidebarFilters = BaseController.asyncHandler(async (req, res) => {
+
+    const { category } = req.query;
+
+    const result = await ProductService.getSidebarFilters(category);
+
+    BaseController.logAction("SIDEBAR FILTERS FETCHED", result);
+    BaseController.sendSuccess(res, "SIDEBAR FILTERS FETCHED", result);
+
+  });
 
 }
 module.exports = ProductController

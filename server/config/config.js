@@ -25,7 +25,7 @@ module.exports = {
   },
   
   CORS: {
-    ORIGIN: process.env.FRONTEND_URL || 'http://localhost:3000',
+    ORIGIN: process.env.FRONTEND_URL || 'http://localhost:5173',
     CREDENTIALS: true,
     METHODS: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     ALLOWED_HEADERS: ['Content-Type', 'Authorization', 'X-Requested-With']

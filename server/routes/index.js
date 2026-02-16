@@ -7,6 +7,7 @@ const userRoutes = require('./user')
 const categoryRoutes = require('./category')
 const productRoutes = require('./product')
 const brandRoutes = require('./brand')
+const usersProductsRoutes = require('./general/productsUser')
 const setupRoutes = (app) => {
     const authLimiter = createAuthLimiter();
     const shouldUseAuthLimiter = config.NODE_ENV === 'production';
@@ -17,6 +18,7 @@ const setupRoutes = (app) => {
     app.use('/api/admin/category',categoryRoutes)
     app.use('/api/admin/product',productRoutes)
     app.use('/api/admin/brand',brandRoutes)
+    app.use('/api/products',usersProductsRoutes)
 };
 
 module.exports = {

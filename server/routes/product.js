@@ -8,6 +8,7 @@ const router = express.Router()
 
 
 router.post('/add-product',authenticateAdmin,upload.array('images',5),ProductController.addProduct)
-router.get('/get-products',authenticateAdmin,ProductController.getProducts)
-
+router.get('/get-products-list',authenticateAdmin,ProductController.getProductsList)
+router.get('/get-products',ProductController.getProducts)
+router.get('get-sidebar-filter',ProductController.getSidebarFilters)
 module.exports = router;

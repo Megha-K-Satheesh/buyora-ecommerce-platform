@@ -8,7 +8,9 @@ import AddCategoryForm from "./pages/admin/category/AddCategory";
 import UpdateCategoryForm from "./pages/admin/category/UpdateCategory";
 // import AddProducts from "./pages/admin/products/AddProducts";
 import AddBrand from "./pages/admin/brand/addBrand";
-import Home from "./pages/auth/Home";
+import Home from "./pages/publicPages/Home";
+import ProductListingPage from "./pages/publicPages/ProductListingPage";
+import SingleProductPage from "./pages/publicPages/SingleProductPage";
 const AdminLayouts = lazy(() => import("./layouts/AdminLayouts"));
 const Banners = lazy(() => import("./pages/admin/banner/Banners"));
 const Category = lazy(() => import("./pages/admin/category/Categories"));
@@ -55,6 +57,10 @@ function App() {
       <Suspense fallback={<div style={{ textAlign: "center" }}>Loading...</div>}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/:level1/:level2/:level3?" element={<ProductListingPage/>  }/>
+          <Route path="/product/:slug/:id" element={<SingleProductPage />} />
+
+           
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/verify-otp" element={<VerifyOtpPage />} />
@@ -73,7 +79,7 @@ function App() {
           />
 
 
-           <Route path="/admin-dashboard" element={<AdminLayouts />}>
+          <Route path="/admin-dashboard" element={<AdminLayouts />}>
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="products" element={<Products />} />
@@ -108,6 +114,7 @@ function App() {
               element={<ChangePassword />}
             />
           </Route>
+       
         </Routes>
       </Suspense>
 

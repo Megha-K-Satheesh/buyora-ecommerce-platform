@@ -11,11 +11,11 @@ export const addProduct = createAsyncThunk('product/addProducts',async(formData,
       }
 })
 
-export const getProducts = createAsyncThunk(
-  'product/getProducts',
+export const getProductsList = createAsyncThunk(
+  'product/getProductsList',
   async (params, thunkAPI) => {
     try {
-      const res = await adminService.getProducts(params);
+      const res = await adminService.getProductsList(params);
       return res.data.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(
@@ -55,11 +55,11 @@ const productSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(getProducts.pending,(state)=>{
+      .addCase(getProductsList.pending,(state)=>{
         state.loading = true;
         state.error = null
       })
-      .addCase(getProducts.fulfilled
+      .addCase(getProductsList.fulfilled
         ,(state,action)=>{
         state.loading = false;
         state.error = null;
@@ -68,7 +68,7 @@ const productSlice = createSlice({
       state.currentPage = action.payload.currentPage;
       state.totalProducts = action.payload.totalProducts;
       })
-      .addCase(getProducts.rejected,(state,action)=>{
+      .addCase(getProductsList.rejected,(state,action)=>{
         state.loading = false;
         state.error = action.payload;
       })

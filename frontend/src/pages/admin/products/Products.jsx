@@ -8,7 +8,7 @@ import Button from "../../../components/ui/Button";
 import Pagination from "../../../components/ui/Pagination";
 import SearchInput from "../../../components/ui/SearchInput";
 import { showError, showSuccess } from "../../../components/ui/Toastify";
-import { getProducts, setCurrentPage } from "../../../Redux/slices/admin/productSlice";
+import { getProductsList, setCurrentPage } from "../../../Redux/slices/admin/productSlice";
 
 
 const Products = () => {
@@ -52,7 +52,7 @@ const Products = () => {
   };
 
   const handlePageChange = (page) => {
-    dispatch(getProducts({
+    dispatch(getProductsList({
       page,limit:10,search,categoryFilter,statusFilter,priceSort
 
     }));
@@ -60,7 +60,7 @@ const Products = () => {
 
 useEffect(() => {
   dispatch(
-    getProducts({
+    getProductsList({
       page: currentPage,
       limit: 10,
       search,

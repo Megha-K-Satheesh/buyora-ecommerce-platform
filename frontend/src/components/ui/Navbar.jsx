@@ -1,3 +1,4 @@
+import NavbarMenu from "../Navbar/NavbarMenu"
 import NavbarIcons from "../Navbar/navIcons"
 import SearchBar from "../Navbar/SearchBar"
 import Logo from "./Logo"
@@ -11,7 +12,10 @@ const Navbar=()=>{
         <div className="flex-1 ">
           <Logo/>
         </div>
-        <div className="lg:flex-5 bg-amber-900 hidden lg:block md:block"></div>
+        <div className="lg:flex-5  hidden lg:block md:block">
+
+          <NavbarMenu/>
+        </div>
         <div className="lg:flex-4 flex-3 flex items-center justify-center ">
           <SearchBar/>
         </div>

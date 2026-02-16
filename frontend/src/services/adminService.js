@@ -30,8 +30,8 @@ search=""){
     headers: { "Content-Type": "multipart/form-data" }
   })
 },
-getProducts({ category, status, priceSort, page = 1, limit = 10 }) {
-  return adminApiClient.get("/product/get-products", {
+getProductsList({ category, status, priceSort, page = 1, limit = 10 }) {
+  return adminApiClient.get("/product/get-products-list", {
     params: {
       category,
       status,
@@ -47,5 +47,6 @@ addBrand(data){
 },
 getBrands(categoryId){
   return adminApiClient.get(`/brand/get-brands/${categoryId}`)
-}
+},
+
 }
