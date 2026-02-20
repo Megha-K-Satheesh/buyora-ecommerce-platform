@@ -26,6 +26,34 @@ export const getProductsList = createAsyncThunk(
 );
 
 
+export const updateProduct = createAsyncThunk(
+  'product/updateProduct',
+  async ({ id, formData }, thunkAPI) => {
+    try {
+      const res = await adminService.updateProduct(id, formData);
+      return res.data.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || "Update product failed"
+      );
+    }
+  }
+);
+
+export const deleteProduct = createAsyncThunk(
+  "product/deleteProduct",
+  async (productId, { rejectWithValue }) => {
+    try {
+      const response = await adminService.deleteProduct(productId);
+      return { productId, ...response.data };
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.error?.message || "Delete failed"
+      );
+    }
+  }
+);
+
 const productSlice = createSlice({
   name:"product",
    initialState: { products: [],
@@ -72,6 +100,46 @@ const productSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+
+
+
+
+      .addCase(updateProduct.pending, (state) => {
+  state.loading = true;
+  state.error = null;
+})
+.addCase(updateProduct.fulfilled, (state, action) => {
+  state.loading = false;
+
+  const index = state.products.findIndex(
+    (product) => product._id === action.payload._id
+  );
+
+  if (index !== -1) {
+    state.products[index] = action.payload;
+  }
+})
+.addCase(updateProduct.rejected, (state, action) => {
+  state.loading = false;
+  state.error = action.payload;
+})
+
+
+.addCase(deleteProduct.pending, (state) => {
+  state.loading = true;
+})
+.addCase(deleteProduct.fulfilled, (state, action) => {
+  state.loading = false;
+
+  state.products = state.products.filter(
+    (product) => product._id !== action.payload.productId
+  );
+})
+.addCase(deleteProduct.rejected, (state, action) => {
+  state.loading = false;
+  state.error = action.payload;
+})
+
      
   }
 })

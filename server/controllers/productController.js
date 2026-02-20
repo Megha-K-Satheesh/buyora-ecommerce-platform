@@ -59,16 +59,40 @@ class ProductController extends BaseController{
  })
 
 
-   static getSidebarFilters = BaseController.asyncHandler(async (req, res) => {
+  //  static getSidebarFilters = BaseController.asyncHandler(async (req, res) => {
 
-    const { category } = req.query;
+  //   const { category } = req.query;
 
-    const result = await ProductService.getSidebarFilters(category);
+  //   const result = await ProductService.getSidebarFilters(category);
 
-    BaseController.logAction("SIDEBAR FILTERS FETCHED", result);
-    BaseController.sendSuccess(res, "SIDEBAR FILTERS FETCHED", result);
+  //   BaseController.logAction("SIDEBAR FILTERS FETCHED", result);
+  //   BaseController.sendSuccess(res, "SIDEBAR FILTERS FETCHED", result);
 
+  // });
+
+
+  static updateProduct = BaseController.asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    const result = await ProductService.updateProduct({
+      id,
+      body: req.body,
+      files: req.files,
+    });
+
+    BaseController.logAction("PRODUCT UPDATED", result);
+    BaseController.sendSuccess(res, "PRODUCT UPDATED", result);
   });
+
+  static deleteProduct = BaseController.asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const result = await ProductService.deleteProduct(id);
+
+  BaseController.logAction("PRODUCT DELETED", result);
+  BaseController.sendSuccess(res, "PRODUCT DELETED", result);
+});
+
 
 }
 module.exports = ProductController

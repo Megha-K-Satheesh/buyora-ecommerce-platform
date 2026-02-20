@@ -9,6 +9,16 @@ const router = express.Router()
 
 router.post('/add-product',authenticateAdmin,upload.array('images',5),ProductController.addProduct)
 router.get('/get-products-list',authenticateAdmin,ProductController.getProductsList)
-router.get('/get-products',ProductController.getProducts)
-router.get('get-sidebar-filter',ProductController.getSidebarFilters)
+
+
+router.put(
+  '/update-product/:id',
+  authenticateAdmin,
+  upload.array('images', 5),
+  ProductController.updateProduct
+)
+router.delete("/delete-product/:id",authenticateAdmin, ProductController.deleteProduct);
+
+// router.get('/get-products',ProductController.getProducts)
+// router.get('get-sidebar-filter',ProductController.getSidebarFilters)
 module.exports = router;

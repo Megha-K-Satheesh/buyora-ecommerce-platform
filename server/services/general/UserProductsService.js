@@ -1,8 +1,9 @@
-const mongoose = require("mongoose");
+
 const Product = require("../../models/admin/Product");
 const Category = require("../../models/admin/Category");
 const Brand = require("../../models/admin/Brand");
 const { ErrorFactory } = require("../../utils/errors");
+
 
 class UserProductService {
 
@@ -23,6 +24,9 @@ class UserProductService {
   }) {
 
     console.log(level1,level2,level3)
+    console.log("search ",search)
+    console.log("pricerange",minPrice,maxPrice)
+    console.log("discount",discount)
   const filters = {};
 
   let level1Doc = null;
@@ -52,6 +56,69 @@ class UserProductService {
   }
 
   if (categoryIds.length) filters.category = { $in: categoryIds };
+
+
+
+
+
+
+
+
+
+if (search) {
+  let lowerSearch = search.toLowerCase().trim();
+  let genderCategory = null;
+
+  // Gender detection
+  if (/\b(women|woman|female|girls|girl)\b/.test(lowerSearch)) {
+    genderCategory = await Category.findOne({ slug:"women", level: 1 });
+    lowerSearch = lowerSearch.replace(/\b(women|woman|female|girls|girl)\b/g, "");
+  } 
+  else if (/\b(men|man|male|boys|boy)\b/.test(lowerSearch)) {
+    genderCategory = await Category.findOne({ slug:"men", level: 1 });
+    lowerSearch = lowerSearch.replace(/\b(men|man|male|boys|boy)\b/g, "");
+  }
+
+  if (genderCategory) {
+    const level2Docs = await Category.find({ parentId: genderCategory._id, level: 2 }).select("_id");
+    const level3Docs = await Category.find({ parentId: { $in: level2Docs.map(d => d._id) }, level: 3 }).select("_id");
+    const genderCategoryIds = level3Docs.map(c => c._id);
+
+    if (filters.category) {
+      filters.category = {
+        $in: filters.category.$in.filter(id =>
+          genderCategoryIds.some(gid => gid.equals(id))
+        )
+      };
+    } else {
+      filters.category = { $in: genderCategoryIds };
+    }
+  }
+
+  const cleanedSearch = lowerSearch
+    .replace(/-/g, " ")          
+    .replace(/\btshirt\b/g, "t shirt")
+    .trim();
+
+  const words = cleanedSearch.split(/\s+/).filter(Boolean);
+
+  
+  filters.$and = words.map(word => ({
+  $or: [
+    { name: { $regex: `\\b${word}\\b`, $options: "i" } },
+    
+  ]
+}));
+
+
+
+}
+
+
+
+
+
+
 
   if (brand) {
     const brandArr = Array.isArray(brand) ? brand : brand.split(",");
@@ -85,7 +152,7 @@ class UserProductService {
     if (discountFilter.length) filters.$or = discountFilter;
   }
 
-  if (search) filters.name = { $regex: search, $options: "i" };
+  // if (search) filters.name = { $regex: search, $options: "i" };
 
   const sortOption = {};
   if (sort === "priceAsc") sortOption.sellingPrice = 1;
@@ -102,17 +169,41 @@ class UserProductService {
     .limit(limitNum)
     .populate("brand", "_id name");
 
-  const total = await Product.countDocuments(filters);
 
+
+  const total = await Product.countDocuments(filters);
+console.log("FINAL FILTERS:", filters);
   return { products, pages: Math.ceil(total / limitNum), total };
 }
 
+
+
+
+
   static async getSidebarFilters(level1Slug,level2Slug) {
-    console.log("dddddddddddddddddddd",level2Slug)
+    console.log(level2Slug)
 
+       if (!level1Slug || !level2Slug) {
+    const brands = await Brand.find({ isActive: true }).select("_id name");
+    const priceAgg = await Product.aggregate([
+      { $match: { status: "active" } },
+      { $group: { _id: null, min: { $min: "$sellingPrice" }, max: { $max: "$sellingPrice" } } },
+    ]);
+    const priceRange = priceAgg[0] || { min: 0, max: 0 };
+    
+    const sizes = ["S", "M", "L", "XL"]; // fallback or from products
+    const colors = ["Red", "Blue", "Green", "Black"]; // fallback or from products
+    const discountRanges = [
+      { label: "10% - 20%", value: "10-20" },
+      { label: "20% - 30%", value: "20-30" },
+      { label: "30% - 40%", value: "30-40" },
+      { label: "40% & above", value: "40-above" },
+    ];
 
-  if (!level1Slug) throw ErrorFactory.validation("Level1 slug is required");
-  if (!level2Slug) throw ErrorFactory.validation("Level2 slug is required");
+    return { categories: [], brands, colors, sizes, discountRanges, priceRange };
+  }
+  // if (!level1Slug) throw ErrorFactory.validation("Level1 slug is required");
+  // if (!level2Slug) throw ErrorFactory.validation("Level2 slug is required");
 
   const level1Category = await Category.findOne({ slug: level1Slug, level: 1 });
   if (!level1Category) throw ErrorFactory.notFound("Level1 category not found");
@@ -167,7 +258,7 @@ static async getProductById(productId) {
   const product = await Product.findById(productId)
     .populate("brand", "_id name") // brand info
     .populate("category", "_id name level slug") 
-    .select("name description brand category sellingPrice originalPrice discountPercentage attributes variations images ratings");
+    .select("name description brand category sellingPrice mrp discountPercentage attributes variations images ratings");
 
   if (!product) throw ErrorFactory.notFound("Product not found");
 

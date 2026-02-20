@@ -76,7 +76,15 @@ class ProductService {
      limit = parseInt(limit)
     const filter = {};
 
-    if (category) filter.category = category;
+   if (category) {
+  const allCategories = await Category.find().lean();
+  const getChildrenIds = (id) => {
+    const children = allCategories.filter(c => String(c.parentId) === String(id));
+    return children.reduce((acc, child) => [...acc, child._id, ...getChildrenIds(child._id)], []);
+  };
+  const ids = [category, ...getChildrenIds(category)];
+  filter.category = { $in: ids };
+}
     if (status) filter.status = status;
 
     const skip = (page - 1) * limit;
@@ -100,235 +108,125 @@ class ProductService {
   };
   }
 
-// static async getProducts({
-//   category,
-//   brand,
-//   minPrice,
-//   maxPrice,
-//   size,
-//   color,
-//   discount,
-//   search,
-//   page = 1,
-//   limit = 10,
-//   sort
-// }) {
 
-//   let filter = {};
+  static async updateProduct({ id, body, files }) {
 
-//   //  Category
-//   if (category) {
-//     filter.category = category;
-//   }
+  const product = await Product.findById(id);
+  if (!product) throw new Error("Product not found");
 
-//   //  Brand
-//   if (brand) {
-//     filter.brand = brand;
-//   }
+  const {
+    name,
+    description,
+    brand,
+    category,
+    mrp,
+    sellingPrice,
+    stock,
+    attributes,
+    status,
+    isVisible,
+    existingImages
+  } = body;
 
-//   //  Price
-//   if (minPrice || maxPrice) {
-//     filter.sellingPrice  = {};
-//     if (minPrice) filter.sellingPrice .$gte = Number(minPrice);
-//     if (maxPrice) filter.sellingPrice .$lte = Number(maxPrice);
-//   }
+  const parsedExistingImages = existingImages
+    ? JSON.parse(existingImages)
+    : [];
 
-// if (discount) {
-//   if (discount.includes("-")) {
+  const imagesToDelete = product.images.filter(
+    (img) => !parsedExistingImages.includes(img)
+  );
 
-//     const [min, max] = discount.split("-");
+  for (const imageUrl of imagesToDelete) {
+    const publicId = imageUrl
+      .split("/")
+      .slice(-2)
+      .join("/")
+      .split(".")[0];
 
-//     if (max === "above") {
-//       filter.discountPercentage = { $gte: Number(min) };
-//     } else {
-//       filter.discountPercentage = {
-//         $gte: Number(min),
-//         $lte: Number(max)
-//       };
-//     }
+    await cloudinary.uploader.destroy(publicId);
+  }
 
-//   }
-// }
+  const newImages = [];
+  if (files && files.length > 0) {
+    for (const file of files) {
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "products" },
+          (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+          }
+        );
+        stream.end(file.buffer);
+      });
 
+      newImages.push(result.secure_url);
+    }
+  }
 
-//   //  Search
-//   if (search) {
-//     filter.name = { $regex: search, $options: "i" };
-//   }
+  const finalImages = [...parsedExistingImages, ...newImages];
 
-//   //  Variant (Size + Color)
-//   if (size || color) {
-//     const elemMatch = { isActive: true };
+  const updatedMrp = mrp ?? product.mrp;
+  const updatedSellingPrice = sellingPrice ?? product.sellingPrice;
 
-//     if (size) {
-//       elemMatch["attributes.size"] = {
-//         $in: size.split(",")
-//       };
-//     }
+  const discountPercentage =
+    updatedMrp && updatedSellingPrice
+      ? Math.round(((updatedMrp - updatedSellingPrice) / updatedMrp) * 100)
+      : 0;
 
-//     if (color) {
-//       elemMatch["attributes.color"] = {
-//         $in: color.split(",")
-//       };
-//     }
+  const parsedVariations = attributes
+    ? typeof attributes === "string"
+      ? JSON.parse(attributes)
+      : attributes
+    : product.variations;
 
-//     filter.variations = { $elemMatch: elemMatch };
-//   }
+  const totalStock = parsedVariations.reduce(
+    (sum, v) => sum + Number(v.stock || 0),
+    0
+  );
 
-//   // Sorting
-//   let sortOption = {};
-//   if (sort === "price_asc") sortOption.sellingPrice = 1;
-//   if (sort === "price_desc") sortOption.sellingPrice = -1;
-//   if (sort === "newest") sortOption.createdAt = -1;
-//    if (sort === "rating_desc") sortOption.rating = -1;
-//    if (sort === "rating_asc") sortOption.rating = 1;
+  product.name = name ?? product.name;
+  product.description = description ?? product.description;
+  product.brand = brand ?? product.brand;
+  product.category = category ?? product.category;
+  product.mrp = updatedMrp;
+  product.sellingPrice = updatedSellingPrice;
+  product.discountPercentage = discountPercentage;
+  product.status = status ?? product.status;
+  product.isVisible = isVisible === "true" || isVisible === true;
+  product.stock = Number(stock) || product.stock;
+  product.totalStock = totalStock;
+  product.variations = parsedVariations;
+  product.images = finalImages;
 
+  await product.save();
 
-//   //  Pagination
-//   const skip = (Number(page) - 1) * Number(limit);
-
-//   const products = await Product.find(filter)
-//     .sort(sortOption)
-//     .skip(skip)
-//     .limit(Number(limit));
-
-//   const total = await Product.countDocuments(filter);
-
-//   return {
-//     products,
-//     total,
-//     page: Number(page),
-//     pages: Math.ceil(total / limit)
-//   };
-// }
+  return product;
+}
 
 
+static async deleteProduct(id) {
 
-//      static async getSidebarFilters(categoryId) {
+  const product = await Product.findById(id);
+  if (!product) throw new Error("Product not found");
 
-//     if (!categoryId) {
-//       throw new Error("Category ID is required");
-//     }
+  for (const imageUrl of product.images) {
+    const publicId = imageUrl
+      .split("/")
+      .slice(-2)
+      .join("/")
+      .split(".")[0];
 
-//     const currentCategory = await Category.findById(categoryId);
+    await cloudinary.uploader.destroy(publicId);
+  }
 
-//     if (!currentCategory) {
-//       throw new Error("Category not found");
-//     }
+  await Product.findByIdAndDelete(id);
 
-//     let level2Id;
+  return { message: "Product deleted successfully" };
+}
 
-//     if (currentCategory.level === 3) {
-//       level2Id = currentCategory.parentId;
-//     } else if (currentCategory.level === 2) {
-//       level2Id = currentCategory._id;
-//     } else {
-//       throw new Error("Invalid category level");
-//     }
 
-//     const level2Category = await Category.findById(level2Id);
 
-//     const level3Categories = await Category.find({
-//       parent: level2Id,
-//       level: 3
-//     }).select("_id name slug");
-
-//     const level3Ids = level3Categories.map(cat => cat._id);
-
-//     const priceRangeResult = await Product.aggregate([
-//       {
-//         $match: {
-//           category: { $in: level3Ids },
-//           status: "active",
-//          isVisible: true
-//         }
-//       },
-//       {
-//         $group: {
-//           _id: null,
-//           min: { $min:"$sellingPrice" },
-//           max: { $max:"$sellingPrice" }
-//         }
-//       }
-//     ]);
-
-//     const priceRange = priceRangeResult[0] || { min: 0, max: 0 };
-
-//     const brands = await Product.aggregate([
-//       {
-//         $match: {
-//           category: { $in: level3Ids },
-//           status: "active",
-//         isVisible: true
-//         }
-//       },
-//       {
-//         $group: {
-//           _id: "$brand",
-//           count: { $sum: 1 }
-//         }
-//       },
-//       {
-//         $lookup: {
-//           from: "brands",
-//           localField: "_id",
-//           foreignField: "_id",
-//           as: "brandData"
-//         }
-//       },
-//       { $unwind: "$brandData" },
-//       {
-//         $project: {
-//           _id: 0,
-//           id: "$brandData._id",
-//           name: "$brandData.name",
-//           count: 1
-//         }
-//       }
-//     ]);
-
-//     const variationData = await Product.aggregate([
-//       {
-//         $match: {
-//           category: { $in: level3Ids },
-//          status: "active",
-// isVisible: true
-//         }
-//       },
-//       { $unwind: "$variations" },
-//       {
-//         $match: {
-//           "variations.isActive": true
-//         }
-//       },
-//       {
-//         $group: {
-//           _id: null,
-//           sizes: { $addToSet: "$variations.attributes.size" },
-//           colors: { $addToSet: "$variations.attributes.color" }
-//         }
-//       }
-//     ]);
-
-//     const sizes = variationData[0]?.sizes || [];
-//     const colors = variationData[0]?.colors || [];
-
-//     const discountRanges = [
-//       { label: "10% - 20%", value: "10-20" },
-//       { label: "20% - 30%", value: "20-30" },
-//       { label: "30% - 40%", value: "30-40" },
-//       { label: "40% & above", value: "40-above" }
-//     ];
-
-//     return {
-//       level2Heading: level2Category.name,
-//       level3Categories,
-//       priceRange,
-//       brands,
-//       sizes,
-//       colors,
-//       discountRanges
-//     };
   }
 
 

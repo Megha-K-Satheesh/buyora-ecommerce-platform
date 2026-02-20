@@ -1,14 +1,15 @@
 import { useNavigate } from "react-router-dom";
+import PriceRange from "../ui/PriceRange";
 
 
 
-const SidebarFilter = ({level1,level2,level3, filters,  selectedBrands, selectedColors, selectedSizes,  selectedDiscounts,  onFilterChange }) =>{ 
+const SidebarFilter = ({level1,level2,level3, filters,  selectedBrands, selectedColors, selectedSizes,  selectedDiscounts,  onFilterChange,  selectedPriceRange }) =>{ 
   
   
   const navigate = useNavigate()
   
   return(
-  <div className="w-64  ml-7 mt-2 ">
+  <div className="w-64  ml-7 mt-2  ">
     <h3 className="text-lg font-semibold mb-2">Filters</h3>
      <div className="border-r border-r-gray-200">
 
@@ -64,6 +65,25 @@ const SidebarFilter = ({level1,level2,level3, filters,  selectedBrands, selected
         ))}
       </div>
     )}
+
+
+
+{filters?.priceRange &&
+ filters.priceRange.min < filters.priceRange.max && (
+  <div className="border-t border-t-gray-200 py-4">
+    <h4 className="font-medium mb-4 ml-4">PRICE</h4>
+
+    <div className="px-4 mt-10">
+      <PriceRange
+        minPrice={filters.priceRange.min}
+        maxPrice={filters.priceRange.max}
+        step={100}
+        selectedPriceRange={selectedPriceRange}
+        onChange={(vals) => onFilterChange("price", vals)}
+      />
+    </div>
+  </div>
+)}
 
     {filters.colors?.length > 0 && (
       <div className=" border-t border-t-gray-200 py-3">

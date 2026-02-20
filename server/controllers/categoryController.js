@@ -18,9 +18,9 @@ class CategoryController extends BaseController {
           BaseController.sendSuccess(res,"CATEGORY FETCHED",result)
      })
      static categoriesTable = BaseController.asyncHandler(async(req,res)=>{
-            const {page,limit,level,status,search=""} = req.query
+            const {page,limit,level,status,search="",category} = req.query
 
-          const result = await CategoryService.categories(page,limit,level,status,search);
+          const result = await CategoryService.categories(page,limit,level,status,search,category);
            BaseController.logAction("CATEGORY FETCHED TABLE",result);
           BaseController.sendSuccess(res,"CATEGORY FETCHED TABLE",result)
      })

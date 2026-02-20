@@ -1,25 +1,69 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getProductById } from "../../Redux/slices/general/productSlice";
 import Navbar from "../../components/ui/Navbar";
+import { addToCart } from "../../Redux/slices/cartSlice";
+import { getProductById } from "../../Redux/slices/general/productSlice";
 
 const SingleProductPage = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { product, error, loading } = useSelector((state) => state.generalProducts);
 
+const { token } = useSelector((state) => state.auth);
   const [mainImage, setMainImage] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
+
+useEffect(() => {
+    if (product?.images?.length) setMainImage(product.images[0]);
+  }, [product]);
+  const handleAddToCart = () => {
+  if (!selectedSize || !selectedColor) {
+    alert("Please select size and color");
+    return;
+  }
+
+  const selectedVariation = product.variations.find(
+    (v) =>
+      v.attributes.Size === selectedSize &&
+      v.attributes.Color === selectedColor
+  );
+
+  if (!selectedVariation) return;
+
+  const cartItem = {
+    productId: product._id,
+    variationId: selectedVariation._id,
+    name: product.name,
+     brandName :product.brand.name,
+    image: mainImage,
+    price: product.sellingPrice,
+      mrp: product.mrp,             // backend MRP
+  discountPercentage:  product.discountPercentage,
+  
+    size: selectedSize,
+    color: selectedColor,
+    quantity: 1,
+  };
+
+  if (token) {
+    alert("Token exist")
+    //dispatch(addToCartBackend(cartItem));
+  } else {
+
+    dispatch(addToCart(cartItem));
+  }
+};
+
 
   useEffect(() => {
     dispatch(getProductById(id));
   }, [dispatch, id]);
 
-  useEffect(() => {
-    if (product?.images?.length) setMainImage(product.images[0]);
-  }, [product]);
+  // useEffect(() => {
+  //   if (product?.images?.length) setMainImage(product.images[0]);
+  // }, [product]);
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;
   if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
@@ -35,30 +79,36 @@ const SingleProductPage = () => {
       <div className="max-w-7xl mx-auto p-6 flex flex-col md:flex-row gap-8 mt-25">
 
      
-      <div className="flex flex-col md:flex-row gap-4 flex-1">
-        
-        {/* Thumbnails */}
-        <div className="flex flex-row md:flex-col gap-2 mt-3 ">
-          {product.images.map((img, index) => (
-            <img
-              key={index}
-              src={img}
-              alt={`${product.name}-${index}`}
-              className={`w-20 h-auto object-contain cursor-pointer rounded border-2 ${mainImage === img ? 'border-pink-500' : 'border-gray-300'}`}
-              onClick={() => setMainImage(img)}
-            />
-          ))}
-        </div>
+     <div className="flex flex-col md:flex-row gap-4 flex-1">
 
-        {/* Main Image */}
-        <div className="flex-1 flex items-center justify-center rounded-lg p-2">
-          <img
-            src={mainImage}
-            alt={product.name}
-            className="w-full h-[400px] md:h-[500px] object-contain rounded-lg"
-          />
-        </div>
-      </div>
+  {/* Main Image */}
+  <div className="order-1 md:order-2 flex-1 flex items-center justify-center rounded-lg p-2">
+    <img
+      src={mainImage}
+      alt={product.name}
+      className="w-full h-[400px] md:h-[500px] object-contain rounded-lg"
+    />
+  </div>
+
+  {/* Thumbnails */}
+  <div className="order-2 md:order-1 flex flex-row md:flex-col gap-10 lg:gap-2 mt-3 md:mt-0 ">
+    {product.images.map((img, index) => (
+      <img
+        key={index}
+        src={img}
+        alt={`${product.name}-${index}`}
+        className={`w-20 h-auto object-contain cursor-pointer rounded border-2 ${
+          mainImage === img
+            ? "border-pink-500"
+            : "border-none"
+        }`}
+        onClick={() => setMainImage(img)}
+      />
+    ))}
+  </div>
+
+</div>
+
 
       {/* Right Column Product Info */}
       <div className="flex-1 flex flex-col mt-3">
@@ -121,6 +171,7 @@ const SingleProductPage = () => {
         <div className="flex flex-col md:flex-row gap-4 mt-8 text-2xl">
           <button
             disabled={!selectedSize || !selectedColor}
+            onClick={handleAddToCart}
             className={`flex-1 py-3 rounded text-white font-semibold bg-pink-600 ${selectedSize && selectedColor ? 'bg-pink-600 hover:bg-pink-700' : 'b cursor-not-allowed'}`}
           >
             Add to Cart

@@ -39,13 +39,13 @@ const ForgetPassword = ()=>{
   }
    
 return(
-  <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-sky-400 via-sky-300 to-amber-300 ">
+  <div className="min-h-screen flex justify-center items-center bg-pink-50 ">
       
    
 
       <div className=" w-full md:w-1/3  h-1/2    p-10 m-10  rounded-lg shadow-md bg-white mt-10">
         <h1 className='text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center font-bold mt-5'>Forgot Password?</h1>
-         <h6 className='text-xs sm:text-base md:text-sm lg:text-lg text-center text-sky-400 mt-4 mb-6'>No worries! Enter your email and 
+         <h6 className='text-xs sm:text-base md:text-sm lg:text-lg text-center text-pink-600 mt-4 mb-6'>No worries! Enter your email and 
           we’ll send you a
                                          reset link.
 </h6>
@@ -80,7 +80,7 @@ return(
                         Remember the Password?{" "}
                         <Link
                           to="/login"
-                          className="text-blue-600 font-medium hover:underline"
+                          className="text-pink-600 font-medium hover:underline"
                         >
                           Sign In
                         </Link>

@@ -1,7 +1,7 @@
 
 import { FiHeart, FiShoppingBag } from "react-icons/fi";
+import { Link } from "react-router-dom";
 import ProfileDropdown from "./ProfileDropdown";
-
 const NavbarIcons = ()=>{
   return(
     <>
@@ -18,10 +18,12 @@ const NavbarIcons = ()=>{
         </div>
         <div className=" flex flex-1 flex-col
         justify-center items-center ">
+          <Link to='/product/cart'>
           <FiShoppingBag className="text-2xl lg:text-3xl "/>
           <span className="text-sm font-medium">
               Bag
             </span>
+          </Link>
         </div>
       </div>
     </>

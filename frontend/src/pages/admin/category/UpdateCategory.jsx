@@ -172,7 +172,7 @@ const UpdateCategoryForm = () => {
               </select>
             </div>
             
-            <div className="flex flex-col gap-1 pb-3">
+           <div className="flex flex-col gap-1 pb-3">
               <label className="text-sm md:text-lg lg:text-lg text-gray-900">
                 Status
               </label>
@@ -196,6 +196,7 @@ const UpdateCategoryForm = () => {
                 <input
                   type="checkbox"
                   {...register("isVisible")}
+                    defaultChecked={selectedCategory?.isVisible}
                   className="sr-only peer"
                 />
                 <div className="w-11 h-6 bg-gray-300 rounded-full peer-checked:bg-pink-600 transition-colors"></div>
@@ -204,6 +205,7 @@ const UpdateCategoryForm = () => {
                 </div>
               </label>
             </div>
+               
 
              {parentLevel === 1 && (
               <div className="border p-3 rounded space-y-3">

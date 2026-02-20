@@ -66,10 +66,7 @@ const Profile = ()=>{
         <td className="py-2 ">Alternate Mobile</td>
         <td className="py-3  pl-20 lg:pl-20">{user?.altMobile || "- not added -"}</td>
       </tr>
-      {/* <tr>
-        <td className="py-2 font-semibold">Hint Name</td>
-        <td className="py-2">{user?.hintName || "- not added -"}</td>
-      </tr> */}
+     
     </tbody>
   </table>
        <Button variant='primary'  className="mt-10 ml-20  ">

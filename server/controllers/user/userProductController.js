@@ -19,7 +19,11 @@ class UserProductController extends BaseController{
       size,
       sort,
      level1,
-     level2,level3
+     level2,level3,
+     search,
+     minPrice,
+     maxPrice,
+     discount
   } = req.query;
 
     const filters = {
@@ -29,10 +33,13 @@ class UserProductController extends BaseController{
   color: color || [],
   size: size || [],
   sort: sort || "",
+  search:search ||"",
   level1:level1 || null,
   level2:level2 || null,
   level3:level3 || null,
-
+   minPrice: minPrice != null ? Number(minPrice) : null,
+    maxPrice: maxPrice != null ? Number(maxPrice) : null,
+     discount: discount || null
 };
 
     const result = await UserProductService.getProducts(filters)

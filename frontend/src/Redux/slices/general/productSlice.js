@@ -38,6 +38,7 @@ const productSlice = createSlice({
   name: "generalProducts",
   initialState: {
     products: [],
+      searchTerm: "",
     filters: {
       categories: [],
       brands: [],
@@ -51,7 +52,10 @@ const productSlice = createSlice({
     error: null,
     product:null
   },
-  reducers: {},
+  reducers: {
+    setSearchTerm: (state, action) => {
+    state.searchTerm = action.payload;
+  }},
   extraReducers: (builder) => {
     builder
       // Products
@@ -107,3 +111,4 @@ const productSlice = createSlice({
 });
 
 export default productSlice.reducer;
+export const { setSearchTerm } = productSlice.actions;

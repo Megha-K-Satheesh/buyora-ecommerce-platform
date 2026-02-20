@@ -75,7 +75,8 @@ class CategoryService{
     return this.makeTree(categories);
   }
 
-  static async categories(page=1,limit=10,level,status,search){
+  static async categories(page=1,limit=10,level,status,search,category){
+    
      page = parseInt(page)
      limit = parseInt(limit)
      const skip = (page-1)*limit
@@ -91,7 +92,17 @@ class CategoryService{
      if(search){
       filter.name = {$regex:search,$options:"i"}
      }
-
+     
+     if (category) {
+  // get all children IDs recursively
+  const allCategories = await Category.find().lean();
+  const getChildrenIds = (id) => {
+    const children = allCategories.filter(c => String(c.parentId) === String(id));
+    return children.reduce((acc, child) => [...acc, child._id, ...getChildrenIds(child._id)], []);
+  }
+  const ids = [category, ...getChildrenIds(category)];
+  filter._id = { $in: ids };
+}
 
 
      const totalCategories = await Category.countDocuments(filter)

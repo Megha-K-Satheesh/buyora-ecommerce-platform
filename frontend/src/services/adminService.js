@@ -48,5 +48,17 @@ addBrand(data){
 getBrands(categoryId){
   return adminApiClient.get(`/brand/get-brands/${categoryId}`)
 },
+updateProduct(id, formData) {
+  return adminApiClient.put(
+    `/product/update-product/${id}`,
+    formData,
+    {
+      headers: { "Content-Type": "multipart/form-data" }
+    }
+  );
+},
+deleteProduct(productId) {
+  return adminApiClient.delete(`/product/delete-product/${productId}`);
+},
 
 }

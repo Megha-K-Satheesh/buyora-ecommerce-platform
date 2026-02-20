@@ -16,17 +16,17 @@ const ProductGrid = ({ products = [] }) => {
   if (!products.length) return <p>No Products Found</p>;
 
   return (
-    <div className="grid grid-cols-4 gap-1 mb-2 p-2 ">
+    <div className="grid lg:grid-cols-4 lg:gap-1 gap-3 mb-2 p-2 grid-cols-2  ">
       {products.map((product) => (
         <div
           key={product._id}
-          className="rounded-lg  m-10 p-4 hover:shadow-lg transition-shadow duration-300 "
+          className="rounded-lg  lg:m-10 lg:p-4 hover:shadow-lg transition-shadow duration-300 "
           onClick={()=>handleClick(product)}
         >
           <img
             src={product.images[0]}
             alt={product.name}
-            className="w-4.5/5 h-82 object-cover mb-3 rounded"
+            className="lg:w-4.5/5  lg:h-82 object-cover mb-3 rounded"
           />
           <p className="text-gray-500 text-sm mb-1">{product.brand.name}</p>
          <h3 className="font-medium text-gray-900 mb-2 truncate overflow-hidden whitespace-nowrap">

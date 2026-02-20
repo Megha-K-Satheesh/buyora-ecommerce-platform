@@ -139,6 +139,8 @@ const authSlice = createSlice({
     isOtpSent: false,
     user: null,
     role:null,
+    token: localStorage.getItem("authToken") || null,
+
     isAuthenticated: !!localStorage.getItem("authToken"),
     userId:  localStorage.getItem('otpUserId') || null,
     resetToken: localStorage.getItem('resetToken') || null,
@@ -254,6 +256,7 @@ const authSlice = createSlice({
     state.user = action.payload.data.user;
     state.isAuthenticated = true;
     state.role = action.payload.data.user.role
+    state.token = action.payload.data.token;
     setAuthToken(action.payload.data.token)
 })
 .addCase(login.rejected,(state,action)=>{

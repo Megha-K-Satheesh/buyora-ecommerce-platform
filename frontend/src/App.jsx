@@ -8,9 +8,11 @@ import AddCategoryForm from "./pages/admin/category/AddCategory";
 import UpdateCategoryForm from "./pages/admin/category/UpdateCategory";
 // import AddProducts from "./pages/admin/products/AddProducts";
 import AddBrand from "./pages/admin/brand/addBrand";
+import CartPage from "./pages/publicPages/CartPage";
 import Home from "./pages/publicPages/Home";
 import ProductListingPage from "./pages/publicPages/ProductListingPage";
 import SingleProductPage from "./pages/publicPages/SingleProductPage";
+import EditProduct from "./pages/admin/products/UpdateProduct";
 const AdminLayouts = lazy(() => import("./layouts/AdminLayouts"));
 const Banners = lazy(() => import("./pages/admin/banner/Banners"));
 const Category = lazy(() => import("./pages/admin/category/Categories"));
@@ -57,9 +59,11 @@ function App() {
       <Suspense fallback={<div style={{ textAlign: "center" }}>Loading...</div>}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/search" element={<ProductListingPage />} />
           <Route path="/:level1/:level2/:level3?" element={<ProductListingPage/>  }/>
           <Route path="/product/:slug/:id" element={<SingleProductPage />} />
-
+          <Route path="/product/cart" element={<CartPage />} />
+          
            
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/login" element={<LoginForm />} />
@@ -84,6 +88,10 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="products" element={<Products />} />
           <Route path="/admin-dashboard/products/add-product" element={<AddProducts/>}/>
+          <Route
+  path="/admin-dashboard/products/update-product/:id"
+  element={<EditProduct />}
+/>
           <Route path="brands" element={<AddBrand/>}/>
 
           <Route path="categories" element={<Category />} />
