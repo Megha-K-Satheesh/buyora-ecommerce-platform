@@ -2,6 +2,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { userProductsService } from "../../services/productsService";
 
+
+  export const addToCartBackend = createAsyncThunk('cart/addToCartBackend',async(data,thunkAPI)=>{
+      try {
+         const  res = await userProductsService.addToCart(data)
+             return res.data.data
+      } catch (err) {
+        return thunkAPI.rejectWithValue(err.message||"cart add to backend") 
+      }
+  })
+
+
 export const mergeCart = createAsyncThunk('cart/mergeCart',
   async(_,thunkAPI)=>{
         try {
@@ -17,6 +28,18 @@ export const mergeCart = createAsyncThunk('cart/mergeCart',
   }
 )
 
+export const getCartBackend = createAsyncThunk(
+  "cart/getCartBackend",
+  async (_, thunkAPI) => {
+    try {
+      const res = await userProductsService.getCart(); 
+      return res.data.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data?.message || "Failed to fetch cart");
+    }
+  }
+);
+
 export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
   async (variationId, thunkAPI) => {
@@ -24,14 +47,14 @@ export const removeFromCart = createAsyncThunk(
       const token = localStorage.getItem("authToken");
 
       if (!token) {
-        // Guest → remove from localStorage
+        // Guest  remove from localStorage
         const cart = JSON.parse(localStorage.getItem("cart")) || [];
         const updatedCart = cart.filter((x) => x.variationId !== variationId);
         localStorage.setItem("cart", JSON.stringify(updatedCart));
         return updatedCart;
       }
 
-      // Logged-in → API
+      // Logged in  API
       const res = await userProductsService.removeFromCart(variationId);
       return res.data.data; // backend cart
     } catch (err) {
@@ -46,17 +69,18 @@ export const updateCartQuantity = createAsyncThunk(
     try {
       const token = localStorage.getItem("authToken");
 
-      if (!token) {
-        // Guest → localStorage
-        const cart = JSON.parse(localStorage.getItem("cart")) || [];
-        const item = cart.find((x) => x.variationId === variationId);
-        if (item) item.quantity = quantity;
-        localStorage.setItem("cart", JSON.stringify(cart));
-        return cart;
-      }
+     if (!token) {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const updatedCart = cart.map(item =>
+    item.variationId === variationId ? { ...item, quantity } : item
+  );
+  localStorage.setItem("cart", JSON.stringify(updatedCart));
+  return updatedCart;
+}
 
      
       const res = await userProductsService.updateCartQuantity(variationId, quantity);
+      console.log(res)
       return res.data.data; // backend cart
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data?.message || "Update quantity failed");
@@ -110,7 +134,7 @@ const cartSlice = createSlice({
     })
     .addCase(mergeCart.fulfilled, (state, action) => {
       state.loading = false;
-      state.cartItems = action.payload; // backend cart is now source of truth
+     state.cartItems = action.payload?.items ||action.payload|| [];
     })
     .addCase(mergeCart.rejected, (state, action) => {
       state.loading = false;
@@ -122,7 +146,8 @@ const cartSlice = createSlice({
       })
       .addCase(removeFromCart.fulfilled, (state, action) => {
         state.loading = false;
-        state.cartItems = action.payload;
+        state.cartItems = action.payload?.items ||action.payload|| [];
+        console.log(action.payload?.item)
       })
       .addCase(removeFromCart.rejected, (state, action) => {
         state.loading = false;
@@ -134,12 +159,36 @@ const cartSlice = createSlice({
       })
       .addCase(updateCartQuantity.fulfilled, (state, action) => {
         state.loading = false;
-        state.cartItems = action.payload;
+        state.cartItems = action.payload?.items ||action.payload|| [];
       })
       .addCase(updateCartQuantity.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      .addCase(addToCartBackend.pending, (state) => {
+    state.loading = true;
+    state.error = null;
+  })
+  .addCase(addToCartBackend.fulfilled, (state, action) => {
+    state.loading = false;
+    state.cartItems = action.payload?.items ||action.payload|| [];
+  })
+  .addCase(addToCartBackend.rejected, (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
+  })
+  .addCase(getCartBackend.pending, (state) => {
+    state.loading = true;
+    state.error = null;
+  })
+  .addCase(getCartBackend.fulfilled, (state, action) => {
+    state.loading = false;
+    state.cartItems = action.payload?.items ||action.payload|| []; 
+  })
+  .addCase(getCartBackend.rejected, (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
+  });
 }
 
 });

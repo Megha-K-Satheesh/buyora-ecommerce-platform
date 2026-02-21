@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { mergeCart, removeFromCart, setCart, updateCartQuantity } from "../../Redux/slices/cartSlice";
+import { getCartBackend, mergeCart, removeFromCart, setCart, updateCartQuantity } from "../../Redux/slices/cartSlice";
 
 const CartPage = () => {
   const dispatch = useDispatch();
@@ -9,14 +9,79 @@ const CartPage = () => {
    const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponCode, setCouponCode] = useState("");
 
+
+  // useEffect(() => {
+  //   if (token) {
+  //     dispatch(mergeCart());
+  //   } else {
+  //     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+  //     dispatch(setCart(storedCart));
+  //   }
+  // }, [dispatch, token]);
+
+// useEffect(() => {
+//   const guestCart = JSON.parse(localStorage.getItem("cart")) || [];
+  
+//   if (token) {
+//     if (guestCart.length) {
+//       dispatch(mergeCart());
+//     } else {
+//       dispatch(getCartBackend());
+//     }
+//   } else {
+//     // Set cart from localStorage once
+//     dispatch(setCart(guestCart));
+//   }
+// }, [dispatch, token]);
+
+
+// 
+
+  //   useEffect(() => {
+  //   const fetchCart = async () => {
+  //     const guestCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  //     if (token) {
+  //       // If user logged in
+  //       if (guestCart.length) {
+  //         // Merge guest cart into backend
+  //         dispatch(mergeCart());
+  //       } else {
+  //         // Fetch backend cart
+  //         dispatch(getCartBackend());
+  //       }
+  //     } else {
+        
+  //          localStorage.setItem("cart", JSON.stringify(guestCart));
+  //    dispatch(setCart(guestCart));
+  //     }
+  //   };
+
+  //   fetchCart();
+  // }, [dispatch, token]);
+
+
+ const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+
   useEffect(() => {
-    if (token) {
-      dispatch(mergeCart());
+    const guestCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    if (isAuthenticated) {
+      // merge guest cart if exists, else get backend cart
+      if (guestCart.length) {
+        dispatch(mergeCart());
+      } else {
+        dispatch(getCartBackend());
+      }
     } else {
-      const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-      dispatch(setCart(storedCart));
+      dispatch(setCart(guestCart));
     }
-  }, [dispatch, token]);
+  }, [dispatch, isAuthenticated]);
+
+
+
+
+
 
   const handleRemove = (variationId) => {
     dispatch(removeFromCart(variationId));
@@ -45,7 +110,7 @@ const CartPage = () => {
       <h1 className="text-2xl font-bold mb-6">Shopping Cart</h1>
 
       {cartItems.map((item) => (
-        <div key={item.variationId} className="flex items-center justify-between border-b py-4">
+        <div key={item.variationId.toString()} className="flex items-center justify-between border-b py-4">
           <div className="flex items-center gap-4">
             <img src={item.image} alt={item.name} className="lg:w-30  w-25 h-auto object-cover" />
             <div>

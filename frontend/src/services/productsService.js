@@ -13,15 +13,17 @@ export const userProductsService = {
   getProductById(id){
     return apiClient.get(`/products/get-product-by-id/${id}`)
   },
-  mergeCart(items){
-    return apiClient.post('/products/cart/merge-cart',items)
+  mergeCart(guestCartItems){
+    console.log(guestCartItems)
+    return apiClient.post('/products/cart/merge-cart',{ guestCart: guestCartItems })
+
   },
   getCart() {
     return apiClient.get("/products/cart");
   },
 
   addToCart(item) {
-    return apiClient.post("/products/cart/add", item);
+    return apiClient.post("/products/cart/add-to-cart", item);
   },
 
   removeFromCart(variationId) {
@@ -29,6 +31,7 @@ export const userProductsService = {
   },
 
   updateCartQuantity(variationId, quantity) {
+    
     return apiClient.put(`/products/cart/update/${variationId}`, { quantity });
   },
 }

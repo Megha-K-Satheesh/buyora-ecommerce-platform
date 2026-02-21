@@ -7,12 +7,13 @@ import "./App.css";
 import AddCategoryForm from "./pages/admin/category/AddCategory";
 import UpdateCategoryForm from "./pages/admin/category/UpdateCategory";
 // import AddProducts from "./pages/admin/products/AddProducts";
+import { AdminRoute, PublicRoute, UserRoute } from "./components/protectedRoutes/ProtectedRoutes";
 import AddBrand from "./pages/admin/brand/addBrand";
+import EditProduct from "./pages/admin/products/UpdateProduct";
 import CartPage from "./pages/publicPages/CartPage";
 import Home from "./pages/publicPages/Home";
 import ProductListingPage from "./pages/publicPages/ProductListingPage";
 import SingleProductPage from "./pages/publicPages/SingleProductPage";
-import EditProduct from "./pages/admin/products/UpdateProduct";
 const AdminLayouts = lazy(() => import("./layouts/AdminLayouts"));
 const Banners = lazy(() => import("./pages/admin/banner/Banners"));
 const Category = lazy(() => import("./pages/admin/category/Categories"));
@@ -53,6 +54,9 @@ const ChangePassword = lazy(() =>
   import("./pages/user/ChangePassword")
 );
 
+
+
+
 function App() {
   return (
     <>
@@ -65,8 +69,18 @@ function App() {
           <Route path="/product/cart" element={<CartPage />} />
           
            
-          <Route path="/register" element={<RegisterForm />} />
-          <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={
+            <PublicRoute>
+
+              <RegisterForm />
+            </PublicRoute>
+            } />
+          <Route path="/login" element={
+            <PublicRoute>
+
+              <LoginForm />
+            </PublicRoute>
+            } />
           <Route path="/verify-otp" element={<VerifyOtpPage />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
@@ -79,11 +93,22 @@ function App() {
           
           <Route
             path="/admin-login"
-            element={<AdminLoginForm />}
+            element={
+            // <PublicRoute>
+
+              <AdminLoginForm />
+            // </PublicRoute>
+          }
           />
 
 
-          <Route path="/admin-dashboard" element={<AdminLayouts />}>
+          <Route path="/admin-dashboard" element={
+            <AdminRoute>
+              
+              <AdminLayouts />
+            </AdminRoute>
+            }>
+
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="products" element={<Products />} />
@@ -105,23 +130,34 @@ function App() {
         
         </Route>
 
-          <Route path="/account" element={<ProfileLayout />}>
+          <Route path="/account" element={
+            <UserRoute>
+
+              <ProfileLayout />
+            </UserRoute>
+            
+            }>
+        
             <Route index element={<Profile />} />
             <Route path="profile" element={<Profile />} />
             <Route path="address" element={<Address />} />
             <Route
               path="address/add-address"
               element={<AddAddress />}
-            />
+              />
             <Route
               path="address/edit-address/:addressId"
               element={<EditAddress />}
-            />
+              />
             <Route
               path="change-password"
               element={<ChangePassword />}
-            />
+              />
+
+
+
           </Route>
+              
        
         </Routes>
       </Suspense>

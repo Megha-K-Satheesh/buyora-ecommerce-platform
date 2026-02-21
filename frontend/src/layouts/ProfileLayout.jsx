@@ -1,15 +1,22 @@
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, useMatch } from 'react-router-dom';
 import Footer from '../components/ui/Footer';
 import Navbar from '../components/ui/Navbar';
 import SideMenu from '../components/ui/SideMenu';
 import AccountHaad from '../components/user/AccountHead';
+import { getUserProfile } from '../Redux/slices/userSlice';
 const ProfileLayout = () => {
 
   const isAccountRoot = useMatch('/account/*')
   const isAccountHome = useMatch('/account')
     const {loading} = useSelector(state=>state.auth)
 
+     const dispatch = useDispatch()
+     useEffect(()=>{
+        console.log("ProfileLayout mounted");
+      dispatch(getUserProfile())
+     },[dispatch])
 
      if (loading) {
     return (

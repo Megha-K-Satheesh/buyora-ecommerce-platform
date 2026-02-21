@@ -21,7 +21,7 @@ const AddProducts = ()=>{
    //  const [leafCategories,setLeafCategories]= useState([]);
    const [files, setFiles] = useState([]);
    const {brands} =useSelector((state)=>state.brand)
-   
+   const {loading} = useSelector((state)=>state.product)
    const {register,handleSubmit,control,formState:{errors}} = useForm()
 
    const selectedCategoryId = useWatch({
@@ -265,7 +265,9 @@ const AddProducts = ()=>{
 
 
            <Button type='submit'>
-            Add product
+
+           {loading ? "Adding..." : "Add product"}
+          
            </Button>
            </div>
        </form>

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Navbar from "../../components/ui/Navbar";
-import { addToCart } from "../../Redux/slices/cartSlice";
+import { showSuccess } from "../../components/ui/Toastify";
+import { addToCart, addToCartBackend } from "../../Redux/slices/cartSlice";
 import { getProductById } from "../../Redux/slices/general/productSlice";
 
 const SingleProductPage = () => {
@@ -18,7 +19,7 @@ const { token } = useSelector((state) => state.auth);
 useEffect(() => {
     if (product?.images?.length) setMainImage(product.images[0]);
   }, [product]);
-  const handleAddToCart = () => {
+  const handleAddToCart = async() => {
   if (!selectedSize || !selectedColor) {
     alert("Please select size and color");
     return;
@@ -48,11 +49,13 @@ useEffect(() => {
   };
 
   if (token) {
-    alert("Token exist")
-    //dispatch(addToCartBackend(cartItem));
+    
+     dispatch(addToCartBackend(cartItem));
+    showSuccess("Added cart to backend")
   } else {
 
-    dispatch(addToCart(cartItem));
+  dispatch(addToCart(cartItem))
+    showSuccess("Added to cart localstorage")
   }
 };
 

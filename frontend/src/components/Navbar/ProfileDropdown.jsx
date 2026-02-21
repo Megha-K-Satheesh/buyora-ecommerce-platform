@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { FiUser } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../Redux/slices/authSlice";
+import { getUserProfile } from "../../Redux/slices/userSlice";
 
 
 
@@ -9,13 +11,15 @@ import { logout } from "../../Redux/slices/authSlice";
 const ProfileDropdown = ()=>{
   const navigate = useNavigate()
  const dispatch = useDispatch()
-  const {isAuthenticated,user} = useSelector((state)=>state.auth)
-
+  const {isAuthenticated} = useSelector((state)=>state.auth)
+const {user} = useSelector((state)=>state.user)
   const handleLogout = ()=>{
      dispatch(logout())
      navigate('/login')
   }
-
+  useEffect(()=>{
+    dispatch(getUserProfile())
+  },[dispatch])
   return(
     
      <div className=" relative group flex flex-1 flex-col justify-center items-center cursor-pointer">
