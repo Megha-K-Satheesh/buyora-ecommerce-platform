@@ -5,6 +5,7 @@ import cartReducer from '../Redux/slices/cartSlice';
 import userReducer from '../Redux/slices/userSlice';
 import brandReducer from './slices/admin/brandSlice';
 import categoryReducer from './slices/admin/categorySlice';
+import couponReducer from './slices/admin/couponSlice';
 import productReducer from './slices/admin/productSlice';
 import productsReducer from './slices/general/productSlice';
 export const store = configureStore({
@@ -17,5 +18,6 @@ export const store = configureStore({
     brand:brandReducer,
     generalProducts:productsReducer,
        cart: cartReducer,
+       coupon:couponReducer,
   },
 });

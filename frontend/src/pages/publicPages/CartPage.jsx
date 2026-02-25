@@ -10,55 +10,7 @@ const CartPage = () => {
   const [couponCode, setCouponCode] = useState("");
 
 
-  // useEffect(() => {
-  //   if (token) {
-  //     dispatch(mergeCart());
-  //   } else {
-  //     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-  //     dispatch(setCart(storedCart));
-  //   }
-  // }, [dispatch, token]);
 
-// useEffect(() => {
-//   const guestCart = JSON.parse(localStorage.getItem("cart")) || [];
-  
-//   if (token) {
-//     if (guestCart.length) {
-//       dispatch(mergeCart());
-//     } else {
-//       dispatch(getCartBackend());
-//     }
-//   } else {
-//     // Set cart from localStorage once
-//     dispatch(setCart(guestCart));
-//   }
-// }, [dispatch, token]);
-
-
-// 
-
-  //   useEffect(() => {
-  //   const fetchCart = async () => {
-  //     const guestCart = JSON.parse(localStorage.getItem("cart")) || [];
-
-  //     if (token) {
-  //       // If user logged in
-  //       if (guestCart.length) {
-  //         // Merge guest cart into backend
-  //         dispatch(mergeCart());
-  //       } else {
-  //         // Fetch backend cart
-  //         dispatch(getCartBackend());
-  //       }
-  //     } else {
-        
-  //          localStorage.setItem("cart", JSON.stringify(guestCart));
-  //    dispatch(setCart(guestCart));
-  //     }
-  //   };
-
-  //   fetchCart();
-  // }, [dispatch, token]);
 
 
  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
@@ -67,9 +19,10 @@ const CartPage = () => {
     const guestCart = JSON.parse(localStorage.getItem("cart")) || [];
 
     if (isAuthenticated) {
-      // merge guest cart if exists, else get backend cart
+      
       if (guestCart.length) {
         dispatch(mergeCart());
+        localStorage.removeItem("cart");
       } else {
         dispatch(getCartBackend());
       }

@@ -28,9 +28,15 @@ class CartService {
       return cart; 
     }
 
+    // const existingItem = cart.items.find(
+    //   x => x.productId.equals(cartItem.productId) && x.variationId === cartItem.variationId
+    // );
     const existingItem = cart.items.find(
-      x => x.productId.equals(cartItem.productId) && x.variationId === cartItem.variationId
-    );
+  x =>
+    x.productId.equals(cartItem.productId) &&
+    x.variationId.equals(cartItem.variationId)
+);
+
 
     if (existingItem) {
       existingItem.quantity += cartItem.quantity || 1;
@@ -60,11 +66,15 @@ static async mergeCart(userId, guestCart = []) {
   }));
 
   for (const item of normalizedGuestCart) {
-    const existingItem = cart.items.find(
-      x =>
-        x.productId.equals(item.productId) &&
-        x.variationId.equals(item.variationId)
-    );
+
+    // const existingItem = cart.items.find(
+    //   x =>
+    //     x.productId.equals(item.productId) &&
+    //     x.variationId.equals(item.variationId)
+    // );
+const existingItem = cart.items.find(
+  x => x.variationId.equals(item.variationId)
+);
 
     if (existingItem) {
       existingItem.quantity += item.quantity || 1;

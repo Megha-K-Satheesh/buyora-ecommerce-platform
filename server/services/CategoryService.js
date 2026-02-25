@@ -60,6 +60,8 @@ class CategoryService{
    return category
     }
        
+
+
      static makeTree(list, parentId = null) {
     return list
       .filter(item => String(item.parentId) === String(parentId) || (parentId === null && !item.parentId))
@@ -69,12 +71,13 @@ class CategoryService{
       }));
   }
      
-
+//for dropdown
     static async getCategories() {
     const categories = await Category.find().lean();
     return this.makeTree(categories);
   }
 
+  //for list
   static async categories(page=1,limit=10,level,status,search,category){
     
      page = parseInt(page)

@@ -102,7 +102,7 @@ return(
             error={errors.agreeToTerms?.message}
             />
 
-            <p className="text-sm text-pink-600"><Link to='/forgetpassword'>Forget Password?</Link></p>
+            <p className="text-sm text-pink-600"><Link to='/forget-password'>Forget Password?</Link></p>
                   </div>
 
 

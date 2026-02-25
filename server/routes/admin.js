@@ -17,7 +17,7 @@ const checkUserStatus = require('../middlewares/checkUserStatus');
 
 const router = express.Router();
 
-router.post('/login',checkUserStatus, AdminController.login);
+router.post('/login', AdminController.login);
 
 
 module.exports = router;

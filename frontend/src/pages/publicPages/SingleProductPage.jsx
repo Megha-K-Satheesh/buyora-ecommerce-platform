@@ -40,13 +40,16 @@ useEffect(() => {
      brandName :product.brand.name,
     image: mainImage,
     price: product.sellingPrice,
-      mrp: product.mrp,             // backend MRP
+      mrp: product.mrp,             
   discountPercentage:  product.discountPercentage,
   
     size: selectedSize,
     color: selectedColor,
     quantity: 1,
   };
+   
+  //console.log("token",token)
+
 
   if (token) {
     
@@ -142,6 +145,8 @@ useEffect(() => {
         <div className="mt-6">
           <h2 className="font-bold mb-2 text-lg">SELECT SIZE</h2>
           <div className="flex gap-2 flex-wrap mt-5 text-lg">
+
+            
             {sizes.map(size => (
               <button
                 key={size}

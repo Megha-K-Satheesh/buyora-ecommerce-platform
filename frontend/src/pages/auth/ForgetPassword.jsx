@@ -32,7 +32,7 @@ const ForgetPassword = ()=>{
       const res =   await dispatch(forgotPassword(data)).unwrap()
       console.log(res)
           localStorage.setItem('otpUserId', res.data.userId);
-         navigate('/PasswordResetOtp')
+         navigate('/Password-ResetOtp')
       } catch (error) {
         console.log(error)
       }

@@ -7,8 +7,11 @@ import "./App.css";
 import AddCategoryForm from "./pages/admin/category/AddCategory";
 import UpdateCategoryForm from "./pages/admin/category/UpdateCategory";
 // import AddProducts from "./pages/admin/products/AddProducts";
-import { AdminRoute, PublicRoute, UserRoute } from "./components/protectedRoutes/ProtectedRoutes";
+import { AdminRoute, UserRoute } from "./components/protectedRoutes/ProtectedRoutes";
+import NotFound from "./components/ui/NotFount";
+import ServerError from "./components/ui/ServerError";
 import AddBrand from "./pages/admin/brand/addBrand";
+import AddCoupon from "./pages/admin/coupons/AddCoupon";
 import EditProduct from "./pages/admin/products/UpdateProduct";
 import CartPage from "./pages/publicPages/CartPage";
 import Home from "./pages/publicPages/Home";
@@ -63,6 +66,12 @@ function App() {
       <Suspense fallback={<div style={{ textAlign: "center" }}>Loading...</div>}>
         <Routes>
           <Route path="/" element={<Home />} />
+          {/* 404 CatchAll */}
+        <Route path="*" element={<NotFound/>} />
+
+ <Route path="/404" element={<NotFound />} />
+        <Route path="/500" element={<ServerError/>} />
+
           <Route path="/search" element={<ProductListingPage />} />
           <Route path="/:level1/:level2/:level3?" element={<ProductListingPage/>  }/>
           <Route path="/product/:slug/:id" element={<SingleProductPage />} />
@@ -70,16 +79,16 @@ function App() {
           
            
           <Route path="/register" element={
-            <PublicRoute>
+            // <PublicRoute>
 
               <RegisterForm />
-            </PublicRoute>
+            // </PublicRoute>
             } />
           <Route path="/login" element={
-            <PublicRoute>
+            // <PublicRoute>
 
               <LoginForm />
-            </PublicRoute>
+            // </PublicRoute>
             } />
           <Route path="/verify-otp" element={<VerifyOtpPage />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
@@ -124,6 +133,8 @@ function App() {
            <Route path ="/admin-dashboard/categories/update-category/:categoryId" element={<UpdateCategoryForm/>}/> 
           <Route path="orders" element={<Orders />} />
           <Route path="coupons" element={<Coupons />} />
+          <Route path="/admin-dashboard/Coupons/add-coupon" element={<AddCoupon/>  }/>
+
           <Route path="users" element={<Users />} />
           <Route path="banners" element={<Banners />} />
           <Route path="sales-report" element={<Report />} />
