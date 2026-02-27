@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import adminAuthReducer from '../Redux/slices/adminAuthSlice';
 import authReducer from '../Redux/slices/authSlice';
 import cartReducer from '../Redux/slices/cartSlice';
+import userCouponReducer from '../Redux/slices/userCouponSlice';
 import userReducer from '../Redux/slices/userSlice';
 import brandReducer from './slices/admin/brandSlice';
 import categoryReducer from './slices/admin/categorySlice';
@@ -19,5 +20,6 @@ export const store = configureStore({
     generalProducts:productsReducer,
        cart: cartReducer,
        coupon:couponReducer,
+       userCoupon:userCouponReducer,
   },
 });

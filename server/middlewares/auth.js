@@ -76,6 +76,47 @@ const authenticateAdmin = async (req, res, next) => {
   }
 };
 
+const optionalAuth = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+
+    // No token → guest
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return next();
+    }
+
+    const token = authHeader.substring(7);
+
+    let decoded;
+    try {
+      decoded = verifyUserToken(token);
+    } catch (error) {
+      return sendError(res, 'Invalid or expired token', 401);
+    }
+
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      return sendError(res, 'User not found', 401);
+    }
+
+    if (user.status === 'banned') {
+      return sendError(res, 'Your account has been banned', 403);
+    }
+
+    req.user = user;
+
+    next();
+  } catch (error) {
+    return sendError(res, 'Authentication error', 500);
+  }
+};
+
+
+
+
+
+
 const requireAdmin = (req, res, next) => {
   if (!req.user || req.user.role !== 'admin') {
     return sendError(res, 'Admin privileges required', 403);
@@ -86,5 +127,6 @@ const requireAdmin = (req, res, next) => {
 module.exports = {
   authenticateUser,
   authenticateAdmin,
-  requireAdmin
+  requireAdmin,
+  optionalAuth
 };
