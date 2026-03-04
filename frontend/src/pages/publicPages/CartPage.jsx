@@ -2,33 +2,53 @@
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getCartBackend,
-  mergeCart,
-  removeFromCart,
-  setCart,
-  updateCartQuantity
-} from "../../Redux/slices/cartSlice";
-
+import { useNavigate } from "react-router-dom";
 import {
   clearCoupon,
+  getCartBackend,
+  mergeCart,
+  removeCouponBackend,
+  removeFromCart,
+  setCart,
+  updateCartQuantity,
   verifyCoupon
-} from "../../Redux/slices/userCouponSlice";
+} from "../../Redux/slices/cartSlice";
+
+
 
 const CartPage = () => {
   const dispatch = useDispatch();
+ const navigate = useNavigate();
 
-  const { cartItems } = useSelector((state) => state.cart);
+  // const { cartItems } = useSelector((state) => state.cart);
   const { isAuthenticated } = useSelector((state) => state.auth);
 
+  // const {
+  //   coupon,
+  //   discountAmount,
+  //   loading,
+  //   error,
+  //   isApplied
+  // } = useSelector((state) => state.userCoupon);
+
+
   const {
-    discountAmount,
-    loading,
-    error,
-    isApplied
-  } = useSelector((state) => state.userCoupon);
+  cartItems,
+  appliedCoupon,
+  discountAmount,
+  finalAmount,
+  loading,
+  error,
+  isApplied
+} = useSelector((state) => state.cart);
 
   const [couponCode, setCouponCode] = useState("");
+  useEffect(() => {
+  if (appliedCoupon) {
+    setCouponCode(appliedCoupon|| "");
+  }
+}, [appliedCoupon]);
+ console.log(appliedCoupon,couponCode)
 
   useEffect(() => {
     const guestCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -47,14 +67,21 @@ const CartPage = () => {
 
   const handleRemove = (variationId) => {
     dispatch(removeFromCart(variationId));
-    dispatch(clearCoupon()); // auto clear coupon
+    if(!isAuthenticated){
+
+      dispatch(clearCoupon()); // auto clear coupon
+    }
+   
   };
 
   const handleQuantityChange = (variationId, quantity) => {
     if (quantity < 1) return;
 
     dispatch(updateCartQuantity({ variationId, quantity }));
-    dispatch(clearCoupon()); // auto clear coupon
+    if(!isAuthenticated){
+
+      dispatch(clearCoupon()); // auto clear coupon
+    }
   };
 
   const handleApplyCoupon = () => {
@@ -82,8 +109,11 @@ const CartPage = () => {
 
   const platformFee = 0;
 
-  const totalPayable =
-    totalMRP - totalDiscount - discountAmount + platformFee;
+  // const totalPayable =
+  //   totalMRP - totalDiscount - discountAmount + platformFee;
+  const totalPayable = isAuthenticated
+  ? finalAmount + platformFee
+  : totalMRP - totalDiscount - discountAmount + platformFee;
 
   if (cartItems.length === 0)
     return (
@@ -195,7 +225,7 @@ const CartPage = () => {
           <span>Total Payable:</span>
           <span>₹{totalPayable}</span>
         </div>
-
+         
         <div className="mt-4 flex gap-2">
           <input
             type="text"
@@ -222,24 +252,83 @@ const CartPage = () => {
           </p>
         )}
 
-        {isApplied && (
+        {/* {isApplied && (
           <div className="flex justify-between items-center mt-2">
             <p className="text-green-600 font-semibold">
               Coupon Applied Successfully 
             </p>
 
             <button
-              onClick={() => dispatch(clearCoupon())}
+              onClick={() => dispatch(clearCoupon()
+              
+                setCouponCode(""))}
               className="text-sm text-red-500 underline"
             >
               Remove
             </button>
           </div>
-        )}
+        )} */}
 
-        <button className="mt-4 w-full bg-pink-600 text-white py-3 rounded font-bold">
-          Place Order
-        </button>
+        
+{/* 
+        {isApplied && (
+  <div className="flex justify-between items-center mt-2">
+    <p className="text-green-600 font-semibold">
+      Coupon Applied Successfully 
+    </p>
+
+    <button
+      onClick={() => {
+        dispatch(clearCoupon());
+        setCouponCode("");
+      }}
+      className="text-sm text-red-500 underline"
+    >
+      Remove
+    </button>
+  </div>
+)} */}
+{isApplied && (
+  <div className="flex justify-between items-center mt-2">
+    <p className="text-green-600 font-semibold">
+      Coupon Applied Successfully
+    </p>
+
+    <button
+      onClick={() => {
+        if (isAuthenticated) {
+          dispatch(removeCouponBackend());
+        } else {
+          dispatch(clearCoupon());
+        }
+
+        setCouponCode("");
+      }}
+      className="text-sm text-red-500 underline"
+    >
+      Remove
+    </button>
+  </div>
+)}
+
+       {/* <button
+  onClick={() => navigate("/product/checkout")}
+  className="mt-4 w-full bg-pink-600 text-white py-3 rounded font-bold"
+>
+  Proceed to Checkout
+</button> */}
+<button
+  onClick={() => {
+    if (!isAuthenticated) {
+      navigate("/login", { state: { from: "/product/checkout" } });
+    } else {
+      navigate("/product/checkout")
+    }
+  }}
+  className="mt-4 w-full bg-pink-600 text-white py-3 rounded font-bold"
+>
+  Proceed to Checkout
+</button>
       </div>
     </div>
   );

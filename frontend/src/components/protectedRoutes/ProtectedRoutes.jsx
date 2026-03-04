@@ -15,12 +15,14 @@ export const UserRoute = ({ children }) => {
   if (loading) {
     return <div>Loading...</div>;
   }
-
+  console.log(isAuthenticated)
   // Not logged in
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
-
+ if (!user) {
+    return <div>Loading...</div>;
+  }
   // Logged in but NOT normal user
   if (user?.role !== "user") {
     return <Navigate to="/" replace />;

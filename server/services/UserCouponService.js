@@ -1,5 +1,6 @@
 const Category = require("../models/admin/Category");
 const Coupon = require("../models/admin/Coupon");
+const Cart = require("../models/Cart")
 const couponUsage = require("../models/admin/couponUsage");
 const Order = require("../models/Order");
 const { ErrorFactory } = require("../utils/errors");
@@ -129,12 +130,72 @@ if (coupon.scope === "CATEGORY") {
 
     const finalAmount = Math.max(cartTotal - discountAmount, 0);
 
+   
+
+    console.log("This is the userId", userId)
+    if (userId) {
+  const cart = await Cart.findOne({ userId });
+
+  if (!cart) {
+    throw ErrorFactory.notFound("Cart not found");
+  }
+
+  cart.appliedCouponId = coupon._id;   
+  cart.appliedCouponCode = coupon.code;   
+  cart.discountAmount = discountAmount; 
+  cart.finalAmount = finalAmount;     
+
+  await cart.save();
+}
+
+
+
     return {
       couponId: coupon._id,
+        appliedCoupon:coupon.code,
       discountAmount,
       finalAmount
     };
   }
+
+
+  static async removeCoupon(userId) {
+      //  Find cart
+      const cart = await Cart.findOne({ userId });
+  
+      if (!cart) {
+        throw new Error("Cart not found");
+      }
+  
+      // Clear coupon fields
+      cart.appliedCouponId = null;
+      cart.appliedCouponCode = null;
+      cart.discountAmount = 0;
+  
+      //  Recalculate totals
+      const totalMRP = cart.items.reduce(
+        (acc, item) => acc + item.mrp * item.quantity,
+        0
+      );
+  
+      const totalDiscount = cart.items.reduce(
+        (acc, item) =>
+          acc + (item.mrp - item.price) * item.quantity,
+        0
+      );
+  
+      cart.finalAmount = totalMRP - totalDiscount;
+  
+      await cart.save();
+  
+      return {
+        items: cart.items,
+        appliedCoupon: null,
+        discountAmount: 0,
+        finalAmount: cart.finalAmount
+      };
+    }
+
 
   
 }

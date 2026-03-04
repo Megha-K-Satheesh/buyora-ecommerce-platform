@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { nanoid } = require("nanoid");
 
 const orderItemSchema = new mongoose.Schema({
   productId: {
@@ -6,21 +7,22 @@ const orderItemSchema = new mongoose.Schema({
     ref: "Product",
     required: true
   },
-
-  name: String, 
-  price: Number, 
+  name: String,
+  price: Number,
   quantity: Number,
-
   categoryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category"
   }
-
 }, { _id: false });
 
-
-
 const orderSchema = new mongoose.Schema({
+
+  orderNumber: {
+    type: String,
+    unique: true,
+
+  },
 
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -50,6 +52,12 @@ const orderSchema = new mongoose.Schema({
     required: true
   },
 
+  paymentMethod: {
+    type: String,
+    enum: ["COD", "ONLINE"],
+    required: true
+  },
+
   paymentStatus: {
     type: String,
     enum: ["PENDING", "PAID", "FAILED"],
@@ -72,5 +80,13 @@ const orderSchema = new mongoose.Schema({
   }
 
 }, { timestamps: true });
+
+
+orderSchema.pre("save", function (next) {
+  if (!this.orderNumber) {
+    this.orderNumber = `ORD-${nanoid(8).toUpperCase()}`;
+  }
+  next();
+});
 
 module.exports = mongoose.model("Order", orderSchema);

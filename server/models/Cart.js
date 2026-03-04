@@ -29,8 +29,23 @@ const CartSchema = new mongoose.Schema(
       required: true,
     },
     items: [CartItemSchema],
+    // appliedCoupon: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Coupon",
+    //   default: null
+    // },
+appliedCouponId: { type: mongoose.Schema.Types.ObjectId, ref: "Coupon", default: null },
+  appliedCouponCode: { type: String, default: null },
+    discountAmount: {
+  type: Number,
+  default: 0
+},
+finalAmount: {
+  type: Number,
+  default: 0
+}
   },
-  { timestamps: true } // keeps createdAt and updatedAt
+  { timestamps: true } 
 );
 
 module.exports = mongoose.model("Cart", CartSchema);

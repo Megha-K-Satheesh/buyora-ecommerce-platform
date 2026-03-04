@@ -1,5 +1,4 @@
 import adminApiClient from "../utils/adminApiClient";
-import apiClient from "../utils/apiClient";
 
 
 export const couponService = {
@@ -12,7 +11,10 @@ export const couponService = {
       params: { page, limit, search, status, category },
     })
   },
-  verifyCoupon(data) {
-    return apiClient.post("/user/coupon/verify-coupon", data);
-  }
+  // verifyCoupon(data) {
+  //   return apiClient.post("/user/coupon/verify-coupon", data);
+  // },
+  //  removeCoupon() {
+  //   return apiClient.post("/user/coupon/remove-coupon");
+  // }
 }

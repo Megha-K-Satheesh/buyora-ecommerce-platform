@@ -103,9 +103,10 @@ const optionalAuth = async (req, res, next) => {
     if (user.status === 'banned') {
       return sendError(res, 'Your account has been banned', 403);
     }
+    console.log("this is from optinalAuth",user)
 
     req.user = user;
-
+    
     next();
   } catch (error) {
     return sendError(res, 'Authentication error', 500);

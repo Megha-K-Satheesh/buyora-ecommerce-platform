@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -7,6 +7,7 @@ import "./App.css";
 import AddCategoryForm from "./pages/admin/category/AddCategory";
 import UpdateCategoryForm from "./pages/admin/category/UpdateCategory";
 // import AddProducts from "./pages/admin/products/AddProducts";
+import { useDispatch } from "react-redux";
 import { AdminRoute, UserRoute } from "./components/protectedRoutes/ProtectedRoutes";
 import NotFound from "./components/ui/NotFount";
 import ServerError from "./components/ui/ServerError";
@@ -17,6 +18,9 @@ import CartPage from "./pages/publicPages/CartPage";
 import Home from "./pages/publicPages/Home";
 import ProductListingPage from "./pages/publicPages/ProductListingPage";
 import SingleProductPage from "./pages/publicPages/SingleProductPage";
+import CheckoutPage from "./pages/user/checkout/checkout";
+import { getUserProfile } from "./Redux/slices/userSlice";
+import OrderSuccessPage from "./pages/user/checkout/OrderSuccessPage";
 const AdminLayouts = lazy(() => import("./layouts/AdminLayouts"));
 const Banners = lazy(() => import("./pages/admin/banner/Banners"));
 const Category = lazy(() => import("./pages/admin/category/Categories"));
@@ -61,6 +65,15 @@ const ChangePassword = lazy(() =>
 
 
 function App() {
+  const dispatch = useDispatch()
+
+    useEffect(() => {
+    const token = localStorage.getItem("authToken");
+
+    if (token) {
+      dispatch(getUserProfile());
+    }
+  }, [dispatch]);
   return (
     <>
       <Suspense fallback={<div style={{ textAlign: "center" }}>Loading...</div>}>
@@ -76,7 +89,25 @@ function App() {
           <Route path="/:level1/:level2/:level3?" element={<ProductListingPage/>  }/>
           <Route path="/product/:slug/:id" element={<SingleProductPage />} />
           <Route path="/product/cart" element={<CartPage />} />
-          
+
+          {/* <Route path="/product/checkout" element={<CheckoutPage/>}/> */}
+          <Route
+  path="/product/checkout"
+  element={
+    <UserRoute>
+      <CheckoutPage />
+    </UserRoute>
+  }
+/>
+
+<Route
+  path="/order-success/:orderId"
+  element={
+    <UserRoute>
+      <OrderSuccessPage />
+    </UserRoute>
+  }
+/>
            
           <Route path="/register" element={
             // <PublicRoute>

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Button from "../../components/ui/Button";
 import Footer from "../../components/ui/Footer";
 import FormCheckbox from "../../components/ui/FormCheckbox";
@@ -12,10 +12,15 @@ import { login } from "../../Redux/slices/authSlice";
 
 
 const LoginForm = ()=>{
-     const error = useSelector((state)=>state.auth.error)
-     const loading = useSelector((state)=>state.auth.loginLoading)
+    //  const error = useSelector((state)=>state.auth.error)
+    //  const loading = useSelector((state)=>state.auth.loginLoading)
      const dispatch = useDispatch()
      const navigate = useNavigate()
+     const location = useLocation()
+      const { error, loginLoading, isAuthenticated } = useSelector((state) => state.auth);
+     const from = location.state?.from?.pathname || "/"
+
+     console.log( from)
    const {
       register,
       handleSubmit,
@@ -27,11 +32,18 @@ const LoginForm = ()=>{
         if (error) showError(error);
          }, [error]);
 
+
+           // Navigate to "from" page after login
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, from, navigate]);
      const onSubmit= async (data)=>{
       try {
           const res = await dispatch(login({email:data.email,password:data.password})).unwrap()
           showSuccess("Successfully logined")
-          navigate('/')
+          // navigate(from)
       } catch (err) {
         showError(err)
       }
@@ -107,7 +119,7 @@ return(
 
 
                      <Button type="submit" fullWidth className='mt-3'>
-                       {loading ? "Loading...":"Login"}
+                       {loginLoading ? "Loading...":"Login"}
                   </Button>
                   <p className='flex justify-center mt-2.5'>or</p>
                   <Button type='button' fullWidth className='mt-4 text-black' variant='outline'>

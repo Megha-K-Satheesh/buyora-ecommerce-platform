@@ -34,4 +34,10 @@ export const userProductsService = {
     
     return apiClient.put(`/products/cart/update/${variationId}`, { quantity });
   },
+  verifyCoupon(data) {
+    return apiClient.post("/user/coupon/verify-coupon", data);
+  },
+   removeCoupon() {
+    return apiClient.post("/user/coupon/remove-coupon");
+  }
 }
