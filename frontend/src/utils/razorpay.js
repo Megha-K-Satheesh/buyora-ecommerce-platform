@@ -1,4 +1,21 @@
-export const openRazorpay = ({
+
+
+export const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    if (window.Razorpay) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.id = "razorpay-script";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
+export const openRazorpay = async ({
   data,
   dispatch,
   verifyPayment,
@@ -6,9 +23,13 @@ export const openRazorpay = ({
   selectedAddress,
   addresses,
 }) => {
-  const selectedAddr = addresses.find(
-    (a) => a._id === selectedAddress
-  );
+  const loaded = await loadRazorpayScript();
+  if (!loaded) {
+    alert("Razorpay SDK failed to load. Please check your internet connection.");
+    return;
+  }
+
+  const selectedAddr = addresses.find(a => a._id === selectedAddress);
 
   const options = {
     key: import.meta.env.VITE_RAZORPAY_KEY_ID,
@@ -17,7 +38,6 @@ export const openRazorpay = ({
     name: "BUYORA",
     description: "Order Payment",
     order_id: data.razorpayOrderId,
-
     handler: async function (response) {
       try {
         await dispatch(
@@ -28,18 +48,16 @@ export const openRazorpay = ({
             orderId: data.order._id,
           })
         ).unwrap();
-
         navigate(`/order-success/${data.order._id}`);
       } catch (error) {
-        alert("Payment verification failed",error);
+        alert("Payment verification failed: " + error.message);
       }
     },
-
     prefill: {
-      name: selectedAddr?.fullName,
-      contact: selectedAddr?.phone,
+      name: selectedAddr?.fullName || "",
+      contact: selectedAddr?.phone || "",
+      email: selectedAddr?.email || "",
     },
-
     theme: {
       color: "#ec4899",
     },

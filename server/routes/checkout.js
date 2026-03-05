@@ -19,6 +19,8 @@ routers.post(
   authenticateUser,
   CheckoutController.verifyPayment
 );
+// routers.get("/get-all-orders", CheckoutController.getAllOrders);
+// routers.get("/get-single-order/:orderId", CheckoutController.getSingleOrder);
 
 
 

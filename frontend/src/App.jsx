@@ -19,8 +19,10 @@ import Home from "./pages/publicPages/Home";
 import ProductListingPage from "./pages/publicPages/ProductListingPage";
 import SingleProductPage from "./pages/publicPages/SingleProductPage";
 import CheckoutPage from "./pages/user/checkout/checkout";
-import { getUserProfile } from "./Redux/slices/userSlice";
 import OrderSuccessPage from "./pages/user/checkout/OrderSuccessPage";
+import AllOrdersPage from "./pages/user/order/AllOrderPage";
+import SingleOrderPage from "./pages/user/order/SingleOrderView";
+import { getUserProfile } from "./Redux/slices/userSlice";
 const AdminLayouts = lazy(() => import("./layouts/AdminLayouts"));
 const Banners = lazy(() => import("./pages/admin/banner/Banners"));
 const Category = lazy(() => import("./pages/admin/category/Categories"));
@@ -108,7 +110,18 @@ function App() {
     </UserRoute>
   }
 />
-           
+      <Route path="/orders" element={<UserRoute>
+<AllOrdersPage />
+      </UserRoute> 
+        } />
+        <Route path="/orders/:orderId" element={
+          <UserRoute>
+
+            <SingleOrderPage />
+          </UserRoute>
+      } />
+
+
           <Route path="/register" element={
             // <PublicRoute>
 

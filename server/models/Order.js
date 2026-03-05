@@ -9,11 +9,25 @@ const orderItemSchema = new mongoose.Schema({
   },
   name: String,
   price: Number,
+  mrp:Number,
   quantity: Number,
   categoryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category"
-  }
+  },
+  status: {
+    type: String,
+    enum: ["PLACED", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED", "RETURN_REQUESTED", "RETURNED", "REFUNDED"],
+    default: "PLACED"
+  },
+  expectedDeliveryDate: {
+    type: Date
+  },
+   confirmAt: Date,             
+  shippedAt: Date,            
+  deliveredAt: Date ,
+   cancelReason: String,    
+    returnReason: String,    
 }, { _id: false });
 
 const orderSchema = new mongoose.Schema({
@@ -60,13 +74,20 @@ const orderSchema = new mongoose.Schema({
 
   paymentStatus: {
     type: String,
-    enum: ["PENDING", "PAID", "FAILED"],
+    enum: ["PENDING", "PAID", "FAILED", "REFUNDED"],
     default: "PENDING"
   },
 
   orderStatus: {
     type: String,
-    enum: ["PLACED", "SHIPPED", "DELIVERED", "CANCELLED"],
+    enum: [   "PENDING_PAYMENT", "PLACED",
+    "CONFIRMED",
+    "SHIPPED",
+    "DELIVERED",
+    "CANCELLED",
+    "RETURN_REQUESTED",
+    "RETURNED",
+    "REFUNDED"],
     default: "PLACED"
   },
 
@@ -77,7 +98,10 @@ const orderSchema = new mongoose.Schema({
     city: String,
     state: String,
     postalCode: String
-  }
+  },
+  razorpayOrderId: String,
+razorpayPaymentId: String,
+razorpaySignature: String,
 
 }, { timestamps: true });
 

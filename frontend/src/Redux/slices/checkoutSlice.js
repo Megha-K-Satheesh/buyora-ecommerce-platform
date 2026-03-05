@@ -39,7 +39,7 @@ export const verifyPayment = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const res = await checkoutService.verifyPayment(payload);
-      return res.data.data; // backend should return verified order
+      return res.data.data; 
     } catch (err) {
       return thunkAPI.rejectWithValue(
         err.response?.data?.message || "Payment verification failed"
@@ -47,6 +47,7 @@ export const verifyPayment = createAsyncThunk(
     }
   }
 );
+
 
 
 const initialState = {
@@ -61,6 +62,9 @@ const initialState = {
   lastOrder: null,
   paymentRequired: false,
   razorpayOrderId: null,
+
+
+
 
   loading: false,
   error: null,
@@ -149,6 +153,8 @@ const checkoutSlice = createSlice({
   state.loading = false;
   state.error = action.payload;
 })
+
+
   },
 });
 

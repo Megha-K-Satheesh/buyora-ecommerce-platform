@@ -9,6 +9,7 @@ const { setupRoutes } = require('./routes');
 const { errorHandler, notFound } = require('./middlewares/errorHandler');
 const { initializeSocket } = require('./utils/socket');
 const { runSeeders } = require('./utils/seeder');
+const { scheduleDeliveryCron } = require('./utils/corn');
 
 class Server {
   constructor() {
@@ -46,6 +47,9 @@ class Server {
       setTimeout(async () => {
         await runSeeders();
       }, 2000);
+      
+    //    scheduleDeliveryCron()
+    // logger.info("Delivery cron job scheduled");
     });
     
     this.setupGracefulShutdown();

@@ -19,8 +19,5 @@ export const checkoutService = {
   },
 
 
-  saveAddress(data) {
-    return apiClient.post("/user/checkout/save-address", data);
-  }
 
 };

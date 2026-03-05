@@ -90,13 +90,31 @@ class CheckoutService {
 
     const finalAmount = Math.max(subtotal - totalDiscount - (cart.discountAmount || 0), 0);
 
-    const orderItems = cart.items.map(item => ({
-      productId: item.productId,
-      name: item.name,
-      price: item.price,
-      quantity: item.quantity,
-      categoryId: item.categoryId || null
-    }));
+    // -- - - - - - - -- -//commented to check corn - - - - - - -- - - - - 
+
+    // const orderItems = cart.items.map(item => ({
+    //   productId: item.productId,
+    //   name: item.name,
+    //   price: item.price,
+    //   quantity: item.quantity,
+    //   categoryId: item.categoryId || null
+    // }));
+
+    const now = new Date();
+
+const orderItems = cart.items.map(item => ({
+  productId: item.productId,
+  name: item.name,
+  price: item.price,
+  mrp:item.mrp,
+  quantity: item.quantity,
+  categoryId: item.categoryId || null,
+  status: "PLACED",
+  confirmAt: new Date(now.getTime() + 1*60*1000),
+  shippedAt: new Date(now.getTime() + 2*60*1000),  
+  deliveredAt: new Date(now.getTime() + 3*60*1000),  
+   expectedDeliveryDate: new Date(now.getTime() + 3*24*60*60*1000) 
+}));
 
     const order = new Order({
   userId,
@@ -107,7 +125,10 @@ class CheckoutService {
   totalAmount: finalAmount,
   paymentMethod,
   paymentStatus: "PENDING",
-  orderStatus: "PLACED",
+  // orderStatus: "PLACED",
+  orderStatus: paymentMethod === "ONLINE" 
+    ? "PENDING_PAYMENT" 
+    : "PLACED",
   shippingAddress: {
     fullName: address.fullName,
     phone: address.phone,
@@ -136,6 +157,9 @@ await order.save();
         receipt: order._id.toString()
       });
 
+
+      order.razorpayOrderId = razorpayOrder.id;
+  await order.save();
       return {
         order,
         paymentRequired: true,
@@ -160,14 +184,23 @@ static async verifyPayment(userId, body) {
     .digest("hex");
 
   if (generated_signature !== razorpay_signature) {
-    throw new Error("Payment verification failed");
+    throw ErrorFactory.validation("Payment verification failed");
   }
 
   const order = await Order.findOne({ _id: orderId, userId });
-  if (!order) throw new Error("Order not found");
+  if (!order) throw ErrorFactory.notFound("Order not found");
 
   order.paymentStatus = "PAID";
+  
+if (order.orderStatus === "PENDING_PAYMENT") {
   order.orderStatus = "PLACED";
+}
+
+
+order.razorpayPaymentId = razorpay_payment_id;
+order.razorpaySignature = razorpay_signature;
+
+
   await order.save();
 
   const cart = await Cart.findOne({ userId });
@@ -180,6 +213,12 @@ static async verifyPayment(userId, body) {
   }
 
   return order;
-}}
+}
+
+
+
+
+
+}
 
 module.exports = CheckoutService;

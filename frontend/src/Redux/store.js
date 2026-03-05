@@ -3,6 +3,7 @@ import adminAuthReducer from '../Redux/slices/adminAuthSlice';
 import authReducer from '../Redux/slices/authSlice';
 import cartReducer from '../Redux/slices/cartSlice';
 import checkoutReducer from '../Redux/slices/checkoutSlice';
+import orderReducer from '../Redux/slices/orderSlice';
 import userReducer from '../Redux/slices/userSlice';
 import brandReducer from './slices/admin/brandSlice';
 import categoryReducer from './slices/admin/categorySlice';
@@ -21,6 +22,7 @@ export const store = configureStore({
        cart: cartReducer,
        coupon:couponReducer,
       //  userCoupon:userCouponReducer,
-      checkout:checkoutReducer
+      checkout:checkoutReducer,
+      order:orderReducer,
   },
 });

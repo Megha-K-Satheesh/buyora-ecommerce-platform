@@ -39,12 +39,22 @@ const OrderSuccessPage = () => {
           <p><strong>Order Status:</strong> {lastOrder.orderStatus}</p>
         </div>
 
-        <Button
-          onClick={() => navigate("/")}
-          className="w-full"
-        >
-          Continue Shopping
-        </Button>
+       <div className="space-y-2">
+  <Button
+    onClick={() => navigate("/orders")}
+    className="w-full"
+  >
+    View My Orders
+  </Button>
+
+  <Button
+    onClick={() => navigate("/")}
+    variant="secondary"
+    className="w-full"
+  >
+    Continue Shopping
+  </Button>
+</div>
       </div>
     </div>
   );

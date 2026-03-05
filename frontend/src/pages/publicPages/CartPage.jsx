@@ -20,16 +20,10 @@ const CartPage = () => {
   const dispatch = useDispatch();
  const navigate = useNavigate();
 
-  // const { cartItems } = useSelector((state) => state.cart);
+
   const { isAuthenticated } = useSelector((state) => state.auth);
 
-  // const {
-  //   coupon,
-  //   discountAmount,
-  //   loading,
-  //   error,
-  //   isApplied
-  // } = useSelector((state) => state.userCoupon);
+ 
 
 
   const {
@@ -69,7 +63,7 @@ const CartPage = () => {
     dispatch(removeFromCart(variationId));
     if(!isAuthenticated){
 
-      dispatch(clearCoupon()); // auto clear coupon
+      dispatch(clearCoupon()); 
     }
    
   };
@@ -80,7 +74,7 @@ const CartPage = () => {
     dispatch(updateCartQuantity({ variationId, quantity }));
     if(!isAuthenticated){
 
-      dispatch(clearCoupon()); // auto clear coupon
+      dispatch(clearCoupon()); 
     }
   };
 
@@ -109,8 +103,7 @@ const CartPage = () => {
 
   const platformFee = 0;
 
-  // const totalPayable =
-  //   totalMRP - totalDiscount - discountAmount + platformFee;
+
   const totalPayable = isAuthenticated
   ? finalAmount + platformFee
   : totalMRP - totalDiscount - discountAmount + platformFee;
@@ -252,42 +245,6 @@ const CartPage = () => {
           </p>
         )}
 
-        {/* {isApplied && (
-          <div className="flex justify-between items-center mt-2">
-            <p className="text-green-600 font-semibold">
-              Coupon Applied Successfully 
-            </p>
-
-            <button
-              onClick={() => dispatch(clearCoupon()
-              
-                setCouponCode(""))}
-              className="text-sm text-red-500 underline"
-            >
-              Remove
-            </button>
-          </div>
-        )} */}
-
-        
-{/* 
-        {isApplied && (
-  <div className="flex justify-between items-center mt-2">
-    <p className="text-green-600 font-semibold">
-      Coupon Applied Successfully 
-    </p>
-
-    <button
-      onClick={() => {
-        dispatch(clearCoupon());
-        setCouponCode("");
-      }}
-      className="text-sm text-red-500 underline"
-    >
-      Remove
-    </button>
-  </div>
-)} */}
 {isApplied && (
   <div className="flex justify-between items-center mt-2">
     <p className="text-green-600 font-semibold">
@@ -311,12 +268,6 @@ const CartPage = () => {
   </div>
 )}
 
-       {/* <button
-  onClick={() => navigate("/product/checkout")}
-  className="mt-4 w-full bg-pink-600 text-white py-3 rounded font-bold"
->
-  Proceed to Checkout
-</button> */}
 <button
   onClick={() => {
     if (!isAuthenticated) {
