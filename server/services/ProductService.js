@@ -37,7 +37,7 @@ class ProductService {
   ? (typeof attributes === "string" ? JSON.parse(attributes) : attributes)
   : {};
   if (Object.keys(parsedAttributes).length === 0) {
-  // console.log("No attributes provided, variants will be empty");
+// console.log("No attributes provided, variants will be empty");
 }
 
   //  console.log("Parsed attributes:", parsedAttributes);
@@ -232,7 +232,7 @@ static async deleteProduct(id) {
 
 
     
-//function
+
 function generateVariants(attributes) {
   const keys = Object.keys(attributes);
   if (!keys.length) return [];
@@ -248,7 +248,7 @@ function generateVariants(attributes) {
     });
     variants = temp;
   });
-// console.log("Generated variants:", variants);
+
   return variants;
  
 }

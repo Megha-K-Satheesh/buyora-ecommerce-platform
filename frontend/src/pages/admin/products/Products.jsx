@@ -69,7 +69,7 @@ const Products = () => {
       try {
         await dispatch(deleteProduct(id)).unwrap();
         showSuccess("Product deleted successfully");
-
+        navigate("/admin-dashboard/products")
         dispatch(
           getProductsList({
             page: currentPage,

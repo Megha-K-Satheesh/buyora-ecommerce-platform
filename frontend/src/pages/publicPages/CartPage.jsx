@@ -13,6 +13,7 @@ import {
   updateCartQuantity,
   verifyCoupon
 } from "../../Redux/slices/cartSlice";
+import Navbar from "../../components/ui/Navbar";
 
 
 
@@ -110,13 +111,20 @@ const CartPage = () => {
 
   if (cartItems.length === 0)
     return (
-      <h2 className="text-center mt-10">
+       <>
+       <Navbar/>
+      <h2 className="text-center mt-50">
         Your Cart is Empty
       </h2>
+       </>
     );
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+
+    <>
+<Navbar/>
+  
+    <div className="max-w-4xl mx-auto p-6 mt-25">
       <h1 className="text-2xl font-bold mb-6">
         Shopping Cart
       </h1>
@@ -282,6 +290,7 @@ const CartPage = () => {
 </button>
       </div>
     </div>
+    </>
   );
 };
 

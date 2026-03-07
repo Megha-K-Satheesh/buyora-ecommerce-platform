@@ -44,29 +44,7 @@ const selectedPriceRange = [
     ? Number(maxPrice)
     : filters?.priceRange?.max || 10000,
 ];
-// const updateQuery = (key, value) => {
-//   const params = new URLSearchParams(location.search);
 
-//   const current = params.get(key)?.split(",") || [];
-
-//   let updated;
-
-//   if (current.includes(value)) {
-//     updated = current.filter((v) => v !== value);
-//   } else {
-//     updated = [...current, value];
-//   }
-
-//   if (updated.length > 0) {
-//     params.set(key, updated.join(","));
-//   } else {
-//     params.delete(key);
-//   }
-
-//   params.set("page", 1);
-
-//   navigate(`?${params.toString()}`);
-// };
 const updateQuery = (key, value) => {
   const params = new URLSearchParams(location.search);
 

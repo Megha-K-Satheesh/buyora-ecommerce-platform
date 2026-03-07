@@ -18,14 +18,14 @@ class OrderService {
 
     const orders = await Order.find({ userId })
       .sort({ createdAt: -1 })
-      .populate("items.productId", "name images price") // populate product details
+      .populate("items.productId", "name images price")
       .lean();
 
     return orders.map(order => ({
       orderId: order._id,
       orderNumber: order.orderNumber,
       totalAmount: order.totalAmount,
-      orderStatus: order.orderStatus, // overall order status
+      orderStatus: order.orderStatus,
       paymentStatus: order.paymentStatus,
       createdAt: order.createdAt,
       items: order.items.map(item => ({
@@ -70,7 +70,7 @@ class OrderService {
       totalAmount: order.totalAmount,
       paymentMethod: order.paymentMethod,
       paymentStatus: order.paymentStatus,
-      orderStatus: order.orderStatus, // overall
+      orderStatus: order.orderStatus,
       shippingAddress: order.shippingAddress,
       createdAt: order.createdAt,
       items: order.items.map(item => ({
@@ -138,7 +138,7 @@ class OrderService {
 
   
     if (activeItems.length === 0) {
-      order.orderStatus = "CANCELLED"; // All items cancelled
+      order.orderStatus = "CANCELLED"; 
    
     }
 
@@ -165,31 +165,32 @@ class OrderService {
   }
 
 
-  static async requestReturn(userId, orderId, productId) {
-    const order = await Order.findOne({ _id: orderId, userId });
-    if (!order) throw ErrorFactory.notFound("Order not found");
 
-    let changed = false;
+static async requestReturn(userId, orderId, productId) {
 
-    order.items.forEach(item => {
-      if (
-        item.productId.toString() === productId.toString() &&
-        item.status === "DELIVERED"
-      ) {
-        item.status = "RETURN_REQUESTED";
-        changed = true;
-      }
-    });
+  const order = await Order.findOne({ _id: orderId, userId });
+  if (!order) throw ErrorFactory.notFound("Order not found");
 
-    if (!changed) throw ErrorFactory.validation("Item cannot be returned");
+  const item = order.items.find(
+    i => i.productId.toString() === productId.toString()
+  );
 
-    syncOrderStatus(order);
-    await order.save();
+  if (!item) throw ErrorFactory.notFound("Item not found");
 
-    return order;
+  if (item.status !== "DELIVERED") {
+    throw ErrorFactory.validation("Item cannot be returned");
   }
 
+  item.status = "RETURN_REQUESTED";
+  item.returnRequestedAt = new Date();
 
+
+  syncOrderStatus(order);
+
+  await order.save();
+
+  return order;
+}
 
 
 

@@ -16,10 +16,10 @@ class BrandService {
       throw ErrorFactory.validation("Please select at least one category");
     }
 
-    // Extract category IDs from frontend array
+
     const categoryIds = category.map(c => c.value);
 
-    // Validate each category
+  
     for (const catId of categoryIds) {
       const cat = await Category.findById(catId);
       if (!cat) {
@@ -30,7 +30,7 @@ class BrandService {
       }
     }
 
-    // Create new brand
+    
     const brand = new Brand({
       name,
       categories: categoryIds,

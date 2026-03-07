@@ -35,11 +35,11 @@ class CartService {
     if (existingItem) existingItem.quantity += cartItem.quantity || 1;
     else cart.items.push(cartItem);
 
-    // Clear applied coupon because cart changed
+   
     cart.appliedCouponId = null;
     cart.appliedCouponCode = null;
     cart.discountAmount = 0;
-    // cart.finalAmount = 0;
+  
      cart.finalAmount = cart.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
     await cart.save();
@@ -50,13 +50,13 @@ class CartService {
 
   static async mergeCart(userId, guestCart = []) {
     if (!guestCart || guestCart.length === 0) {
-      return await CartService.getCart(userId); // nothing to merge
+      return await CartService.getCart(userId); 
     }
 
     let cart = await Cart.findOne({ userId });
     if (!cart) cart = await Cart.create({ userId, items: [] });
 
-    // Convert guestCart item IDs to ObjectId
+ 
     const normalizedGuestCart = guestCart.map(item => ({
       ...item,
       productId: new mongoose.Types.ObjectId(item.productId),
@@ -75,16 +75,16 @@ class CartService {
       }
     }
 
-    // Clear coupon after merging
+  
     cart.appliedCouponId = null;
     cart.appliedCouponCode = null;
     cart.discountAmount = 0;
-    // cart.finalAmount = 0;
+  
      cart.finalAmount = cart.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
     await cart.save();
 
-    // Return clean object for Redux
+
     return {
       items: cart.items,
       appliedCoupon: cart.appliedCouponCode || null,
@@ -100,11 +100,11 @@ class CartService {
     const varId = new mongoose.Types.ObjectId(variationId);
     cart.items = cart.items.filter(x => !x.variationId.equals(varId));
 
-    // Clear coupon because cart changed
+    
     cart.appliedCouponId = null;
     cart.appliedCouponCode = null;
     cart.discountAmount = 0;
-    // cart.finalAmount = 0;
+   
      cart.finalAmount = cart.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
     await cart.save();
@@ -122,11 +122,11 @@ class CartService {
 
     item.quantity = quantity;
 
-    // Clear coupon because quantity changed
+   
     cart.appliedCouponId = null;
     cart.appliedCouponCode = null;
     cart.discountAmount = 0;
-    // cart.finalAmount = 0;
+    
      cart.finalAmount = cart.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
     await cart.save();
@@ -137,7 +137,7 @@ class CartService {
     let cart = await Cart.findOne({ userId });
     if (!cart) cart = await Cart.create({ userId, items: [] });
 
-    // Compute subtotal for display
+  
     const subtotal = cart.items.reduce(
       (total, item) => total + item.price * item.quantity,
       0

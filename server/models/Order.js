@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 const { nanoid } = require("nanoid");
 
@@ -7,35 +8,87 @@ const orderItemSchema = new mongoose.Schema({
     ref: "Product",
     required: true
   },
+
   name: String,
-  price: Number,
-  mrp:Number,
-  quantity: Number,
+
+  price: {
+    type: Number,
+    required: true
+  },
+
+  mrp: Number,
+
+  quantity: {
+    type: Number,
+    required: true
+  },
+
   categoryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category"
   },
+
   status: {
     type: String,
-    enum: ["PLACED", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED", "RETURN_REQUESTED", "RETURNED", "REFUNDED"],
+    enum: [
+      "PLACED",
+      "CONFIRMED",
+      "SHIPPED",
+      "DELIVERED",
+      "CANCELLED",
+      "RETURN_REQUESTED",
+      "RETURN_APPROVED",
+      "RETURN_REJECTED",
+   
+    "RETURN_REJECTED",
+      "RETURNED"
+    ],
     default: "PLACED"
   },
-  expectedDeliveryDate: {
-    type: Date
+
+  expectedDeliveryDate: Date,
+
+  confirmAt: Date,
+  shippedAt: Date,
+  deliveredAt: Date,
+
+  cancelReason: String,
+
+  returnReason: String,
+
+  returnRequestedAt: Date,
+
+  returnedAt: Date,
+
+  refundStatus: {
+    type: String,
+    enum: ["NONE", "PENDING", "REFUNDED"],
+    default: "NONE"
   },
-   confirmAt: Date,             
-  shippedAt: Date,            
-  deliveredAt: Date ,
-   cancelReason: String,    
-    returnReason: String,    
-}, { _id: false });
+
+  refundAmount: {
+    type: Number,
+    default: 0
+  },
+
+  refundMethod: {
+    type: String,
+    enum: ["WALLET", "RAZORPAY", "NONE"],
+    default: "NONE"
+  },
+
+  refundProcessedAt: Date
+
+}, { timestamps: true });
+
+
+
 
 const orderSchema = new mongoose.Schema({
 
   orderNumber: {
     type: String,
-    unique: true,
-
+    unique: true
   },
 
   userId: {
@@ -80,14 +133,17 @@ const orderSchema = new mongoose.Schema({
 
   orderStatus: {
     type: String,
-    enum: [   "PENDING_PAYMENT", "PLACED",
+     enum: [
+    "PENDING_PAYMENT",
+    "PLACED",
     "CONFIRMED",
     "SHIPPED",
     "DELIVERED",
     "CANCELLED",
-    "RETURN_REQUESTED",
-    "RETURNED",
-    "REFUNDED"],
+    "PARTIALLY_CANCELLED",
+    "PARTIALLY_RETURNED",
+    "RETURNED"
+  ],
     default: "PLACED"
   },
 
@@ -99,11 +155,20 @@ const orderSchema = new mongoose.Schema({
     state: String,
     postalCode: String
   },
+
   razorpayOrderId: String,
-razorpayPaymentId: String,
-razorpaySignature: String,
+  razorpayPaymentId: String,
+  razorpaySignature: String,
+
+  refundSummary: {
+    totalRefundedAmount: {
+      type: Number,
+      default: 0
+    }
+  }
 
 }, { timestamps: true });
+
 
 
 orderSchema.pre("save", function (next) {
@@ -112,5 +177,6 @@ orderSchema.pre("save", function (next) {
   }
   next();
 });
+
 
 module.exports = mongoose.model("Order", orderSchema);

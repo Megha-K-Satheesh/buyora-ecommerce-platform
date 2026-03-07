@@ -37,25 +37,48 @@ const AllOrdersPage = () => {
             key={order.orderId}
             className="rounded-xl p-5 mb-6 shadow-sm hover:shadow-md transition-shadow duration-200 bg-white"
           >
-            {/* Order Header */}
+         
+
             <div className="flex justify-between items-center mb-4 flex-wrap">
-              <p className="font-semibold text-lg">Order #{order.orderNumber}</p>
-              <p className="text-sm mt-1 md:mt-0">
-                {order.items.every((i) => i.status === "CANCELLED") ? (
-                  <span className="font-medium text-red-600">Cancelled</span>
-                ) : (
-                  <span className="font-medium text-gray-600">
-                    Expected Delivery on{" "}
-                    {earliestDate &&
-                      earliestDate.toLocaleDateString("en-US", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                  </span>
-                )}
-              </p>
-            </div>
+  <p className="font-semibold text-lg">Order #{order.orderNumber}</p>
+
+  <p className="text-sm mt-1 md:mt-0">
+    {order.items.every((i) => i.status === "CANCELLED") ? (
+      <span className="font-medium text-red-600">Cancelled</span>
+
+    ) : order.items.every((i) => i.status === "DELIVERED") ? (
+      <span className="font-medium text-green-600">
+        Delivered on{" "}
+        {earliestDate &&
+          earliestDate.toLocaleDateString("en-US", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          })}
+      </span>
+
+    ) : order.items.some((i) => i.status === "RETURN_APPROVED") ? (
+      <span className="font-medium text-blue-600">Return Approved</span>
+
+    ) : order.items.some((i) => i.status === "RETURN_REJECTED") ? (
+      <span className="font-medium text-red-500">Return Rejected</span>
+
+    ) : order.items.some((i) => i.status === "RETURN_REQUESTED") ? (
+      <span className="font-medium text-yellow-600">Return Requested</span>
+
+    ) : (
+      <span className="font-medium text-gray-600">
+        Expected Delivery on{" "}
+        {earliestDate &&
+          earliestDate.toLocaleDateString("en-US", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          })}
+      </span>
+    )}
+  </p>
+</div>
 
             {/* Items List */}
             <div className="flex flex-col gap-4 mb-4">

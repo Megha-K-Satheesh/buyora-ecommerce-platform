@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AdminOutletHead from "../../../components/Admin/AdminOutletHead";
 import Button from "../../../components/ui/Button";
 import FormInput from "../../../components/ui/FormInput";
@@ -14,6 +14,7 @@ import { getCategory, getCategoryById, updateCategory } from "../../../Redux/sli
 const UpdateCategoryForm = () => {
   const dispatch = useDispatch();
   const [parentLevel, setParentLevel] = useState(0);
+  const navigate = useNavigate()
   const { categories, loading,loadingCategory,selectedCategory } = useSelector((state) => state.category);
       const {categoryId} = useParams()
   
@@ -126,6 +127,7 @@ const UpdateCategoryForm = () => {
       await dispatch(updateCategory({categoryId,data:formattedData})).unwrap();
         dispatch(getCategory());
       showSuccess("Category updated successfully");
+       navigate("/admin-dashboard/categories")
       reset();
     } catch (err) {
       showError(err);

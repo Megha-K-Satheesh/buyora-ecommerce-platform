@@ -32,7 +32,7 @@ const SideMenu = ()=>{
               </li>
             <li className="text-sm lg:text-xl text-gray-300  my-4">SHOPPING</li>
               <li className="my-1">
-                <NavLink to="orders" className={linkClass}>
+                <NavLink to="all-orders" className={linkClass}>
                     Orders
                 </NavLink>
               </li>
@@ -42,12 +42,12 @@ const SideMenu = ()=>{
                 </NavLink>
               </li>
                <li className="my-1">
-                <NavLink to="walet" className={linkClass}>
-                    Walet
+                <NavLink to="wallet" className={linkClass}>
+                    Wallet
                 </NavLink>
               </li>
                <li className="my-1">
-                <NavLink to="pcoupons" className={linkClass}>
+                <NavLink to="user-coupons" className={linkClass}>
                     Coupons
                 </NavLink>
               </li>

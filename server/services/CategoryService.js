@@ -71,13 +71,12 @@ class CategoryService{
       }));
   }
      
-//for dropdown
+
     static async getCategories() {
     const categories = await Category.find().lean();
     return this.makeTree(categories);
   }
 
-  //for list
   static async categories(page=1,limit=10,level,status,search,category){
     
      page = parseInt(page)
@@ -97,7 +96,7 @@ class CategoryService{
      }
      
      if (category) {
-  // get all children IDs recursively
+  
   const allCategories = await Category.find().lean();
   const getChildrenIds = (id) => {
     const children = allCategories.filter(c => String(c.parentId) === String(id));

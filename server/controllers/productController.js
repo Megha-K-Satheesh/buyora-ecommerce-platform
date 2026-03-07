@@ -59,17 +59,6 @@ class ProductController extends BaseController{
  })
 
 
-  //  static getSidebarFilters = BaseController.asyncHandler(async (req, res) => {
-
-  //   const { category } = req.query;
-
-  //   const result = await ProductService.getSidebarFilters(category);
-
-  //   BaseController.logAction("SIDEBAR FILTERS FETCHED", result);
-  //   BaseController.sendSuccess(res, "SIDEBAR FILTERS FETCHED", result);
-
-  // });
-
 
   static updateProduct = BaseController.asyncHandler(async (req, res) => {
     const { id } = req.params;

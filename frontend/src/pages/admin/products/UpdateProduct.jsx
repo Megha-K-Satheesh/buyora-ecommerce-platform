@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useForm, useWatch } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import Select from "react-select"
 
 import AdminOutletHead from "../../../components/Admin/AdminOutletHead"
@@ -14,9 +14,9 @@ import { showError, showSuccess } from "../../../components/ui/Toastify"
 import { getBrandsByCategoryId } from "../../../Redux/slices/admin/brandSlice"
 import { getCategory } from "../../../Redux/slices/admin/categorySlice"
 
+import { updateProduct } from "../../../Redux/slices/admin/productSlice"
 import { getProductById } from "../../../Redux/slices/general/productSlice"
 import { CategoryUtils } from "../../../utils/categoryUtiles"
-import { updateProduct } from "../../../Redux/slices/admin/productSlice"
 
 const EditProduct = () => {
   const dispatch = useDispatch()
@@ -27,8 +27,8 @@ const EditProduct = () => {
  const { product } = useSelector((state) => state.generalProducts)
 
 
-const [existingImages, setExistingImages] = useState([]);
-
+ const [existingImages, setExistingImages] = useState([]);
+ const navigate = useNavigate()
   const [files, setFiles] = useState([])
 useEffect(() => {
   if (product) {
@@ -132,6 +132,7 @@ useEffect(() => {
        await dispatch(updateProduct({ id, formData })).unwrap()
 
       showSuccess("Product Updated Successfully")
+        navigate("/admin-dashboard/products")
 
     } catch (error) {
       showError(error)

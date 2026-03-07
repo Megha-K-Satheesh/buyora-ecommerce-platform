@@ -3,8 +3,11 @@ import adminAuthReducer from '../Redux/slices/adminAuthSlice';
 import authReducer from '../Redux/slices/authSlice';
 import cartReducer from '../Redux/slices/cartSlice';
 import checkoutReducer from '../Redux/slices/checkoutSlice';
+import userCouponReducer from '../Redux/slices/couponSlice';
 import orderReducer from '../Redux/slices/orderSlice';
 import userReducer from '../Redux/slices/userSlice';
+import userWalletReducer from '../Redux/slices/walletSlice';
+import adminOrderReducer from './slices/admin/adminOrderSlice';
 import brandReducer from './slices/admin/brandSlice';
 import categoryReducer from './slices/admin/categorySlice';
 import couponReducer from './slices/admin/couponSlice';
@@ -21,8 +24,10 @@ export const store = configureStore({
     generalProducts:productsReducer,
        cart: cartReducer,
        coupon:couponReducer,
-      //  userCoupon:userCouponReducer,
+        userCoupon:userCouponReducer,
       checkout:checkoutReducer,
       order:orderReducer,
+      adminOrder:adminOrderReducer,
+      wallet :userWalletReducer
   },
 });

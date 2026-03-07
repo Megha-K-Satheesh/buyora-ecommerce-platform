@@ -4,6 +4,7 @@ const Cart = require("../models/Cart")
 const couponUsage = require("../models/admin/couponUsage");
 const Order = require("../models/Order");
 const { ErrorFactory } = require("../utils/errors");
+const mongoose = require("mongoose");
 
 
 class UserCouponService {
@@ -69,15 +70,15 @@ class UserCouponService {
 
 if (coupon.scope === "CATEGORY") {
 
-  //  Get variation ids from cart
+
   const variationIds = cartItems.map(item => item.variationId);
 
-  // Get product categories (Level 3)
+ 
   const products = await Product.find({
     "variations._id": { $in: variationIds }
   }).select("category").lean();
 
-  //  Load all categories once
+
   const categories = await Category.find().lean();
 
   const categoryMap = {};
@@ -85,7 +86,7 @@ if (coupon.scope === "CATEGORY") {
     categoryMap[cat._id.toString()] = cat;
   });
 
-  // Collect all parent categories for each product
+
   let cartAllCategoryIds = [];
 
   for (let product of products) {
@@ -101,7 +102,7 @@ if (coupon.scope === "CATEGORY") {
     }
   }
 
-  //  Check if coupon category matches any level
+  
   const couponCategoryIds = coupon.applicableCategories.map(id =>
     id.toString()
   );
@@ -122,7 +123,7 @@ if (coupon.scope === "CATEGORY") {
     } else {
       discountAmount = (cartTotal * coupon.discount.value) / 100;
 
-      // Apply max discount cap
+
       if (coupon.discount.maxDiscount) {
         discountAmount = Math.min(discountAmount, coupon.discount.maxDiscount);
       }
@@ -160,19 +161,18 @@ if (coupon.scope === "CATEGORY") {
 
 
   static async removeCoupon(userId) {
-      //  Find cart
+     
       const cart = await Cart.findOne({ userId });
   
       if (!cart) {
         throw new Error("Cart not found");
       }
   
-      // Clear coupon fields
+   
       cart.appliedCouponId = null;
       cart.appliedCouponCode = null;
       cart.discountAmount = 0;
   
-      //  Recalculate totals
       const totalMRP = cart.items.reduce(
         (acc, item) => acc + item.mrp * item.quantity,
         0
@@ -197,6 +197,64 @@ if (coupon.scope === "CATEGORY") {
     }
 
 
+
+
+  static async getAvailableCoupons(userId, { page = 1, limit = 10 } = {}) {
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      throw ErrorFactory.validation("Invalid user ID");
+    }
+
+    const now = new Date();
+    const existingOrders = await Order.countDocuments({ userId });
+
+   
+    const query = {
+       isActive: true,
+      validFrom: { $lte: now },
+      validTill: { $gte: now }
+    };
+
+
+    if (existingOrders > 0) {
+      query.isFirstOrderOnly = false;
+    }
+
+    console.log(query)
+   
+    const totalCount = await Coupon.countDocuments(query);
+
+    const coupons = await Coupon.find(query)
+      .populate("applicableCategories", "name")
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({ createdAt: -1 }); 
+
+  
+    const formattedCoupons = coupons.map(coupon => ({
+      couponId: coupon._id,
+      code: coupon.code,
+      description: coupon.description || "",
+      discountType: coupon.discount.type,
+      discountValue: coupon.discount.value,
+      maxDiscount: coupon.discount.maxDiscount || null,
+      scope: coupon.scope,
+      applicableCategories: coupon.applicableCategories.map(cat => ({
+        id: cat._id,
+        name: cat.name
+      })),
+      minOrderAmount: coupon.minOrderAmount,
+      validFrom: coupon.validFrom,
+      validTill: coupon.validTill,
+      isFirstOrderOnly: coupon.isFirstOrderOnly
+    }));
+
+    return {
+      totalCount,
+      page,
+      limit,
+      coupons: formattedCoupons
+    };
+  }
   
 }
 

@@ -55,7 +55,7 @@ const {user} = useSelector((state)=>state.user)
                                  hover:text-black
                                     transform-all duration-200
                                  ">
-                      <Link to="/">Orders</Link>
+                      <Link to="/all-orders">Orders</Link>
                     </li>
                     <li  className="px-4 py-2
                                  hover:text-xl
@@ -76,14 +76,14 @@ const {user} = useSelector((state)=>state.user)
                                  hover:text-black
                                     transform-all duration-200
                                  ">
-                      <Link to="/">Copuon</Link>
+                      <Link to="/account/user-coupons">Copuon</Link>
                     </li>
                     <li  className="px-4 py-2
                                  hover:text-xl
                                  hover:text-black
                                     transform-all duration-200
                                  ">
-                      <Link to="/">Walet</Link>
+                      <Link to="/account/wallet">Wallet</Link>
                     </li>
                    
                    

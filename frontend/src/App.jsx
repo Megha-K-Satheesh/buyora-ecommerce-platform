@@ -11,8 +11,10 @@ import { useDispatch } from "react-redux";
 import { AdminRoute, UserRoute } from "./components/protectedRoutes/ProtectedRoutes";
 import NotFound from "./components/ui/NotFount";
 import ServerError from "./components/ui/ServerError";
+import NavbarOrderLayout from "./layouts/OrderLayout";
 import AddBrand from "./pages/admin/brand/addBrand";
 import AddCoupon from "./pages/admin/coupons/AddCoupon";
+import EditCoupon from "./pages/admin/coupons/EditCoupon";
 import EditProduct from "./pages/admin/products/UpdateProduct";
 import CartPage from "./pages/publicPages/CartPage";
 import Home from "./pages/publicPages/Home";
@@ -20,8 +22,10 @@ import ProductListingPage from "./pages/publicPages/ProductListingPage";
 import SingleProductPage from "./pages/publicPages/SingleProductPage";
 import CheckoutPage from "./pages/user/checkout/checkout";
 import OrderSuccessPage from "./pages/user/checkout/OrderSuccessPage";
+import CouponsList from "./pages/user/coupon/UserCoupons";
 import AllOrdersPage from "./pages/user/order/AllOrderPage";
 import SingleOrderPage from "./pages/user/order/SingleOrderView";
+import Wallet from "./pages/user/wallet/walletDisplay";
 import { getUserProfile } from "./Redux/slices/userSlice";
 const AdminLayouts = lazy(() => import("./layouts/AdminLayouts"));
 const Banners = lazy(() => import("./pages/admin/banner/Banners"));
@@ -178,6 +182,7 @@ function App() {
           <Route path="orders" element={<Orders />} />
           <Route path="coupons" element={<Coupons />} />
           <Route path="/admin-dashboard/Coupons/add-coupon" element={<AddCoupon/>  }/>
+          <Route path ="/admin-dashboard/Coupons/edit-coupon/:couponId" element={<EditCoupon/>} />
 
           <Route path="users" element={<Users />} />
           <Route path="banners" element={<Banners />} />
@@ -209,11 +214,14 @@ function App() {
               element={<ChangePassword />}
               />
 
-
-
+          <Route path="all-orders" element={<AllOrdersPage/>}/>
+          <Route path="wallet" element={<Wallet/>}/>
+          <Route path ="user-coupons" element ={<CouponsList/>}/>
           </Route>
+         
+          <Route path='all-orders' element={<NavbarOrderLayout/>}/>
               
-       
+          
         </Routes>
       </Suspense>
 

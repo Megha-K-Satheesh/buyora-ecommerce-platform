@@ -5,9 +5,12 @@ import Button from "../../../components/ui/Button";
 import Pagination from "../../../components/ui/Pagination";
 import SearchInput from "../../../components/ui/SearchInput";
 import { getCategory } from "../../../Redux/slices/admin/categorySlice";
-import { getCouponsList, setCurrentPage } from "../../../Redux/slices/admin/couponSlice";
+import { deleteCoupon, getCouponsList, setCurrentPage } from "../../../Redux/slices/admin/couponSlice";
 
+import { useNavigate } from "react-router-dom";
 import CouponsTable from "../../../components/Admin/CouponsTable";
+import { showError, showSuccess } from "../../../components/ui/Toastify";
+import Swal from "sweetalert2";
 
 const Coupons = () => {
   const dispatch = useDispatch();
@@ -16,7 +19,7 @@ const Coupons = () => {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-
+  const navigate = useNavigate()
  
   const { coupons, loading, currentPage, totalPages, totalCoupons } = useSelector(
     (state) => state.coupon
@@ -36,10 +39,42 @@ const Coupons = () => {
     });
   };
 
-const handleClick = ()=>{
+ const handleAdd = () => {
+    navigate("/admin-dashboard/coupons/add-coupon");
+  };
 
-}
 
+  const handleDelete = async (couponId) => {
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "Do you really want to delete this coupon?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, delete it!",
+    cancelButtonText: "Cancel",
+    reverseButtons: true,
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await dispatch(deleteCoupon(couponId)).unwrap();
+      showSuccess("Coupon deleted successfully");
+
+      // Refresh the coupon list after deletion
+      dispatch(
+        getCouponsList({
+          page: currentPage,
+          limit: 10,
+          search,
+          status,
+          category: selectedCategory,
+        })
+      );
+    } catch (err) {
+      showError(err);
+    }
+  }
+};
 
  
   useEffect(() => {
@@ -82,8 +117,8 @@ const handleClick = ()=>{
       <AdminOutletHead heading="COUPONS" />
       <div className="flex justify-end mr-20 mt-10">
             <Button 
-             onClick = {handleClick}
-            >ADD CATEGORY</Button>
+             onClick = {handleAdd}
+            >ADD COUPON</Button>
           </div>
 
       {/* Filters */}
@@ -125,8 +160,8 @@ const handleClick = ()=>{
         loading={loading}
         tableData={coupons}
           total={totalCoupons}
-        onEdit={() => {}}
-        onDelete={() => {}}
+        onEdit={(couponId) => navigate(`/admin-dashboard/coupons/edit-coupon/${couponId}`)}
+  onDelete={(couponId) => handleDelete(couponId)}
       />
 
       {/* Pagination */}

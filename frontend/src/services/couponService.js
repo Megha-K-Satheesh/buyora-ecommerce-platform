@@ -1,4 +1,5 @@
 import adminApiClient from "../utils/adminApiClient";
+import apiClient from "../utils/apiClient";
 
 
 export const couponService = {
@@ -11,10 +12,27 @@ export const couponService = {
       params: { page, limit, search, status, category },
     })
   },
-  // verifyCoupon(data) {
-  //   return apiClient.post("/user/coupon/verify-coupon", data);
-  // },
-  //  removeCoupon() {
-  //   return apiClient.post("/user/coupon/remove-coupon");
-  // }
+
+
+  // Get coupon by ID
+  getCouponById(id) {
+    return adminApiClient.get(`/coupon/get-coupon/${id}`);
+  },
+
+  // Update coupon by ID
+  updateCoupon(couponId, data) {
+    return adminApiClient.put(`/coupon/update-coupon/${couponId}`, data);
+  },
+
+  // Delete coupon by ID
+  deleteCoupon(couponId) {
+    return adminApiClient.delete(`/coupon/delete-coupon/${couponId}`);
+  },
+
+  getAllCoupons({ page = 1, limit = 10 } = {}) {
+    return apiClient.get("/user/coupon/get-all-coupons", {
+      params: { page, limit},
+    })
+  },
+  
 }

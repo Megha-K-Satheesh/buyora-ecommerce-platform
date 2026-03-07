@@ -3,15 +3,23 @@ const BaseController = require("../BaseController");
 
 class OrderController extends BaseController {
 
+
   static getAllOrders = BaseController.asyncHandler(async (req, res) => {
-    const orders = await OrderService.getAllOrders(req.user._id);
-    BaseController.sendSuccess(res, "ALL ORDERS FETCHED", orders);
-  });
+
+
+console.log(req.user._id)
+  const orders = await OrderService.getAllOrders(
+    req.user._id,
+    
+  );
+
+  BaseController.sendSuccess(res, "ALL ORDERS FETCHED", orders);
+});
 
   static getSingleOrder = BaseController.asyncHandler(async (req, res) => {
 
-      console.log("User:", req.user);
-  console.log("Order ID:", req.params.id);
+  //     console.log("User:", req.user);
+  // console.log("Order ID:", req.params.id);
     const orderId = req.params.orderId;
     const order = await OrderService.getSingleOrder(req.user._id, orderId);
     BaseController.sendSuccess(res, "ORDER DETAILS FETCHED", order);
@@ -22,7 +30,7 @@ class OrderController extends BaseController {
     BaseController.sendSuccess(res, "ITEM CANCELLED", updatedOrder);
   });
 
-  // Request return for a single item
+
   static requestReturnItem = BaseController.asyncHandler(async (req, res) => {
     const { orderId, productId, reason } = req.body;
     const updatedOrder = await OrderService.requestReturn(req.user._id, orderId, productId, reason);

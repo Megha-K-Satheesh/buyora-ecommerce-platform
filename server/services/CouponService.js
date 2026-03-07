@@ -18,13 +18,13 @@ class CouponService {
     static async getCouponList({ page = 1, limit = 10, search = "", status = "", category = "" }) {
     const filter = {};
 
-    // Filter by status
+  
     if (status) filter.isActive = status === "active";
 
-    // Filter by category (CATEGORY scoped coupons)
+  
     if (category) filter.applicableCategories = category;
 
-    // Search by coupon code or description
+   
     if (search) {
       filter.$or = [
         { code: { $regex: search, $options: "i" } },

@@ -90,15 +90,7 @@ class CheckoutService {
 
     const finalAmount = Math.max(subtotal - totalDiscount - (cart.discountAmount || 0), 0);
 
-    // -- - - - - - - -- -//commented to check corn - - - - - - -- - - - - 
-
-    // const orderItems = cart.items.map(item => ({
-    //   productId: item.productId,
-    //   name: item.name,
-    //   price: item.price,
-    //   quantity: item.quantity,
-    //   categoryId: item.categoryId || null
-    // }));
+  
 
     const now = new Date();
 

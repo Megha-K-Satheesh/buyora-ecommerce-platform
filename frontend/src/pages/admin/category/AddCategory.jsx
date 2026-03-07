@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import AdminOutletHead from "../../../components/Admin/AdminOutletHead";
 import Button from "../../../components/ui/Button";
 import FormInput from "../../../components/ui/FormInput";
@@ -13,6 +14,7 @@ import { addCategory, getCategory } from "../../../Redux/slices/admin/categorySl
 const AddCategoryForm = () => {
   const dispatch = useDispatch();
   const { categories, loading,loadingCategory } = useSelector((state) => state.category);
+  const navigate = useNavigate()
   const [parentLevel,setParentLevel] = useState(0)
   const {
     register,
@@ -82,7 +84,9 @@ const AddCategoryForm = () => {
       await dispatch(addCategory(formattedData)).unwrap();
         dispatch(getCategory());
       showSuccess("Category added successfully");
+
       reset();
+      navigate("/admin-dashboard/categories")
     } catch (err) {
       showError(err);
     }

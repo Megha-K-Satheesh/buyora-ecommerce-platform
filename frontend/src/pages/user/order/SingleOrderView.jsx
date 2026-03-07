@@ -93,7 +93,7 @@ const SingleOrderPage = () => {
             <img
               src={item.imageUrl?.[0] || "/placeholder.png"}
               alt={item.name}
-              className={`w-28 h-28 object-cover rounded-md mb-3 md:mb-0 ${item.status === "CANCELLED" ? "opacity-50" : ""}`}
+              className={`w-28 h-auto object-cover rounded-md mb-3 md:mb-0 ${item.status === "CANCELLED" ? "opacity-50" : ""}`}
             />
             <div className="flex-1 md:ml-5 flex flex-col justify-between">
               <div>

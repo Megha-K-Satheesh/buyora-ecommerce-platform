@@ -11,4 +11,6 @@ router.post(
   authenticateUser,
   userCouponController.removeCoupon
 );
+
+router.get('/get-all-coupons',authenticateUser,userCouponController.getCoupons)
 module.exports = router
