@@ -29,7 +29,8 @@ const AddAddress = ({ defaultValues }) => {
     try {
       console.log(data)
       await dispatch(addAddress(data)).unwrap()
-         showSuccess("Address added")
+      showSuccess("Address added")
+      navigate("/account/address")
      } catch (err) {
         showError(err)
      }

@@ -129,6 +129,28 @@ export const login = createAsyncThunk('auth/login',async (data,thunkAPI)=>{
            }
 })
 
+
+export const googleLogin = createAsyncThunk(
+  "auth/googleLogin",
+  async (data, thunkAPI) => {
+    try {
+        console.log("data form the register")
+      const res = await authService.googleLogin(data);
+
+      return res.data;
+
+    } catch (err) {
+
+      const message =
+        err.response?.data?.message ||
+        err.response?.data?.error?.message ||
+        "Google login failed";
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const authSlice = createSlice({
     name: 'auth',
     initialState: {
@@ -262,6 +284,26 @@ const authSlice = createSlice({
 .addCase(login.rejected,(state,action)=>{
    state.loginLoading = false;
    state.error = action.payload;
+})
+
+
+
+.addCase(googleLogin.pending,(state)=>{
+  state.loginLoading = true;
+  state.error = null;
+})
+.addCase(googleLogin.fulfilled,(state,action)=>{
+  state.loginLoading = false;
+  state.user = action.payload.data.user;
+  state.role = action.payload.data.user.role;
+  state.token = action.payload.data.token;
+  state.isAuthenticated = true;
+
+  setAuthToken(action.payload.data.token);
+})
+.addCase(googleLogin.rejected,(state,action)=>{
+  state.loginLoading = false;
+  state.error = action.payload;
 })
 
   },

@@ -152,11 +152,12 @@ static async rejectReturn(orderId, productId) {
 
 
 static async updateOrderItemStatus(orderId, productId, status) {
-
+    if(!productId)throw ErrorFactory.notFound("product id not found")
   const order = await Order.findById(orderId);
   if (!order) throw ErrorFactory.notFound("Order not found");
 
   let itemFound = false;
+
 
   order.items.forEach((item) => {
 
@@ -185,5 +186,5 @@ static async updateOrderItemStatus(orderId, productId, status) {
   return order;
 }
 }
-
 module.exports = AdminOrderService;
+

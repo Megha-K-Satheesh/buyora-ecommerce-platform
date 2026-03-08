@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useForm, useWatch } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
 import Select from "react-select"
 import AdminOutletHead from "../../../components/Admin/AdminOutletHead"
 import CategoryAttributeSelect from "../../../components/Admin/CategoryAttributeSelect"
@@ -17,13 +18,14 @@ import { CategoryUtils } from "../../../utils/categoryUtiles"
 const AddProducts = ()=>{
 
    const dispatch = useDispatch()
+   const navigate = useNavigate()
    const {categories} = useSelector((state)=>state.category)
    //  const [leafCategories,setLeafCategories]= useState([]);
    const [files, setFiles] = useState([]);
    const {brands} =useSelector((state)=>state.brand)
    const {loading} = useSelector((state)=>state.product)
    const {register,handleSubmit,control,formState:{errors}} = useForm()
-
+   
    const selectedCategoryId = useWatch({
     control,
     name:'category'
@@ -79,6 +81,7 @@ const AddProducts = ()=>{
            
             await dispatch(addProduct(formData)).unwrap()
             showSuccess("Product Added")
+            navigate("/admin-dashboard/products")
    }catch(err){
           showError(err)
    }

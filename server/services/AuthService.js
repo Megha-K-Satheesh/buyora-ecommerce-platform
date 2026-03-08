@@ -4,6 +4,7 @@ const logger = require('../utils/logger');
 const { ConflictError, ValidationError, GenericError ,ErrorFactory} = require('../utils/errors');
 
 const { generateOtp, sendOtpEmail } = require('../utils/nodeMailer');
+const { verifyGoogleToken } = require('../utils/googleAuth');
 
 
 class AuthService {
@@ -235,6 +236,45 @@ static async forgotPasswordRequest(data){
       throw error;
     }
   }
+
+
+
+
+
+
+static async googleLogin(idToken) {
+
+  const googleUser = await verifyGoogleToken(idToken);
+
+
+  let user = await User.findByEmail(googleUser.email);
+
+  if (!user) {
+
+    user = new User({
+      name: googleUser.name,
+      email: googleUser.email,
+      googleId: googleUser.googleId, 
+      isVerified: true,
+    
+    });
+
+    await user.save();
+  }
+
+
+  const token = generateUserToken({
+    id: user._id,
+    email: user.email,
+    role: user.role
+  });
+
+ 
+  return {
+    user: user.getPublicProfile(),
+    token
+  };
+}
 
 }
 

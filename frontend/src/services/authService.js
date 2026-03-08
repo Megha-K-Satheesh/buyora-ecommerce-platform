@@ -23,5 +23,9 @@ export const authService = {
   },
   login(data){
      return apiClient.post('/auth/login',data)
-  }
+  },
+  googleLogin({ idToken }) { 
+    console.log("Sending token to backend:", idToken); 
+    return apiClient.post('/auth/google-login', { idToken });
+  },
 };

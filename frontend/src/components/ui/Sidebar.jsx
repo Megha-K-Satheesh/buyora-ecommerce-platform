@@ -35,6 +35,11 @@ const menuItems = [
     path: "coupons",
   },
   {
+    icon: <MdLocalOffer className="text-gray-600  text-xl lg:text-3xl" />,
+    label: "Brands",
+    path: "brands",
+  },
+  {
     icon: <FiUsers className="text-gray-600  text-xl lg:text-3xl" />,
     label: "Users",
     path: "users",

@@ -2,6 +2,7 @@ const BaseController = require('./BaseController');
 const { AuthService } = require('../services');
 const { registerValidation, loginValidation, profileUpdateValidation, passwordChangeValidation, resetPasswordValidation, forgotPasswordValidation, verifyForgotOtpValidation, verifyOtpValidation, resendOtpValidation } = require('../utils/validation');
 const { forgotPasswordRequest } = require('../services/AuthService');
+const { ErrorFactory } = require('../utils/errors');
 
 class AuthController extends BaseController {
 
@@ -78,7 +79,24 @@ class AuthController extends BaseController {
            BaseController.sendSuccess(res, 'Login successful', result);
          });
        
-    
+        static googleLogin = BaseController.asyncHandler(async (req, res) => {
+
+  const { idToken } = req.body;
+  
+  console.log("this isth token google",idToken)
+  if (!idToken) {
+    throw ErrorFactory.validation('Google token is required');
+  }
+
+  const result = await AuthService.googleLogin(idToken);
+
+  BaseController.logAction('GOOGLE_LOGIN', result.user);
+
+  BaseController.sendSuccess(res, 'Google login successful', result);
+
+});    
+
+
         //  static logout = BaseController.asyncHandler(async (req, res) => {
         //    BaseController.logAction('USER_LOGOUT', req.user);
         //    BaseController.sendSuccess(res, 'Logged out successfully');

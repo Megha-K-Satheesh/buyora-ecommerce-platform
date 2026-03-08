@@ -1,3 +1,4 @@
+import { GoogleLogin } from "@react-oauth/google";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,8 +9,7 @@ import FormCheckbox from "../../components/ui/FormCheckbox";
 import FormInput from "../../components/ui/FormInput";
 import Navbar from "../../components/ui/Navbar";
 import { showError, showSuccess } from "../../components/ui/Toastify";
-import { login } from "../../Redux/slices/authSlice";
-
+import { googleLogin, login } from "../../Redux/slices/authSlice";
 
 const LoginForm = ()=>{
     //  const error = useSelector((state)=>state.auth.error)
@@ -33,7 +33,7 @@ const LoginForm = ()=>{
          }, [error]);
 
 
-           // Navigate to "from" page after login
+           
   useEffect(() => {
     if (isAuthenticated) {
       navigate(from, { replace: true });
@@ -43,7 +43,7 @@ const LoginForm = ()=>{
       try {
           const res = await dispatch(login({email:data.email,password:data.password})).unwrap()
           showSuccess("Successfully logined")
-          // navigate(from)
+       
       } catch (err) {
         showError(err)
       }
@@ -122,9 +122,39 @@ return(
                        {loginLoading ? "Loading...":"Login"}
                   </Button>
                   <p className='flex justify-center mt-2.5'>or</p>
-                  <Button type='button' fullWidth className='mt-4 text-black' variant='outline'>
-                    GOOGLE
-                  </Button>
+                  
+<div className="mt-3 w-full flex justify-center">
+  <GoogleLogin
+text="continue_with"
+
+    onSuccess={async (response) => {
+
+      const idToken = response.credential;
+      if (!idToken) {
+        return showError("Google token is missing");
+      }
+
+     
+      // console.log("Google token:", idToken);
+
+   
+      try {
+         await dispatch(googleLogin({ idToken })).unwrap();
+
+      
+        showSuccess("Google login successful");
+
+      
+        navigate("/");
+      } catch (err) {
+        
+        showError(err);
+      }
+    }}
+    onError={() => showError("Google login failed")}
+    useOneTap={false} 
+  />
+</div> 
                     <div className="mt-4 text-center text-sm text-gray-600">
                         Don't have an account?{" "}
                         <Link

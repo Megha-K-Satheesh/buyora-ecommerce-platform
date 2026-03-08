@@ -60,7 +60,8 @@ const EditAddress = () => {
     try {
     
       await dispatch(updateAddress({addressId,data})).unwrap()
-         showSuccess("Address added")
+         showSuccess("Updated added")
+         navigate("/account/address")
      } catch (err) {
         showError(err)
      }

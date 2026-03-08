@@ -1,3 +1,4 @@
+import { GoogleLogin } from "@react-oauth/google";
 import { useForm, useWatch } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,9 +8,9 @@ import FormCheckbox from '../../components/ui/FormCheckbox';
 import FormInput from '../../components/ui/FormInput';
 import Navbar from '../../components/ui/Navbar';
 import { showError, showSuccess } from '../../components/ui/Toastify';
-import { registerUser } from '../../Redux/slices/authSlice';
-
+import { googleLogin, registerUser } from '../../Redux/slices/authSlice';
 const RegisterForm = () => {
+ 
   const {
     register,
     handleSubmit,
@@ -25,8 +26,8 @@ const RegisterForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-    
   
+
   const onSubmit = async (data) => {
     try {
       
@@ -49,11 +50,7 @@ const RegisterForm = () => {
     justify-center  items-start lg:bg-[#FFF1F6]
      mt-20
   ">
-{/* 
-      <div className='   
-     lg:bg-gradient-to-b from-rose-500  to-pink-500 
-lg:shadow-[0_9px_20px_-10px_rgba(0,0,0,0.25)] 
-      flex lg:w-[40%] w-[90%] rounded-2xl mt-10'> */}
+
 
 
       <div className="     lg:px-5   bg-white   rounded-r-2xl  lg:w-[40%] w-[90%] rounded-2xl mt-10">
@@ -175,10 +172,42 @@ lg:shadow-[0_9px_20px_-10px_rgba(0,0,0,0.25)]
               <hr className="flex-grow border-gray-200" />
             </div>
 
-          <Button type='button' fullWidth className=' text-black lg:text-lg' variant='outline'>
-            Continue with Google
+  
 
-          </Button>
+<div className="mt-3 flex justify-center">
+  <GoogleLogin
+
+ text="continue_with"
+    onSuccess={async (response) => {
+
+      const idToken = response.credential;
+      if (!idToken) {
+        return showError("Google token is missing");
+      }
+
+     
+      console.log("Google token:", idToken);
+
+   
+      try {
+         await dispatch(googleLogin({ idToken })).unwrap();
+
+      
+        showSuccess("Google login successful");
+
+      
+        navigate("/");
+      } catch (err) {
+        
+        showError(err);
+      }
+    }}
+    onError={() => showError("Google login failed")}
+    useOneTap={false} 
+  />
+</div> 
+
+
             <div className="mt-4 mb-4 text-center lg:text-lg text-gray-600">
                 Already have an account?{" "}
                 <Link
@@ -192,7 +221,7 @@ lg:shadow-[0_9px_20px_-10px_rgba(0,0,0,0.25)]
         </form>
       </div>
     </div>
-      {/* </div> */}
+   
       <Footer>
         <Footer/>
       </Footer>
