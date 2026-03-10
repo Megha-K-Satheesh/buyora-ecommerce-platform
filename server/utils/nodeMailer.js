@@ -5,6 +5,8 @@ const logger = require('./logger');
 
 
 const transporter = nodemailer.createTransport({
+
+  
   host: 'smtp.gmail.com',
   port: 587,       // STARTTLS port
   secure: false,   // use TLS (STARTTLS)
@@ -17,6 +19,19 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+
+
+//DEBUG
+transporter.verify((error, success) => {
+
+  console.log("EMAIL:", config.EMAIL);
+console.log("APP_PASSWORD:", config.APP_PASSWORD);
+  if (error) {
+    console.log("SMTP ERROR:", error);
+  } else {
+    console.log("SMTP server is ready to send emails");
+  }
+});
 
 const generateOtp = (purpose) => {
   const otp = otpGenerator.generate(6, {

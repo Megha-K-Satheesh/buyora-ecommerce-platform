@@ -18,11 +18,17 @@ module.exports = {
   
   BCRYPT_ROUNDS: 12,
   
+  // RATE_LIMIT: {
+  //   WINDOW_MS: 15 * 60 * 1000,
+  //   MAX_REQUESTS: 100,
+  //   AUTH_MAX_REQUESTS: 5
+  // },
+
   RATE_LIMIT: {
-    WINDOW_MS: 15 * 60 * 1000,
-    MAX_REQUESTS: 100,
-    AUTH_MAX_REQUESTS: 5
-  },
+  WINDOW_MS: process.env.NODE_ENV === 'development' ? 60 * 1000 : 15 * 60 * 1000,
+  MAX_REQUESTS: process.env.NODE_ENV === 'development' ? 1000 : 100,              
+  AUTH_MAX_REQUESTS: process.env.NODE_ENV === 'development' ? 20 : 5              
+},
   
   CORS: {
     ORIGIN: process.env.FRONTEND_URL || 'http://localhost:5173',

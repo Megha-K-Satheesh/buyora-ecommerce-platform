@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -7,11 +7,13 @@ import "./App.css";
 import AddCategoryForm from "./pages/admin/category/AddCategory";
 import UpdateCategoryForm from "./pages/admin/category/UpdateCategory";
 // import AddProducts from "./pages/admin/products/AddProducts";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AdminRoute, UserRoute } from "./components/protectedRoutes/ProtectedRoutes";
 import NotFound from "./components/ui/NotFount";
 import ServerError from "./components/ui/ServerError";
 import NavbarOrderLayout from "./layouts/OrderLayout";
+import WishlistLayout from "./layouts/WishlistLayout";
 import AddBrand from "./pages/admin/brand/addBrand";
 import AddCoupon from "./pages/admin/coupons/AddCoupon";
 import EditCoupon from "./pages/admin/coupons/EditCoupon";
@@ -26,6 +28,7 @@ import CouponsList from "./pages/user/coupon/UserCoupons";
 import AllOrdersPage from "./pages/user/order/AllOrderPage";
 import SingleOrderPage from "./pages/user/order/SingleOrderView";
 import Wallet from "./pages/user/wallet/walletDisplay";
+import { getCartBackend, setCart } from "./Redux/slices/cartSlice";
 import { getUserProfile } from "./Redux/slices/userSlice";
 const AdminLayouts = lazy(() => import("./layouts/AdminLayouts"));
 const Banners = lazy(() => import("./pages/admin/banner/Banners"));
@@ -71,13 +74,23 @@ const ChangePassword = lazy(() =>
 
 
 function App() {
-  const dispatch = useDispatch()
+ 
 
-    useEffect(() => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
     const token = localStorage.getItem("authToken");
 
     if (token) {
+   
       dispatch(getUserProfile());
+
+      
+      dispatch(getCartBackend());
+    } else {
+    
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      dispatch(setCart(cart));
     }
   }, [dispatch]);
   return (
@@ -85,7 +98,7 @@ function App() {
       <Suspense fallback={<div style={{ textAlign: "center" }}>Loading...</div>}>
         <Routes>
           <Route path="/" element={<Home />} />
-          {/* 404 CatchAll */}
+        
         <Route path="*" element={<NotFound/>} />
 
  <Route path="/404" element={<NotFound />} />
@@ -97,6 +110,7 @@ function App() {
           <Route path="/product/cart" element={<CartPage />} />
 
           {/* <Route path="/product/checkout" element={<CheckoutPage/>}/> */}
+          
           <Route
   path="/product/checkout"
   element={
@@ -124,6 +138,17 @@ function App() {
             <SingleOrderPage />
           </UserRoute>
       } />
+
+
+ <Route path="/products/wishlist" element={
+          <UserRoute>
+
+            <WishlistLayout />
+          </UserRoute>
+      } />
+
+
+
 
 
           <Route path="/register" element={
@@ -217,6 +242,7 @@ function App() {
           <Route path="all-orders" element={<AllOrdersPage/>}/>
           <Route path="wallet" element={<Wallet/>}/>
           <Route path ="user-coupons" element ={<CouponsList/>}/>
+          {/* <Route path="wishlist" element = {<WishlistPage/>}/> */}
           </Route>
          
           <Route path='all-orders' element={<NavbarOrderLayout/>}/>

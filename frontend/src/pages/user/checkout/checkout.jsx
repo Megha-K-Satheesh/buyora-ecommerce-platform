@@ -10,6 +10,7 @@ import {
 import { getAddresses } from "../../../Redux/slices/userSlice";
 import Button from "../../../components/ui/Button";
 import { openRazorpay } from "../../../utils/razorpay";
+import { showInfo } from "../../../components/ui/Toastify";
 
 const CheckoutPage = () => {
   const dispatch = useDispatch();
@@ -55,7 +56,7 @@ const CheckoutPage = () => {
 
 const handlePlaceOrder = async () => {
   if (!selectedAddress) {
-    alert("Please select address");
+    showInfo("Please select address");
     return;
   }
 

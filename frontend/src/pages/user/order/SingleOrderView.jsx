@@ -150,7 +150,7 @@ const SingleOrderPage = () => {
   
       <div className="text-center mt-6">
         <button
-          onClick={() => navigate("/orders")}
+          onClick={() => navigate("/all-orders")}
           className="px-5 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
         >
           Back to All Orders

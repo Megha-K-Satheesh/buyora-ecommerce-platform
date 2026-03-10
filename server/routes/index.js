@@ -14,7 +14,7 @@ const userCouponRoutes = require('./userCoupon')
 const userCheckoutRoutes = require('./checkout')
 const userOrderRoutes = require('./order')
 const userWalletRoutes = require('./wallet')
-
+const userWishlistRoutes = require('./wishlist')
 const adminOrderRoutes = require('./adminOrder')
 const setupRoutes = (app) => {
     const authLimiter = createAuthLimiter();
@@ -34,6 +34,7 @@ const setupRoutes = (app) => {
     app.use('/api/user/order',userOrderRoutes)
     app.use('/api/admin/order',adminOrderRoutes)
     app.use('/api/user/wallet',userWalletRoutes)
+    app.use('/api/user/wishlist',userWishlistRoutes)
 };
 
 module.exports = {

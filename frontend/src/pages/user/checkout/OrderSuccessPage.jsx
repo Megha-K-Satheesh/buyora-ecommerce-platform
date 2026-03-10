@@ -41,7 +41,7 @@ const OrderSuccessPage = () => {
 
        <div className="space-y-2">
   <Button
-    onClick={() => navigate("/orders")}
+    onClick={() => navigate("/all-orders")}
     className="w-full"
   >
     View My Orders

@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { FiMenu, FiX } from "react-icons/fi"
+import MobileNavbarMenu from "../Navbar/MobileNavMenu"
 import NavbarMenu from "../Navbar/NavbarMenu"
 import NavbarIcons from "../Navbar/navIcons"
 import SearchBar from "../Navbar/SearchBar"
 import Logo from "./Logo"
-import MobileNavbarMenu from "../Navbar/MobileNavMenu"
 
 
 const Navbar=()=>{
@@ -12,7 +12,7 @@ const Navbar=()=>{
    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
    return(
     <>
-     <div className="flex lg:h-[10vh] h-[6vh] mb-16 fixed top-0 left-0 w-full bg-white shadow ">
+     <div className="flex lg:h-[10vh] h-[6vh] mb-16 fixed top-0 left-0 w-full bg-white shadow z-50">
 
            <div className="lg:hidden">
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>

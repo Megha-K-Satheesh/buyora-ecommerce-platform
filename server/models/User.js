@@ -86,9 +86,13 @@ otpDetails: {
 userSchema.pre('save', async function (next) {
   try {
     // Hash password
-    if (this.isModified('password')) {
-      this.password = await bcrypt.hash(this.password, 12);
-    }
+    // if (this.isModified('password')) {
+    //   this.password = await bcrypt.hash(this.password, 12);
+    // }
+
+    if (this.isModified('password') && this.password) {
+  this.password = await bcrypt.hash(this.password, 12);
+}
 
     // Hash OTP
     if (this.isModified('otpDetails') && this.otpDetails?.code) {
@@ -105,8 +109,12 @@ userSchema.methods.compareOtp = async function (candidateOtp) {
 };
 
 
-userSchema.methods.comparePassword = async function(candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
+// userSchema.methods.comparePassword = async function(candidatePassword) {
+//   return await bcrypt.compare(candidatePassword, this.password);
+// };
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  if (!this.password) return false;
+  return bcrypt.compare(candidatePassword, this.password);
 };
 
 userSchema.methods.getPublicProfile = function() {

@@ -20,8 +20,6 @@ const setupMiddleware = (app) => {
     standardHeaders: true,
     legacyHeaders: false,
   });
-  app.use(limiter);
-
   const corsOptions = {
     origin: config.CORS.ORIGIN,
     credentials: config.CORS.CREDENTIALS,
@@ -30,6 +28,8 @@ const setupMiddleware = (app) => {
     allowedHeaders: config.CORS.ALLOWED_HEADERS
   };
   app.use(cors(corsOptions));
+  app.use(limiter);
+
 
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));

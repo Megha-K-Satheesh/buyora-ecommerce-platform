@@ -63,9 +63,10 @@ static async getAllOrdersAdmin({ page = 1, limit = 5, status = "", search = "" }
     orders: paginatedOrders,
     totalOrders,
     totalPages,
-    currentPage: page
+    currentPage: Number(page)
   };
 }
+
 
   static async getSingleOrder(orderId) {
     const order = await Order.findById(orderId)

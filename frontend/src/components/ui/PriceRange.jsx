@@ -13,9 +13,8 @@ const PriceRange = ({
     selectedPriceRange?.[0] || minPrice,
     selectedPriceRange?.[1] || maxPrice,
   ]);
-  const minGap = step; // minimum gap between thumbs
+  const minGap = step; 
   
-  // Sync when parent changes
   useEffect(() => {
     if (selectedPriceRange) {
       setValues(selectedPriceRange);

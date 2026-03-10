@@ -7,6 +7,7 @@ import userCouponReducer from '../Redux/slices/couponSlice';
 import orderReducer from '../Redux/slices/orderSlice';
 import userReducer from '../Redux/slices/userSlice';
 import userWalletReducer from '../Redux/slices/walletSlice';
+import userWishlistReducer from "../Redux/slices/wishlistSlice";
 import adminOrderReducer from './slices/admin/adminOrderSlice';
 import brandReducer from './slices/admin/brandSlice';
 import categoryReducer from './slices/admin/categorySlice';
@@ -28,6 +29,7 @@ export const store = configureStore({
       checkout:checkoutReducer,
       order:orderReducer,
       adminOrder:adminOrderReducer,
-      wallet :userWalletReducer
+      wallet :userWalletReducer,
+      wishlist:userWishlistReducer
   },
 });

@@ -165,21 +165,41 @@ const adminOrderSlice = createSlice({
   state.error = null;
 })
 
+// .addCase(approveReturn.fulfilled, (state, action) => {
+//   state.loading = false;
+
+//   const updatedOrder = {
+//     ...action.payload,
+//     orderId: action.payload.orderId || action.payload._id
+//   };
+
+//   state.singleOrder = updatedOrder;
+
+//   state.allOrders = state.allOrders.map((order) =>
+//     (order.orderId || order._id) === updatedOrder.orderId
+//       ? updatedOrder
+//       : order
+//   );
+// })
+
 .addCase(approveReturn.fulfilled, (state, action) => {
   state.loading = false;
 
-  const updatedOrder = {
-    ...action.payload,
-    orderId: action.payload.orderId || action.payload._id
-  };
+  const { orderId, productId } = action.meta.arg;
 
-  state.singleOrder = updatedOrder;
-
-  state.allOrders = state.allOrders.map((order) =>
-    (order.orderId || order._id) === updatedOrder.orderId
-      ? updatedOrder
-      : order
+  const order = state.allOrders.find(
+    (o) => (o.orderId || o._id) === orderId
   );
+
+  if (order) {
+    const item = order.items.find(
+      (i) => i.productId._id === productId
+    );
+
+    if (item) {
+      item.status = "RETURN_APPROVED";
+    }
+  }
 })
 
 .addCase(approveReturn.rejected, (state, action) => {
@@ -196,23 +216,41 @@ const adminOrderSlice = createSlice({
   state.error = null;
 })
 
+// .addCase(rejectReturn.fulfilled, (state, action) => {
+//   state.loading = false;
+
+//   const updatedOrder = {
+//     ...action.payload,
+//     orderId: action.payload.orderId || action.payload._id
+//   };
+
+//   state.singleOrder = updatedOrder;
+
+//   state.allOrders = state.allOrders.map((order) =>
+//     (order.orderId || order._id) === updatedOrder.orderId
+//       ? updatedOrder
+//       : order
+//   );
+// })
 .addCase(rejectReturn.fulfilled, (state, action) => {
   state.loading = false;
 
-  const updatedOrder = {
-    ...action.payload,
-    orderId: action.payload.orderId || action.payload._id
-  };
+  const { orderId, productId } = action.meta.arg;
 
-  state.singleOrder = updatedOrder;
-
-  state.allOrders = state.allOrders.map((order) =>
-    (order.orderId || order._id) === updatedOrder.orderId
-      ? updatedOrder
-      : order
+  const order = state.allOrders.find(
+    (o) => (o.orderId || o._id) === orderId
   );
-})
 
+  if (order) {
+    const item = order.items.find(
+      (i) => i.productId._id === productId
+    );
+
+    if (item) {
+      item.status = "RETURN_REJECTED";
+    }
+  }
+})
 .addCase(rejectReturn.rejected, (state, action) => {
   state.loading = false;
   state.error = action.payload;
@@ -226,21 +264,40 @@ const adminOrderSlice = createSlice({
   state.error = null;
 })
 
+// .addCase(updateOrderItemStatus.fulfilled, (state, action) => {
+//   state.loading = false;
+
+//   const updatedOrder = {
+//     ...action.payload,
+//     orderId: action.payload.orderId || action.payload._id
+//   };
+
+//   state.singleOrder = updatedOrder;
+
+//   state.allOrders = state.allOrders.map((order) =>
+//     (order.orderId || order._id) === updatedOrder.orderId
+//       ? updatedOrder
+//       : order
+//   );
+// })
 .addCase(updateOrderItemStatus.fulfilled, (state, action) => {
   state.loading = false;
 
-  const updatedOrder = {
-    ...action.payload,
-    orderId: action.payload.orderId || action.payload._id
-  };
+  const { orderId, productId, status } = action.meta.arg;
 
-  state.singleOrder = updatedOrder;
-
-  state.allOrders = state.allOrders.map((order) =>
-    (order.orderId || order._id) === updatedOrder.orderId
-      ? updatedOrder
-      : order
+  const order = state.allOrders.find(
+    (o) => (o.orderId || o._id) === orderId
   );
+
+  if (order) {
+    const item = order.items.find(
+      (i) => i.productId._id === productId
+    );
+
+    if (item) {
+      item.status = status;
+    }
+  }
 })
 
 .addCase(updateOrderItemStatus.rejected, (state, action) => {
