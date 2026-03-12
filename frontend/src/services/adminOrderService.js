@@ -15,27 +15,30 @@ export const adminOrderService = {
   },
 
   // APPROVE RETURN
-  approveReturn(orderId, productId) {
+  approveReturn(orderId, productId,variantId) {
     return adminApiClient.patch("/order/approve-return", {
       orderId,
-      productId
+      productId,
+      variantId
     });
   },
 
   // REJECT RETURN
-  rejectReturn(orderId, productId) {
+  rejectReturn(orderId, productId,variantId) {
     return adminApiClient.patch("/order/reject-return", {
       orderId,
-      productId
+      productId,
+      variantId
     });
   },
 
   // UPDATE ITEM STATUS (SHIPPED / DELIVERED etc)
-  updateStatus(orderId, productId, status) {
+  updateStatus(orderId, productId, status,variantId) {
     return adminApiClient.patch("/order/update-status", {
       orderId,
       productId,
-      status
+      variantId,
+      status,
     });
   }
 

@@ -12,7 +12,8 @@ import adminOrderReducer from './slices/admin/adminOrderSlice';
 import brandReducer from './slices/admin/brandSlice';
 import categoryReducer from './slices/admin/categorySlice';
 import couponReducer from './slices/admin/couponSlice';
-import productReducer from './slices/admin/productSlice';
+import adminDashboardReducer from "./slices/admin/dashboardSlice";
+import adminProductReducer from './slices/admin/productSlice';
 import productsReducer from './slices/general/productSlice';
 export const store = configureStore({
   reducer: {
@@ -20,7 +21,7 @@ export const store = configureStore({
     adminAuth:adminAuthReducer,
     user:userReducer,
     category:categoryReducer,
-    product:productReducer,
+    product:adminProductReducer,
     brand:brandReducer,
     generalProducts:productsReducer,
        cart: cartReducer,
@@ -30,6 +31,7 @@ export const store = configureStore({
       order:orderReducer,
       adminOrder:adminOrderReducer,
       wallet :userWalletReducer,
-      wishlist:userWishlistReducer
+      wishlist:userWishlistReducer,
+      dashboard :adminDashboardReducer
   },
 });

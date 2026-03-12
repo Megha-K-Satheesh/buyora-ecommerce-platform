@@ -57,10 +57,10 @@ console.log(tableData)
 
  
 
-const handleConfirm = async (orderId, productId) => {
+const handleConfirm = async (orderId, productId,variantId) => {
   try {
     await dispatch(
-      updateOrderItemStatus({ orderId, productId, status: "CONFIRMED" })
+      updateOrderItemStatus({ orderId, productId,variantId, status: "CONFIRMED" })
     ).unwrap();
    
    dispatch(
@@ -78,10 +78,10 @@ const handleConfirm = async (orderId, productId) => {
   }
 };
 
-const handleShip = async (orderId, productId) => {
+const handleShip = async (orderId, productId,variantId) => {
   try {
     await dispatch(
-      updateOrderItemStatus({ orderId, productId, status: "SHIPPED" })
+      updateOrderItemStatus({ orderId, productId,variantId, status: "SHIPPED" })
     ).unwrap();
 
 
@@ -101,10 +101,10 @@ const handleShip = async (orderId, productId) => {
 };
 
 
- const handleDeliver = async (orderId, productId) => {
+ const handleDeliver = async (orderId, productId,variantId) => {
   try {
     await dispatch(
-      updateOrderItemStatus({ orderId, productId, status: "DELIVERED" })
+      updateOrderItemStatus({ orderId, productId,variantId, status: "DELIVERED" })
     ).unwrap();
    
     dispatch(
@@ -122,9 +122,9 @@ const handleShip = async (orderId, productId) => {
   }
 };
 
- const handleApproveReturn = async (orderId, productId) => {
+ const handleApproveReturn = async (orderId, productId,variantId) => {
   try {
-    await dispatch(approveReturn({ orderId, productId })).unwrap();
+    await dispatch(approveReturn({ orderId, productId,variantId })).unwrap();
 
      dispatch(
       getAllAdminOrders({
@@ -140,9 +140,9 @@ const handleShip = async (orderId, productId) => {
     showError(error.message || "Failed to approve return");
   }
 };
-  const handleRejectReturn = async (orderId, productId) => {
+  const handleRejectReturn = async (orderId, productId,variantId) => {
   try {
-    await dispatch(rejectReturn({ orderId, productId })).unwrap();
+    await dispatch(rejectReturn({ orderId, productId,variantId })).unwrap();
  dispatch(
       getAllAdminOrders({
         page: Number(currentPage),
@@ -189,6 +189,7 @@ const handleShip = async (orderId, productId) => {
       </div>
 
       {/* Orders Table */}
+    
       <OrdersTable
         loading={loading}
         tableData={tableData}

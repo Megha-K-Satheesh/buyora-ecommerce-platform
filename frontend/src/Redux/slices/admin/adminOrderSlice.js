@@ -40,9 +40,9 @@ export const getAdminSingleOrder = createAsyncThunk(
 
 export const approveReturn = createAsyncThunk(
   "adminOrders/approveReturn",
-  async ({ orderId, productId }, thunkAPI) => {
+  async ({ orderId, productId ,variantId}, thunkAPI) => {
     try {
-      const res = await adminOrderService.approveReturn(orderId, productId);
+      const res = await adminOrderService.approveReturn(orderId, productId,variantId);
       return res.data.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(
@@ -55,9 +55,11 @@ export const approveReturn = createAsyncThunk(
 
 export const rejectReturn = createAsyncThunk(
   "adminOrders/rejectReturn",
-  async ({ orderId, productId }, thunkAPI) => {
+  async ({ orderId, productId ,variantId}, thunkAPI) => {
     try {
-      const res = await adminOrderService.rejectReturn(orderId, productId);
+      const res = await adminOrderService.rejectReturn(orderId, productId,variantId);
+
+    
       return res.data.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(
@@ -71,10 +73,11 @@ export const rejectReturn = createAsyncThunk(
 
 export const updateOrderItemStatus = createAsyncThunk(
   "adminOrders/updateOrderItemStatus",
-  async ({ orderId, productId, status }, thunkAPI) => {
+  async ({ orderId, productId, status, variantId}, thunkAPI) => {
     try {
       console.log(orderId)
-      const res = await adminOrderService.updateStatus(orderId, productId, status);
+      console.log("variantId",variantId)
+      const res = await adminOrderService.updateStatus(orderId, productId, status,variantId);
       return res.data.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(
@@ -165,27 +168,10 @@ const adminOrderSlice = createSlice({
   state.error = null;
 })
 
-// .addCase(approveReturn.fulfilled, (state, action) => {
-//   state.loading = false;
-
-//   const updatedOrder = {
-//     ...action.payload,
-//     orderId: action.payload.orderId || action.payload._id
-//   };
-
-//   state.singleOrder = updatedOrder;
-
-//   state.allOrders = state.allOrders.map((order) =>
-//     (order.orderId || order._id) === updatedOrder.orderId
-//       ? updatedOrder
-//       : order
-//   );
-// })
-
 .addCase(approveReturn.fulfilled, (state, action) => {
   state.loading = false;
 
-  const { orderId, productId } = action.meta.arg;
+  const { orderId, productId, variantId } = action.meta.arg;
 
   const order = state.allOrders.find(
     (o) => (o.orderId || o._id) === orderId
@@ -193,7 +179,9 @@ const adminOrderSlice = createSlice({
 
   if (order) {
     const item = order.items.find(
-      (i) => i.productId._id === productId
+      (i) =>
+        i.productId._id === productId &&
+        (variantId ? i.variantId === variantId : true)
     );
 
     if (item) {
@@ -201,6 +189,8 @@ const adminOrderSlice = createSlice({
     }
   }
 })
+
+
 
 .addCase(approveReturn.rejected, (state, action) => {
   state.loading = false;
@@ -235,7 +225,7 @@ const adminOrderSlice = createSlice({
 .addCase(rejectReturn.fulfilled, (state, action) => {
   state.loading = false;
 
-  const { orderId, productId } = action.meta.arg;
+  const { orderId, productId, variantId } = action.meta.arg;
 
   const order = state.allOrders.find(
     (o) => (o.orderId || o._id) === orderId
@@ -243,7 +233,9 @@ const adminOrderSlice = createSlice({
 
   if (order) {
     const item = order.items.find(
-      (i) => i.productId._id === productId
+      (i) =>
+        i.productId._id === productId &&
+        (variantId ? i.variantId === variantId : true)
     );
 
     if (item) {
@@ -267,23 +259,26 @@ const adminOrderSlice = createSlice({
 // .addCase(updateOrderItemStatus.fulfilled, (state, action) => {
 //   state.loading = false;
 
-//   const updatedOrder = {
-//     ...action.payload,
-//     orderId: action.payload.orderId || action.payload._id
-//   };
+//   const { orderId, productId, status } = action.meta.arg;
 
-//   state.singleOrder = updatedOrder;
-
-//   state.allOrders = state.allOrders.map((order) =>
-//     (order.orderId || order._id) === updatedOrder.orderId
-//       ? updatedOrder
-//       : order
+//   const order = state.allOrders.find(
+//     (o) => (o.orderId || o._id) === orderId
 //   );
+
+//   if (order) {
+//     const item = order.items.find(
+//       (i) => i.productId._id === productId
+//     );
+
+//     if (item) {
+//       item.status = status;
+//     }
+//   }
 // })
 .addCase(updateOrderItemStatus.fulfilled, (state, action) => {
   state.loading = false;
 
-  const { orderId, productId, status } = action.meta.arg;
+  const { orderId, productId, variantId, status } = action.meta.arg;
 
   const order = state.allOrders.find(
     (o) => (o.orderId || o._id) === orderId
@@ -291,7 +286,9 @@ const adminOrderSlice = createSlice({
 
   if (order) {
     const item = order.items.find(
-      (i) => i.productId._id === productId
+      (i) =>
+        i.productId._id === productId &&
+        (variantId ? i.variantId === variantId : true)
     );
 
     if (item) {
@@ -299,10 +296,9 @@ const adminOrderSlice = createSlice({
     }
   }
 })
-
 .addCase(updateOrderItemStatus.rejected, (state, action) => {
-  state.loading = false;
-  state.error = action.payload;
+   state.loading = false
+   state.error = action.payload
 })
   },
 });

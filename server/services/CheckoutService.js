@@ -96,15 +96,16 @@ class CheckoutService {
 
 const orderItems = cart.items.map(item => ({
   productId: item.productId,
+    variantId: item.variationId || null,
   name: item.name,
   price: item.price,
   mrp:item.mrp,
   quantity: item.quantity,
   categoryId: item.categoryId || null,
   status: "PLACED",
-  confirmAt: new Date(now.getTime() + 1*60*1000),
-  shippedAt: new Date(now.getTime() + 2*60*1000),  
-  deliveredAt: new Date(now.getTime() + 3*60*1000),  
+confirmAt: null,
+shippedAt: null,
+deliveredAt: null, 
    expectedDeliveryDate: new Date(now.getTime() + 3*24*60*60*1000) 
 }));
 

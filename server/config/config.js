@@ -26,7 +26,7 @@ module.exports = {
 
   RATE_LIMIT: {
   WINDOW_MS: process.env.NODE_ENV === 'development' ? 60 * 1000 : 15 * 60 * 1000,
-  MAX_REQUESTS: process.env.NODE_ENV === 'development' ? 1000 : 100,              
+  MAX_REQUESTS: process.env.NODE_ENV === 'development' ? 4000 : 1000,              
   AUTH_MAX_REQUESTS: process.env.NODE_ENV === 'development' ? 20 : 5              
 },
   

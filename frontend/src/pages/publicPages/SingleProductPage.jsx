@@ -5,7 +5,6 @@
 
 
 
-
 import { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
@@ -180,7 +179,7 @@ const SingleProductPage = () => {
               {sizes.map((size) => (
                 <button
                   key={size}
-                  className={`px-3 py-1 w-12 h-12 border rounded font-medium text-gray-800 ${
+                  className={`px-3 py-1 w-auto h-12 border rounded font-medium text-gray-800 ${
                     selectedSize === size ? "text-pink-500 border-pink-600" : "border-gray-300 bg-white"
                   }`}
                   onClick={() => setSelectedSize(size)}
@@ -249,3 +248,4 @@ const SingleProductPage = () => {
 };
 
 export default SingleProductPage;
+

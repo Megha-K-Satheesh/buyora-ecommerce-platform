@@ -17,6 +17,11 @@ const orderItemSchema = new mongoose.Schema({
   },
 
   mrp: Number,
+variantId: {                 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Variant",             
+    default: null
+  },
 
   quantity: {
     type: Number,

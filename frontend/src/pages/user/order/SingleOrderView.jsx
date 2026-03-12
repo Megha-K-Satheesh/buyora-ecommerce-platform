@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { cancelOrderItem, clearOrderState, getSingleOrder, requestReturnItem } from "../../../Redux/slices/orderSlice";
+import Navbar from "../../../components/ui/Navbar";
 
 
 
@@ -73,7 +74,11 @@ const SingleOrderPage = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+
+    <>
+    <Navbar/>
+        {/* <h2 className="text-2xl font-bold mb-6 mt-25 text-center">My Orders</h2> */}
+    <div className="max-w-4xl mx-auto p-6 mt-25">
    
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-1">Order #{singleOrder.orderNumber}</h2>
@@ -157,6 +162,7 @@ const SingleOrderPage = () => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 

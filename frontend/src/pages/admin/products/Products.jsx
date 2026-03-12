@@ -28,6 +28,8 @@ const Products = () => {
   const { products: tableData, loading, currentPage, totalPages, totalProducts } =
     useSelector((state) => state.product);
 
+    console.log("tabledata",tableData)
+
   const { categories } = useSelector((state) => state.category); // load categories from Redux
 
   // Recursive function to build category options hierarchically

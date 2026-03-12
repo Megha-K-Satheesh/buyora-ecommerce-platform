@@ -32,9 +32,9 @@ console.log("form adminordercontrolelr",status)
 
   static approveReturn = BaseController.asyncHandler(async (req, res) => {
 
-    const { orderId, productId } = req.body;
+    const { orderId, productId ,variantId} = req.body;
 
-    const updatedOrder = await AdminOrderService.approveReturn(orderId, productId);
+    const updatedOrder = await AdminOrderService.approveReturn(orderId, productId,variantId);
 
     BaseController.sendSuccess(res, "RETURN APPROVED", updatedOrder);
   });
@@ -42,9 +42,9 @@ console.log("form adminordercontrolelr",status)
 
   static rejectReturn = BaseController.asyncHandler(async (req, res) => {
 
-    const { orderId, productId } = req.body;
+    const { orderId, productId ,variantId} = req.body;
 
-    const updatedOrder = await AdminOrderService.rejectReturn(orderId, productId);
+    const updatedOrder = await AdminOrderService.rejectReturn(orderId, productId,variantId);
 
     BaseController.sendSuccess(res, "RETURN REJECTED", updatedOrder);
   });
@@ -52,13 +52,14 @@ console.log("form adminordercontrolelr",status)
 
   static updateOrderItemStatus = BaseController.asyncHandler(async (req, res) => {
 
-    const { orderId, productId, status } = req.body;  
+    const { orderId, productId, variantId,status, } = req.body;  
     console.log(req.body)
-    console.log("orderId orderid",orderId)
+    console.log("orderId orderid",orderId,variantId)
     const updatedOrder = await AdminOrderService.updateOrderItemStatus(
       orderId,
       productId,
-      status
+      status,
+      variantId
     );
 
     BaseController.sendSuccess(res, "ORDER STATUS UPDATED", updatedOrder);

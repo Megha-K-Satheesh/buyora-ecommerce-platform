@@ -65,7 +65,7 @@ const OrdersTable = memo(
                       <div className="flex justify-center gap-3 flex-wrap">
                         {item.status === "PLACED" && (
                           <button
-                            onClick={() => onConfirm(order.orderId, item.productId._id)}
+                            onClick={() => onConfirm(order.orderId, item.productId._id,item.variantId)}
                             className="bg-blue-500 text-white px-2 py-1 rounded"
                           >
                             Confirm
@@ -73,7 +73,7 @@ const OrdersTable = memo(
                         )}
                          {item.status === "CONFIRMED" && (
                               <button
-                      onClick={() => onShip(order.orderId, item.productId._id)}
+                      onClick={() => onShip(order.orderId, item.productId._id,item.variantId)}
                      className="bg-yellow-500 text-white px-3 py-1 rounded"
                                       >
                                       Ship
@@ -82,7 +82,7 @@ const OrdersTable = memo(
 
                         {item.status === "SHIPPED" && (
                           <button
-                            onClick={() => onDeliver(order.orderId, item.productId._id)}
+                            onClick={() => onDeliver(order.orderId, item.productId._id,item.variantId)}
                             className="bg-green-500 text-white px-2 py-1 rounded"
                           >
                             Deliver
@@ -92,13 +92,13 @@ const OrdersTable = memo(
                         {item.status === "RETURN_REQUESTED" && (
                           <>
                             <button
-                              onClick={() => onApproveReturn(order.orderId, item.productId._id)}
+                              onClick={() => onApproveReturn(order.orderId, item.productId._id,item.variantId)}
                               className="bg-green-600 text-white px-2 py-1 rounded"
                             >
                               Approve
                             </button>
                             <button
-                              onClick={() => onRejectReturn(order.orderId, item.productId._id)}
+                              onClick={() => onRejectReturn(order.orderId, item.productId._id,item.variantId)}
                               className="bg-red-500 text-white px-2 py-1 rounded"
                             >
                               Reject

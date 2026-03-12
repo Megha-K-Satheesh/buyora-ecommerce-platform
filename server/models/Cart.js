@@ -8,7 +8,7 @@ const CartItemSchema = new mongoose.Schema({
   },
   variationId: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true, // unique variant (size/color)
+    required: true, 
   },
   name: { type: String, required: true },
   brandName: { type: String },

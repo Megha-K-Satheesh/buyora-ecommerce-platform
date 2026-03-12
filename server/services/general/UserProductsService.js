@@ -238,7 +238,7 @@ console.log("FINAL FILTERS:", filters);
     { label: "30% - 40%", value: "30-40" },
     { label: "40% & above", value: "40-above" },
   ];
-
+console.log("PRICE AGG RESULT:", priceAgg);
   return {
     heading: level2Category.name,
     categories: level3Categories,

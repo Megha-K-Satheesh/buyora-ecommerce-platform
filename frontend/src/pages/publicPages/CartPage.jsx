@@ -132,7 +132,7 @@ const CartPage = () => {
       {cartItems.map((item) => (
         <div
           key={item.variationId.toString()}
-          className="flex items-center justify-between border-b py-4"
+          className="flex items-center justify-between border-b border-gray-400 py-4"
         >
           <div className="flex items-center gap-4">
             <img
@@ -152,7 +152,7 @@ const CartPage = () => {
 
               <div className="flex items-center gap-2 mt-2">
                 <button
-                  className="px-2 py-1 border rounded hover:border-pink-600"
+                  className="px-2 py-1 border border-gray-400 rounded hover:border-pink-600"
                   onClick={() =>
                     handleQuantityChange(
                       item.variationId,
@@ -166,7 +166,7 @@ const CartPage = () => {
                 <span>{item.quantity}</span>
 
                 <button
-                  className="px-2 py-1 border rounded hover:border-pink-600"
+                  className="px-2 py-1 border border-gray-400 rounded hover:border-pink-600"
                   onClick={() =>
                     handleQuantityChange(
                       item.variationId,
@@ -197,7 +197,7 @@ const CartPage = () => {
         </div>
       ))}
 
-      <div className="mt-6 p-4 border rounded">
+      <div className="mt-6 p-4 shadow rounded">
         <h2 className="text-xl font-semibold mb-2">
           Order Summary
         </h2>

@@ -1,10 +1,13 @@
 
 
  import { FaArrowLeft } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const AccountHaad = ()=>{
   const navigate = useNavigate()
+
+  const {user }= useSelector(state=>state.user)
   return(
     <>
       <div className="flex  pt-10 " >
@@ -15,7 +18,7 @@ const AccountHaad = ()=>{
         <div className=" ml-5 lg:ml-20 pb-5" >
 
        <h1 className="font-semibold text-2xl">Account</h1> 
-        <p className="text-xl font-light">Buyora User</p>
+        <p className="text-xl font-light">{user?.name ||"Buyora User"}</p>
         </div>
         
       </div>
