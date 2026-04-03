@@ -3,9 +3,7 @@ import { NavLink } from "react-router-dom"
 
 
 const SideMenu = ()=>{
-  // const linkStyle = ()=>(
-  //    `my-20`
-  // )
+  
   const linkClass = ({isActive})=>(
     ` text-xl    hover:text-pink-600   transition
     ${isActive?"text-green-500":""} `
@@ -37,7 +35,7 @@ const SideMenu = ()=>{
                 </NavLink>
               </li>
                <li className="my-1">
-                <NavLink to="wishlist" className={linkClass}>
+                <NavLink to="/products/wishlist" className={linkClass}>
                     Wishlist
                 </NavLink>
               </li>

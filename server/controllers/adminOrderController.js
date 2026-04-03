@@ -46,7 +46,7 @@ console.log("form adminordercontrolelr",status)
 
     const updatedOrder = await AdminOrderService.rejectReturn(orderId, productId,variantId);
 
-    BaseController.sendSuccess(res, "RETURN REJECTED", updatedOrder);
+   BaseController.sendSuccess(res, "RETURN REQUEST APPROVED", updatedOrder);
   });
 
 
@@ -62,7 +62,7 @@ console.log("form adminordercontrolelr",status)
       variantId
     );
 
-    BaseController.sendSuccess(res, "ORDER STATUS UPDATED", updatedOrder);
+  BaseController.sendSuccess(res, `ITEM STATUS UPDATED TO ${status}`, updatedOrder);
   });
 
 }

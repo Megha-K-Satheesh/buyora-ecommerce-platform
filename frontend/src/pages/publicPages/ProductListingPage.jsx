@@ -136,24 +136,7 @@ console.log(searchTerm)
           </div>
           <div className=" flex-5   ">
             
-            {/* <div className=" flex justify-end mb-2 font-medium">
-              
-             <select
-              value={sort}
-              onChange={(e) => {
-                const params = new URLSearchParams(location.search);
-                params.set("sort", e.target.value);
-                params.set("page", 1);
-                navigate(`?${params.toString()}`);
-              }}
-              className="border border-gray-200 p-2 rounded"
-            >
-              <option value="">Relevance</option>
-              <option value="priceAsc">Price Low to High</option>
-              <option value="priceDesc">Price High to Low</option>
-              <option value="newest">Newest First</option>
-            </select>
-            </div> */}
+            
               <div className="flex justify-between items-center mb-2 gap-2 lg:justify-end mx-2">
   {/* Sort dropdown */}
   <select

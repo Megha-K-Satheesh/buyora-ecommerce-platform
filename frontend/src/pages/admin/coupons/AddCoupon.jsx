@@ -33,7 +33,7 @@ const AddCoupon = () => {
     dispatch(getCategory());
   }, [dispatch]);
 
-  // Recursive hierarchical category options
+
   const buildCategoryOptions = (cats, prefix = "") =>
     cats.flatMap((cat) => {
       if (!cat || !cat._id) return [];
@@ -65,7 +65,7 @@ const AddCoupon = () => {
         </h1>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Coupon Code */}
+     
           <FormInput
             label="Coupon Code"
             placeholder="WELCOME10"
@@ -77,7 +77,7 @@ const AddCoupon = () => {
             })}
           />
 
-          {/* Description */}
+     
           <FormInput
             label="Description"
             placeholder="10% off for first order"
@@ -85,7 +85,7 @@ const AddCoupon = () => {
             {...register("description")}
           />
 
-          {/* Scope */}
+       
           <div>
             <label className="block text-sm font-medium mb-1">
               Coupon Scope <span className="text-red-500">*</span>
@@ -106,7 +106,7 @@ const AddCoupon = () => {
             )}
           </div>
 
-          {/* Category Dropdown (if CATEGORY) */}
+         
           {scope === "CATEGORY" && (
             <div className="flex flex-col gap-1 pb-3">
               <label className="text-sm md:text-lg lg:text-lg text-gray-900">
@@ -115,7 +115,7 @@ const AddCoupon = () => {
               <select
                 {...register("applicableCategories", {
                   required: "Please select a category",
-                  setValueAs: (val) => (val ? [val] : []), // wrap single category in array
+                  setValueAs: (val) => (val ? [val] : []), 
                 })}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 lg:h-11 text-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
               >
@@ -130,7 +130,7 @@ const AddCoupon = () => {
             </div>
           )}
 
-          {/* Discount Type */}
+     
           <div>
             <label className="block text-sm font-medium mb-1">
               Discount Type <span className="text-red-500">*</span>
@@ -152,7 +152,7 @@ const AddCoupon = () => {
             )}
           </div>
 
-          {/* Discount Value */}
+      
           <FormInput
             label="Discount Value"
             type="number"
@@ -165,7 +165,7 @@ const AddCoupon = () => {
             })}
           />
 
-          {/* Max Discount (Only for Percentage) */}
+        
           {discountType === "PERCENTAGE" && (
             <FormInput
               label="Max Discount"
@@ -180,7 +180,7 @@ const AddCoupon = () => {
             />
           )}
 
-          {/* Minimum Order Amount */}
+      
           <FormInput
             label="Minimum Order Amount"
             type="number"
@@ -191,7 +191,7 @@ const AddCoupon = () => {
             })}
           />
 
-          {/* Usage Limits */}
+          
           <div className="grid grid-cols-2 gap-4">
             <FormInput
               label="Usage Limit Per User"
@@ -213,7 +213,7 @@ const AddCoupon = () => {
             />
           </div>
 
-          {/* Valid Dates */}
+        
           <div className="grid grid-cols-2 gap-4">
             <FormInput
               label="Valid From"
@@ -238,19 +238,19 @@ const AddCoupon = () => {
             />
           </div>
 
-          {/* First Order Only */}
+       
           <div className="flex items-center gap-2">
             <input type="checkbox" {...register("isFirstOrderOnly")} className="h-4 w-4" />
             <label>First Order Only</label>
           </div>
 
-          {/* Active */}
+        
           <div className="flex items-center gap-2">
             <input type="checkbox" {...register("isActive")} className="h-4 w-4" />
             <label>Active</label>
           </div>
 
-          {/* Submit Button */}
+        
           <Button type="submit" className="w-full">
             {loading ? "Adding..." : "Create Coupon"}
           </Button>

@@ -8,8 +8,8 @@ const transporter = nodemailer.createTransport({
 
   
   host: 'smtp.gmail.com',
-  port: 587,       // STARTTLS port
-  secure: false,   // use TLS (STARTTLS)
+  port: 587,     
+  secure: false,   
   auth: {
     user: config.EMAIL,
     pass: config.APP_PASSWORD
@@ -22,16 +22,16 @@ const transporter = nodemailer.createTransport({
 
 
 //DEBUG
-transporter.verify((error, success) => {
+// transporter.verify((error, success) => {
 
-  console.log("EMAIL:", config.EMAIL);
-console.log("APP_PASSWORD:", config.APP_PASSWORD);
-  if (error) {
-    console.log("SMTP ERROR:", error);
-  } else {
-    console.log("SMTP server is ready to send emails");
-  }
-});
+//   console.log("EMAIL:", config.EMAIL);
+// console.log("APP_PASSWORD:", config.APP_PASSWORD);
+//   if (error) {
+//     console.log("SMTP ERROR:", error);
+//   } else {
+//     console.log("SMTP server is ready to send emails");
+//   }
+// });
 
 const generateOtp = (purpose) => {
   const otp = otpGenerator.generate(6, {

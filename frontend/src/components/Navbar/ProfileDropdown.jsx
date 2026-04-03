@@ -62,7 +62,7 @@ const {user} = useSelector((state)=>state.user)
                                  hover:text-black
                                     transform-all duration-200
                                  ">
-                      <Link to="/">Wishlist</Link>
+                      <Link to="/products/wishlist">Wishlist</Link>
                     </li>
                     <li  className="px-4 py-2
                                  hover:text-xl

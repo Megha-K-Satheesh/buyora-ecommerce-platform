@@ -17,7 +17,7 @@ const Profile = ()=>{
    
   return(
     
-    // <div className="flex min-h-screen   bg-amber-400">
+ 
       
       
       
@@ -73,7 +73,7 @@ const Profile = ()=>{
         Edit
        </Button>
       </div>
-    // </div>
+   
    
    
   )

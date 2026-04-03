@@ -8,7 +8,7 @@ class WalletController extends BaseController {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 5;
 
-    console.log(limit)
+  
 
     const wallet = await WalletService.getWallet(userId, { page, limit });
 

@@ -17,7 +17,7 @@ const MobilePageWrapper = ({ title, children }) => {
         <h2 className="ml-3 font-semibold">{title}</h2>
       </div>
 
-      {/* Page content */}
+  
       <div className="p-4">{children}</div>
     </div>
   );

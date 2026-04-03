@@ -6,6 +6,7 @@ const Address = require("../models/Address");
 const Order = require("../models/Order");
 const razorpay = require("../utils/razorpay");
 const crypto = require("crypto");
+const Wallet = require("../models/Wallet");
 class CheckoutService {
   static async getOrderSummary(userId) {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -72,7 +73,7 @@ class CheckoutService {
     const { addressId, paymentMethod } = data;
 
     if (!mongoose.Types.ObjectId.isValid(userId)) throw ErrorFactory.validation("Invalid user ID");
-    if (!["COD", "ONLINE"].includes(paymentMethod)) throw ErrorFactory.validation("Invalid payment method");
+    if (!["COD", "ONLINE", "WALLET"].includes(paymentMethod)) throw ErrorFactory.validation("Invalid payment method");
 
     const cart = await Cart.findOne({ userId });
     if (!cart || cart.items.length === 0) throw ErrorFactory.validation("Cart is empty");
@@ -143,6 +144,8 @@ await order.save();
       return { order, paymentRequired: false };
     }
 
+
+
     if (paymentMethod === "ONLINE") {
       const razorpayOrder = await razorpay.orders.create({
         amount: finalAmount * 100,
@@ -161,6 +164,65 @@ await order.save();
         currency: razorpayOrder.currency
       };
     }
+   
+    //wallet pay
+
+   if (paymentMethod === "WALLET") {
+
+  // find user wallet
+  let wallet = await Wallet.findOne({ userId });
+
+  // create wallet if not exists
+  if (!wallet) {
+    wallet = await Wallet.create({
+      userId,
+      balance: 0,
+      transactions: []
+    });
+  }
+
+  // check wallet balance
+  if (wallet.balance < finalAmount) {
+    throw ErrorFactory.validation(
+      `Insufficient wallet balance. Available: ₹${wallet.balance}`
+    );
+  }
+
+  // deduct wallet balance
+  wallet.balance -= finalAmount;
+
+  // add wallet transaction
+  wallet.transactions.push({
+    type: "DEBIT",
+    amount: finalAmount,
+    reason: "Order Payment",
+    orderId: order._id,
+    createdAt: new Date()
+  });
+
+  await wallet.save();
+
+  // update order payment status
+  order.paymentStatus = "PAID";
+  order.orderStatus = "PLACED";
+
+  await order.save();
+
+  // clear cart
+  cart.items = [];
+  cart.appliedCouponId = null;
+  cart.appliedCouponCode = null;
+  cart.discountAmount = 0;
+
+  await cart.save();
+
+  return {
+    order,
+    paymentRequired: false
+  };
+}
+
+
   }
 
 static async verifyPayment(userId, body) {

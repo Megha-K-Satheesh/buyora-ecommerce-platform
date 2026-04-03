@@ -6,6 +6,10 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import './index.css'
 import { store } from './Redux/store.js'
+
+
+import "slick-carousel/slick/slick-theme.css"
+import "slick-carousel/slick/slick.css"
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <GoogleOAuthProvider  clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>

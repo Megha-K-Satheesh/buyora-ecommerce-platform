@@ -12,7 +12,7 @@ import { getCouponById, updateCoupon } from "../../../Redux/slices/admin/couponS
 
 const EditCoupon = () => {
   const dispatch = useDispatch();
-  const { couponId } = useParams(); // coupon id from URL
+  const { couponId } = useParams(); 
   const { categories } = useSelector((state) => state.category);
   const {  currentCoupon: coupon, loading } = useSelector((state) => state.coupon);
 const navigate = useNavigate()
@@ -23,17 +23,17 @@ const navigate = useNavigate()
   const scope = useWatch({ control, name: "scope" });
   const discountType = useWatch({ control, name: "discount.type" });
 
-  // Load categories
+
   useEffect(() => {
     dispatch(getCategory());
   }, [dispatch]);
 
-  // Load coupon
+  
   useEffect(() => {
     if (couponId) dispatch(getCouponById(couponId));
   }, [couponId, dispatch]);
 
-  // Prefill form once coupon is loaded
+
   useEffect(() => {
     if (coupon) {
       reset({

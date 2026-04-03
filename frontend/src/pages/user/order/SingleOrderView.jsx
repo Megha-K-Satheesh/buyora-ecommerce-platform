@@ -121,14 +121,24 @@ const SingleOrderPage = () => {
                     Cancel
                   </button>
                 )}
-                {item.status === "DELIVERED" && (
-                  <button
-                    onClick={() => handleReturnItem(item.productId)}
-                    className="px-3 py-1 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
-                  >
-                    Return
-                  </button>
-                )}
+                 {item.status === "DELIVERED" && (
+    <>
+      <button
+        onClick={() => handleReturnItem(item.productId)}
+        className="px-3 py-1 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+      >
+        Return
+      </button>
+      <button
+        onClick={() => navigate(`/add-review/${item.productId}`)}
+        className="px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+      >
+        Write Review
+      </button>
+    </>
+  )}
+
+
               </div>
             </div>
           </div>

@@ -18,11 +18,11 @@ class CheckoutController extends BaseController {
  static placeOrder = BaseController.asyncHandler(async (req, res) => {
   const result = await CheckoutService.placeOrder(req.user._id, req.body);
 
-  // Log the order creation
+
   BaseController.logAction("ORDER CREATED", result.order);
 
   if (result.paymentRequired) {
-    BaseController.sendSuccess(res, "PAYMENT INITIAaTED", {
+    BaseController.sendSuccess(res, "PAYMENT INITIATED", {
       order: result.order,
         paymentRequired: result.paymentRequired,
       razorpayOrderId: result.razorpayOrderId,

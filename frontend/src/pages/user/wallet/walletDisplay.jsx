@@ -71,7 +71,7 @@ const Wallet = () => {
         ))}
       </ul>
 
-      {/* Pagination */}
+  
       {totalPages > 1 && (
         <Pagination
           currentPage={page}

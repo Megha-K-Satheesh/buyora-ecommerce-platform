@@ -37,16 +37,14 @@ variantId: {
     type: String,
     enum: [
       "PLACED",
-      "CONFIRMED",
-      "SHIPPED",
-      "DELIVERED",
-      "CANCELLED",
-      "RETURN_REQUESTED",
-      "RETURN_APPROVED",
-      "RETURN_REJECTED",
-   
+    "CONFIRMED",
+    "SHIPPED",
+    "DELIVERED",
+    "CANCELLED",
+    "RETURN_REQUESTED",
+    "RETURN_APPROVED",
     "RETURN_REJECTED",
-      "RETURNED"
+    "RETURNED"
     ],
     default: "PLACED"
   },
@@ -126,7 +124,7 @@ const orderSchema = new mongoose.Schema({
 
   paymentMethod: {
     type: String,
-    enum: ["COD", "ONLINE"],
+    enum: ["COD", "ONLINE","WALLET"],
     required: true
   },
 
@@ -139,13 +137,20 @@ const orderSchema = new mongoose.Schema({
   orderStatus: {
     type: String,
      enum: [
-    "PENDING_PAYMENT",
+      "PENDING_PAYMENT",
     "PLACED",
     "CONFIRMED",
+    "PARTIALLY_SHIPPED",
     "SHIPPED",
+    "PARTIALLY_DELIVERED",
     "DELIVERED",
-    "CANCELLED",
     "PARTIALLY_CANCELLED",
+    "CANCELLED",
+"PARTIALLY_CONFIRMED",
+    "PARTIALLY_RETURN_REQUESTED",
+    "RETURN_REQUESTED",
+    "RETURN_APPROVED",
+    "PARTIALLY_RETURN_APPROVED",
     "PARTIALLY_RETURNED",
     "RETURNED"
   ],

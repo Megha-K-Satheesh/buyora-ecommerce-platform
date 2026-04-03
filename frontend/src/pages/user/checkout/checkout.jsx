@@ -9,8 +9,8 @@ import {
 } from "../../../Redux/slices/checkoutSlice";
 import { getAddresses } from "../../../Redux/slices/userSlice";
 import Button from "../../../components/ui/Button";
-import { openRazorpay } from "../../../utils/razorpay";
 import { showInfo } from "../../../components/ui/Toastify";
+import { openRazorpay } from "../../../utils/razorpay";
 
 const CheckoutPage = () => {
   const dispatch = useDispatch();
@@ -32,11 +32,20 @@ const CheckoutPage = () => {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("COD");
 
-  // Fetch data
+
   useEffect(() => {
     dispatch(getAddresses());
     dispatch(getOrderSummary());
   }, [dispatch]);
+
+
+ 
+useEffect(() => {
+  if (!checkoutLoading && items.length === 0) {
+    navigate("/product/cart");
+  }
+}, [checkoutLoading, items, navigate]);
+
 
 
   useEffect(() => {
@@ -48,7 +57,7 @@ const CheckoutPage = () => {
       if (defaultAddress) {
         setSelectedAddress(defaultAddress._id);
       } else {
-        // fallback to first address
+      
         setSelectedAddress(addresses[0]._id);
       }
     }
@@ -87,7 +96,7 @@ const handlePlaceOrder = async () => {
     );
 
   } catch (err) {
-    alert(err);
+     showInfo(err?.message || "Something went wrong");
   }
 };
 
@@ -223,6 +232,25 @@ const handlePlaceOrder = async () => {
               />
               Online Payment (UPI / Card / NetBanking)
             </label>
+
+            
+
+            <label
+                className={`block border p-4 rounded cursor-pointer ${
+                  paymentMethod === "WALLET"
+                    ? "border-pink-600 bg-pink-50"
+                    : "border-gray-300"
+                }`}
+              >
+                <input
+                  type="radio"
+                  value="WALLET"
+                  checked={paymentMethod === "WALLET"}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="mr-2"
+                />
+                Wallet Payment
+              </label>
           </div>
         </div>
       </div>

@@ -1,9 +1,11 @@
+
+
+
+
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { adminDashboardService } from "../../../services/dashboardService";
 
-
-
-// 1️⃣ Dashboard Stats
+// Async thunks
 export const getDashboardStats = createAsyncThunk(
   "dashboard/getStats",
   async (_, thunkAPI) => {
@@ -18,8 +20,6 @@ export const getDashboardStats = createAsyncThunk(
   }
 );
 
-
-// 2️⃣ Monthly Orders
 export const getMonthlyOrders = createAsyncThunk(
   "dashboard/getMonthlyOrders",
   async (_, thunkAPI) => {
@@ -34,8 +34,6 @@ export const getMonthlyOrders = createAsyncThunk(
   }
 );
 
-
-// 3️⃣ Revenue Growth
 export const getRevenueGrowth = createAsyncThunk(
   "dashboard/getRevenueGrowth",
   async (_, thunkAPI) => {
@@ -50,8 +48,6 @@ export const getRevenueGrowth = createAsyncThunk(
   }
 );
 
-
-// 4️⃣ Top Products
 export const getTopProducts = createAsyncThunk(
   "dashboard/getTopProducts",
   async (_, thunkAPI) => {
@@ -66,8 +62,6 @@ export const getTopProducts = createAsyncThunk(
   }
 );
 
-
-// 5️⃣ Recent Orders
 export const getRecentOrders = createAsyncThunk(
   "dashboard/getRecentOrders",
   async (_, thunkAPI) => {
@@ -82,8 +76,6 @@ export const getRecentOrders = createAsyncThunk(
   }
 );
 
-
-// 6️⃣ Low Stock Products
 export const getLowStockProducts = createAsyncThunk(
   "dashboard/getLowStockProducts",
   async (_, thunkAPI) => {
@@ -98,8 +90,6 @@ export const getLowStockProducts = createAsyncThunk(
   }
 );
 
-
-// 7️⃣ Order Status Distribution
 export const getOrderStatusDistribution = createAsyncThunk(
   "dashboard/getOrderStatusDistribution",
   async (_, thunkAPI) => {
@@ -114,7 +104,7 @@ export const getOrderStatusDistribution = createAsyncThunk(
   }
 );
 
-
+// Initial state
 const initialState = {
   stats: null,
   monthlyOrders: [],
@@ -127,50 +117,116 @@ const initialState = {
   error: null,
 };
 
+
 const dashboardSlice = createSlice({
   name: "dashboard",
   initialState,
   reducers: {},
-
   extraReducers: (builder) => {
-
+    
     builder
-
-      // Stats
+      .addCase(getDashboardStats.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(getDashboardStats.fulfilled, (state, action) => {
+        state.loading = false;
         state.stats = action.payload;
       })
-
-      // Monthly Orders
-      .addCase(getMonthlyOrders.fulfilled, (state, action) => {
-        state.monthlyOrders = action.payload;
-      })
-
-      // Revenue
-      .addCase(getRevenueGrowth.fulfilled, (state, action) => {
-        state.revenueGrowth = action.payload;
-      })
-
-      // Top Products
-      .addCase(getTopProducts.fulfilled, (state, action) => {
-        state.topProducts = action.payload;
-      })
-
-      // Recent Orders
-      .addCase(getRecentOrders.fulfilled, (state, action) => {
-        state.recentOrders = action.payload;
-      })
-
-      // Low Stock
-      .addCase(getLowStockProducts.fulfilled, (state, action) => {
-        state.lowStockProducts = action.payload;
-      })
-
-      // Order Status
-      .addCase(getOrderStatusDistribution.fulfilled, (state, action) => {
-        state.orderStatus = action.payload;
+      .addCase(getDashboardStats.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch stats";
       });
 
+    
+    builder
+      .addCase(getMonthlyOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getMonthlyOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.monthlyOrders = action.payload;
+      })
+      .addCase(getMonthlyOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch monthly orders";
+      });
+
+    
+    builder
+      .addCase(getRevenueGrowth.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getRevenueGrowth.fulfilled, (state, action) => {
+        state.loading = false;
+        state.revenueGrowth = action.payload;
+      })
+      .addCase(getRevenueGrowth.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch revenue";
+      });
+
+  
+    builder
+      .addCase(getTopProducts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getTopProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.topProducts = action.payload;
+      })
+      .addCase(getTopProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch top products";
+      });
+
+   
+    builder
+      .addCase(getRecentOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getRecentOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.recentOrders = action.payload;
+      })
+      .addCase(getRecentOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch recent orders";
+      });
+
+   
+    builder
+      .addCase(getLowStockProducts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getLowStockProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.lowStockProducts = action.payload;
+      })
+      .addCase(getLowStockProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch low stock products";
+      });
+
+ 
+    builder
+      .addCase(getOrderStatusDistribution.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getOrderStatusDistribution.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orderStatus = action.payload;
+      })
+      .addCase(getOrderStatusDistribution.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch order status";
+      });
   },
 });
 

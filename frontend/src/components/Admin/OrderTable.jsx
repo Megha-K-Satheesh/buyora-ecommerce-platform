@@ -12,6 +12,7 @@ const OrdersTable = memo(
     onDeliver,
     onApproveReturn,
     onRejectReturn,
+      onMarkReturned
   }) => {
     return (
       <div className="mx-20 mt-10 rounded-t-xl shadow-xl overflow-hidden">
@@ -106,11 +107,27 @@ const OrdersTable = memo(
                           </>
                         )}
 
-                        {item.status === "RETURN_APPROVED" && (
+                        {/* {item.status === "RETURN_APPROVED" && (
       <span className="text-green-700 font-semibold">
         Return Approved
       </span>
-    )}
+    )} */}
+    {item.status === "RETURN_APPROVED" && (
+  <button
+    onClick={() =>
+      onMarkReturned(order.orderId, item.productId._id, item.variantId)
+    }
+    className="bg-purple-600 text-white px-2 py-1 rounded"
+  >
+    Mark Returned
+  </button>
+)}
+
+{item.status === "RETURNED" && (
+  <span className="text-purple-700 font-semibold">
+    Returned
+  </span>
+)}
 
     {item.status === "RETURN_REJECTED" && (
       <span className="text-red-600 font-semibold">

@@ -8,40 +8,51 @@ class DashboardService {
  
 
 
-  static async getDashboardStats() {
+  
 
-    const totalUsers = await User.countDocuments({ role: "user" });
 
-    const totalProducts = await Product.countDocuments();
+static async getDashboardStats() {
 
-    const totalOrders = await Order.countDocuments({
-      orderStatus: { $ne: "CANCELLED" }
-    });
+  const totalUsers = await User.countDocuments({ role: "user" });
 
-    const revenue = await Order.aggregate([
-      {
-        $match: {
-          orderStatus: "DELIVERED"
-        }
-      },
-      {
-        $group: {
-          _id: null,
-          totalRevenue: { $sum: "$totalAmount" }
+  const totalProducts = await Product.countDocuments();
+
+  const totalOrders = await Order.countDocuments({
+    orderStatus: { $ne: "CANCELLED" }
+  });
+
+  const revenue = await Order.aggregate([
+    { $unwind: "$items" },
+
+    {
+      $match: {
+        "items.status": { $in: ["DELIVERED", "RETURN_REJECTED"] }
+      }
+    },
+
+    {
+      $group: {
+        _id: null,
+        totalRevenue: {
+          $sum: {
+            $multiply: ["$items.price", "$items.quantity"]
+          }
+        },
+        totalQuantity: {
+          $sum: "$items.quantity"
         }
       }
-    ]);
+    }
+  ]);
 
-    return {
-      totalUsers,
-      totalOrders,
-      totalProducts,
-      totalRevenue: revenue[0]?.totalRevenue || 0
-    };
-  }
-
-
-
+  return {
+    totalUsers,
+    totalOrders,
+    totalProducts,
+    totalRevenue: revenue[0]?.totalRevenue || 0,
+    totalQuantity: revenue[0]?.totalQuantity || 0 
+  };
+}
 
 
   static async getMonthlyOrders() {
@@ -78,20 +89,33 @@ class DashboardService {
 
 
 
+
+
 static async getRevenueGrowth() {
 
   const revenue = await Order.aggregate([
+
+    { $unwind: "$items" },
+
     {
       $match: {
-        orderStatus: "DELIVERED"
+        "items.status": {
+          $in: ["DELIVERED", "RETURN_REJECTED"]
+        }
       }
     },
+
     {
       $group: {
         _id: { $month: "$createdAt" },
-        revenue: { $sum: "$totalAmount" }
+        revenue: {
+          $sum: {
+            $multiply: ["$items.price", "$items.quantity"]
+          }
+        }
       }
     },
+
     {
       $sort: { "_id": 1 }
     }
@@ -107,7 +131,6 @@ static async getRevenueGrowth() {
     revenue: item.revenue
   }));
 }
-
 
 
   static async getTopProducts() {
@@ -183,6 +206,7 @@ static async getRevenueGrowth() {
       email: order.userId?.email || "",
       amount: order.totalAmount,
       status: order.orderStatus,
+    
       paymentStatus: order.paymentStatus,
       date: order.createdAt
     }));

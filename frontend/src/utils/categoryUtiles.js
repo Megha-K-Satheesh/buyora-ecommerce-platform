@@ -33,11 +33,10 @@ export const CategoryUtils = {
   if (!selectedCategory) return [];
 
 
-    // get parent L2 ID
     const parentL2Id = selectedCategory.parentId;
     if (!parentL2Id) return [];
 
-    // filter brands linked to this L2
+ 
     const filteredBrands = brands.filter(brand =>Array.isArray(brand.categories) &&
     brand.categories.some(c => c.toString() === parentL2Id.toString())
   );

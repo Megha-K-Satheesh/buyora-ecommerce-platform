@@ -28,7 +28,10 @@ export const placeOrder = createAsyncThunk(
       return res.data.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(
-        err.response?.data?.message || "Order failed"
+          err.response?.data?.error?.message ||
+        err.response?.data?.message ||
+        err.message ||
+        "Order failed"
       );
     }
   }

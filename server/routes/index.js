@@ -17,6 +17,10 @@ const userWalletRoutes = require('./wallet')
 const userWishlistRoutes = require('./wishlist')
 const adminOrderRoutes = require('./adminOrder')
 const dashboardRoutes = require('./dashboard')
+const bannerRoutes = require('./banner')
+const reviewRoutes = require("./review")
+const salesRoutes = require('./sales')
+const chatBotRoutes = require('./chatBot')
 const setupRoutes = (app) => {
     const authLimiter = createAuthLimiter();
     const shouldUseAuthLimiter = config.NODE_ENV === 'production';
@@ -37,6 +41,10 @@ const setupRoutes = (app) => {
     app.use('/api/user/wallet',userWalletRoutes)
     app.use('/api/user/wishlist',userWishlistRoutes)
     app.use('/api/admin/dashboard',dashboardRoutes)
+    app.use('/api/admin/banner',bannerRoutes)
+    app.use('/api/user/reviews',reviewRoutes)
+    app.use('/api/admin/sales',salesRoutes)
+    app.use('/api/user/chat-bot',chatBotRoutes)
 };
 
 module.exports = {

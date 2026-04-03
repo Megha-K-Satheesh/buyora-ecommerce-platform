@@ -23,7 +23,7 @@ const AllOrdersPage = () => {
       <h2 className="text-2xl font-bold mb-6">My Orders</h2>
 
       {allOrders.map((order) => {
-        // Compute earliest expected delivery for multiple items
+     
         const deliveryDates = order.items
           .filter((i) => i.status !== "CANCELLED")
           .map((i) => new Date(i.expectedDeliveryDate));
@@ -80,14 +80,14 @@ const AllOrdersPage = () => {
   </p>
 </div>
 
-            {/* Items List */}
+       
             <div className="flex flex-col gap-4 mb-4">
               {order.items.map((item) => (
                 <div
                   key={`${item.productId}-${item.variationId}`}
                   className="flex items-center justify-between p-3 rounded hover:bg-gray-50 transition-colors duration-150"
                 >
-                  {/* Product Image */}
+           
                   <img
                     src={item.imageUrl?.[0] || "/placeholder.png"}
                     alt={item.name}
@@ -96,7 +96,7 @@ const AllOrdersPage = () => {
                     }`}
                   />
 
-                  {/* Product Details */}
+                
                   <div className="flex-1 mx-4">
                     <p
                       className={`font-semibold ${
@@ -127,7 +127,7 @@ const AllOrdersPage = () => {
               ))}
             </div>
 
-            {/* Order Total & View Details */}
+            
             <div className="flex flex-col md:flex-row md:justify-between md:items-center  mt-4 gap-3">
               <p className="font-semibold text-lg">
                 Total Amount: ₹{order.totalAmount}

@@ -12,9 +12,7 @@ const variationSchema = new mongoose.Schema(
       required: true,
       min: 0
     },
-    // sku: {
-    //   type: String
-    // },
+  
     isActive: {
       type: Boolean,
       default: true

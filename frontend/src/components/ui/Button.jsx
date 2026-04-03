@@ -4,8 +4,8 @@ const Button = memo(
   ({
     children,
     type = "button",
-    variant = "primary", // primary | secondary | danger
-    size = "md", // sm | md | lg
+    variant = "primary", 
+    size = "md",
     fullWidth = false,
     loading = false,
     disabled = false,
@@ -17,7 +17,7 @@ const Button = memo(
       "inline-flex items-center justify-center gap-2 rounded-md font-medium transition focus:outline-none";
 
     const variants = {
-      // primary: "bg-blue-600 text-white hover:bg-blue-700",
+    
         primary: "bg-[#E91E63] text-white hover:bg-[#C2185B]",
       secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
       danger: "bg-red-600 text-white hover:bg-red-700",

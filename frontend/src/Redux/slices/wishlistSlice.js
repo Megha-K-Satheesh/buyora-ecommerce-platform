@@ -2,6 +2,7 @@
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { userWishlistService } from "../../services/wishlistService";
+import { addToCartBackend } from "./cartSlice";
 
 export const getWishlist = createAsyncThunk(
   "wishlist/getWishlist",
@@ -50,6 +51,8 @@ export const moveToCart = createAsyncThunk(
   async ({ productId, variationId, size, color, quantity }, thunkAPI) => {
     try {
       await userWishlistService.moveToCart({ productId, variationId, size, color, quantity });
+       await thunkAPI.dispatch(addToCartBackend({ productId, variationId, size, color, quantity }));
+
       return productId;
     } catch (err) {
       return thunkAPI.rejectWithValue(

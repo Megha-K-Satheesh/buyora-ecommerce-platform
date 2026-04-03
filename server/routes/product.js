@@ -19,6 +19,5 @@ router.put(
 )
 router.delete("/delete-product/:id",authenticateAdmin, ProductController.deleteProduct);
 
-// router.get('/get-products',ProductController.getProducts)
-// router.get('get-sidebar-filter',ProductController.getSidebarFilters)
+
 module.exports = router;

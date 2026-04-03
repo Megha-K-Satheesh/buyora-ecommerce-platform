@@ -17,14 +17,14 @@ const WishlistPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Redux state
+
   const user = useSelector((state) => state.user.user);
   const wishlist = useSelector((state) => state.wishlist.items || []);
   const loading = useSelector((state) => state.wishlist.loading);
   const error = useSelector((state) => state.wishlist.error);
   
 
-  // Modal state
+  
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -36,7 +36,7 @@ const WishlistPage = () => {
       return;
     }
 
-    // Fetch wishlist
+    
     dispatch(getWishlist({ page: 1, limit: 20 }));
   }, [user, dispatch, navigate]);
 
@@ -87,7 +87,7 @@ const WishlistPage = () => {
     dispatch(removeFromWishlist(item._id));
   };
 
-  // Loading and error states
+
   if (loading) return <p className="text-center mt-10">Loading wishlist...</p>;
   if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
   if (wishlist.length === 0)
@@ -114,7 +114,7 @@ const WishlistPage = () => {
         ))}
       </div>
 
-      {/* Modal for selecting size and color */}
+     
       {selectedItem && (
         <div className="fixed inset-0 bg-black/30 bg-opacity-10 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-80 sm:w-96 relative">
@@ -127,7 +127,7 @@ const WishlistPage = () => {
 
             <h2 className="text-lg font-semibold mb-4">{selectedItem.name}</h2>
 
-            {/* Size selection */}
+        
             <div className="mb-4">
               <h3 className="font-medium mb-2">Select Size</h3>
               <div className="flex flex-wrap gap-2">
@@ -147,7 +147,7 @@ const WishlistPage = () => {
               </div>
             </div>
 
-            {/* Color selection */}
+         
             <div className="mb-4">
               <h3 className="font-medium mb-2">Select Color</h3>
               <div className="flex flex-wrap gap-2">
@@ -167,14 +167,9 @@ const WishlistPage = () => {
               </div>
             </div>
 
-            {/* Modal actions */}
+         
             <div className="flex justify-end gap-2 mt-6">
-              {/* <button
-                onClick={closeModal}
-                className="px-4 py-2 border rounded hover:bg-gray-100"
-              >
-                Cancel
-              </button> */}
+             
               <button
               
                 onClick={handleMoveToCart}

@@ -1,4 +1,4 @@
-// redux/slices/couponSlice.js
+
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { couponService } from "../../services/couponService";
 

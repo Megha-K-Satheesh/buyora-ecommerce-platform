@@ -135,11 +135,14 @@ const handleShip = async (orderId, productId,variantId) => {
       })
     );
 
-    showSuccess("Return approved and refund processed");
+    showSuccess("Return approved successfully");
   } catch (error) {
     showError(error.message || "Failed to approve return");
   }
 };
+
+
+
   const handleRejectReturn = async (orderId, productId,variantId) => {
   try {
     await dispatch(rejectReturn({ orderId, productId,variantId })).unwrap();
@@ -155,7 +158,34 @@ const handleShip = async (orderId, productId,variantId) => {
   } catch (error) {
     showError(error.message || "Failed to reject return");
   }
+  }
+
+  const handleMarkReturned = async (orderId, productId, variantId) => {
+  try {
+    await dispatch(
+      updateOrderItemStatus({
+        orderId,
+        productId,
+        variantId,
+        status: "RETURNED",
+      })
+    ).unwrap();
+
+    dispatch(
+      getAllAdminOrders({
+        page: Number(currentPage),
+        limit: 5,
+        search,
+        status,
+      })
+    );
+
+    showSuccess("Product returned and refund processed");
+  } catch (error) {
+    showError(error.message || "Failed to mark return");
+  }
 };
+
 
   return (
     <>
@@ -199,6 +229,7 @@ const handleShip = async (orderId, productId,variantId) => {
         onDeliver={handleDeliver}
         onApproveReturn={handleApproveReturn}
         onRejectReturn={handleRejectReturn}
+          onMarkReturned={handleMarkReturned}
       />
 
       {/* Pagination */}

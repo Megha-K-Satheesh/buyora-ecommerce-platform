@@ -1,20 +1,4 @@
-// src/constants/ui.js
 
-/**
- * UI Constants for E-commerce Website
- * 
- * Use these constants across your components for:
- * - Buttons
- * - Cards
- * - Spacing
- * - Gradients
- * - Icons
- * - Breakpoints
- * 
- * Makes your UI consistent and easy to maintain
- */
-
-/* -------------------- GRADIENTS -------------------- */
 export const GRADIENTS = {
   primary: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
   secondary: "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",

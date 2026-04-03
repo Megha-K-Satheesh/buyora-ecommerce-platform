@@ -9,8 +9,10 @@ import { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import Footer from '../../components/ui/Footer';
 import Navbar from "../../components/ui/Navbar";
 import { showError, showSuccess } from "../../components/ui/Toastify";
+import ReviewSection from "../../components/user/ReviewSection";
 import { addToCart, addToCartBackend } from "../../Redux/slices/cartSlice";
 import { getProductById } from "../../Redux/slices/general/productSlice";
 import {
@@ -241,8 +243,16 @@ const SingleProductPage = () => {
             <h2 className="font-semibold mb-2">Product Description</h2>
             <p className="text-gray-700">{product.description}</p>
           </div>
+
         </div>
+
       </div>
+        <div className="max-w-7xl mx-auto px-6">
+  <ReviewSection productId={id} />
+</div>
+<footer>
+   <Footer/>
+</footer>
     </>
   );
 };

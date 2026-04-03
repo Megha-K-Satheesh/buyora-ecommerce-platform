@@ -2,12 +2,16 @@ import { configureStore } from '@reduxjs/toolkit';
 import adminAuthReducer from '../Redux/slices/adminAuthSlice';
 import authReducer from '../Redux/slices/authSlice';
 import cartReducer from '../Redux/slices/cartSlice';
+import userChatBotReducer from "../Redux/slices/chatBotSlice";
 import checkoutReducer from '../Redux/slices/checkoutSlice';
 import userCouponReducer from '../Redux/slices/couponSlice';
 import orderReducer from '../Redux/slices/orderSlice';
+import userReviewReducer from "../Redux/slices/reviewSlice";
 import userReducer from '../Redux/slices/userSlice';
 import userWalletReducer from '../Redux/slices/walletSlice';
 import userWishlistReducer from "../Redux/slices/wishlistSlice";
+import adminSalesReducer from "././slices/admin/salesSlice";
+import adminBannerReducer from './slices/admin/adminBannerSlice';
 import adminOrderReducer from './slices/admin/adminOrderSlice';
 import brandReducer from './slices/admin/brandSlice';
 import categoryReducer from './slices/admin/categorySlice';
@@ -32,6 +36,10 @@ export const store = configureStore({
       adminOrder:adminOrderReducer,
       wallet :userWalletReducer,
       wishlist:userWishlistReducer,
-      dashboard :adminDashboardReducer
+      dashboard :adminDashboardReducer,
+      banner:adminBannerReducer,
+      review:userReviewReducer ,
+      sales:adminSalesReducer,
+      chatBot:userChatBotReducer
   },
 });

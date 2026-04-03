@@ -63,7 +63,7 @@ const PriceRange = ({
         )}
       />
 
-      {/* Selected Price Display */}
+  
       <div className="mt-4 text-sm font-medium text-gray-700">
         ₹{values[0]} - ₹{values[1]}
       </div>

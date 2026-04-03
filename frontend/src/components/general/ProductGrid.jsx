@@ -133,6 +133,7 @@ const ProductGrid = ({ products = [] }) => {
                   <AiOutlineHeart className="text-gray-400 " />
                 )}
               </div>
+              
             </div>
 
             <p className="text-gray-500 text-sm mb-1">{product.brand.name}</p>

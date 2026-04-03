@@ -30,21 +30,21 @@ class CouponController extends BaseController{
     BaseController.sendSuccess(res, "ALL COUPONS FETCHED", result);
   });
 
-  // GET COUPON BY ID
+
   static getCouponById = BaseController.asyncHandler(async (req, res) => {
     const result = await CouponService.getCouponById(req.params.id);
     BaseController.logAction("COUPON FETCHED", result);
     BaseController.sendSuccess(res, "COUPON FETCHED", result);
   });
 
-  // UPDATE COUPON
+  
   static updateCoupon = BaseController.asyncHandler(async (req, res) => {
     const result = await CouponService.updateCoupon(req.params.id, req.body);
     BaseController.logAction("COUPON UPDATED", result);
     BaseController.sendSuccess(res, "COUPON UPDATED", result);
   });
 
-  // DELETE COUPON
+
   static deleteCoupon = BaseController.asyncHandler(async (req, res) => {
     const result = await CouponService.deleteCoupon(req.params.id);
     BaseController.logAction("COUPON DELETED", result);

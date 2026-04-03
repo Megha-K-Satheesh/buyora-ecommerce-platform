@@ -29,7 +29,7 @@ const brandSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Add Brand
+   
       .addCase(addBrand.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -43,7 +43,7 @@ const brandSlice = createSlice({
         state.error = action.payload;
       })
 
-      // Get Brands by Category
+   
       .addCase(getBrandsByCategoryId.pending, (state) => {
         state.loading = true;
         state.error = null;
