@@ -117,6 +117,42 @@ const orderSchema = new mongoose.Schema({
     ref: "Coupon"
   },
 
+originalDiscount: {
+  type: Number,
+  default: 0
+},
+couponScope: {
+  type: String,
+  enum: ["GLOBAL", "CATEGORY"],
+  default: "GLOBAL"
+},
+
+eligibleCategories: [{
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Category"
+}],
+couponType: {
+  type: String,
+  enum: ["FLAT", "PERCENTAGE", "NONE"],
+  default: "NONE"
+},
+
+couponValue: {
+  type: Number,
+  default: 0
+},
+couponBreakup: {
+  globalDiscount: { type: Number, default: 0 },
+  categoryDiscount: { type: Number, default: 0 }
+},
+couponAppliedAmount: {
+  type: Number,
+  default: 0
+},
+mrpSubtotal: {
+  type: Number,
+  required: true
+},
   totalAmount: {
     type: Number,
     required: true

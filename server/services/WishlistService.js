@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Wishlist = require("../models/Wishlist");
 const Product = require("../models/admin/Product");
 const { ErrorFactory } = require("../utils/errors");
+const CartService = require("./CartService");
 
 class WishlistService {
 
@@ -86,10 +87,9 @@ static async moveToCart(userId, { productId, variationId, size, color, quantity 
   console.log("Cart Item to Add:", cartItem);
 
   // Add to cart
-  await cartService.addToCart(userId, cartItem);
+  await CartService.addToCart(userId, cartItem);
 
-  //  remove from wishlist
-  // await this.removeFromWishlist(userId, productId);
+
 }
 }
 

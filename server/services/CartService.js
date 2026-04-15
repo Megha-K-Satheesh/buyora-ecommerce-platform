@@ -32,7 +32,8 @@ class CartService {
       x => x.productId.equals(cartItem.productId) && x.variationId.equals(cartItem.variationId)
     );
 
-    if (existingItem) existingItem.quantity += cartItem.quantity || 1;
+    // if (existingItem) existingItem.quantity += cartItem.quantity || 1;
+    if (existingItem) existingItem.quantity = cartItem.quantity || 1;
     else cart.items.push(cartItem);
 
    
@@ -45,6 +46,8 @@ class CartService {
     await cart.save();
     return cart;
   }
+
+
 
 
 

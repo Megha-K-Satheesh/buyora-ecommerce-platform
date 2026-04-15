@@ -37,10 +37,10 @@ class ProductService {
   ? (typeof attributes === "string" ? JSON.parse(attributes) : attributes)
   : {};
   if (Object.keys(parsedAttributes).length === 0) {
-// console.log("No attributes provided, variants will be empty");
+
 }
 
-  //  console.log("Parsed attributes:", parsedAttributes);
+
 
     const variants = generateVariants(parsedAttributes).map((variant) => ({
       attributes: new Map(Object.entries(variant)),
@@ -233,25 +233,6 @@ static async deleteProduct(id) {
 
     
 
-// function generateVariants(attributes) {
-//   const keys = Object.keys(attributes);
-//   if (!keys.length) return [];
-
-//   let variants = [{}];
-//   keys.forEach((key) => {
-//     const values = attributes[key];
-//     const temp = [];
-//     variants.forEach((variant) => {
-//       values.forEach((value) => {
-//         temp.push({ ...variant, [key]: value });
-//       });
-//     });
-//     variants = temp;
-//   });
-
-//   return variants;
- 
-// }
 
 function generateVariants(attributes) {
   const keys = Object.keys(attributes);
@@ -261,7 +242,7 @@ function generateVariants(attributes) {
   keys.forEach((key) => {
     let values = attributes[key];
 
-    // Wrap single values into an array
+   
     if (!Array.isArray(values)) {
       values = [values];
     }

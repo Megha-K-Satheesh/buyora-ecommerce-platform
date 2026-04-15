@@ -64,5 +64,18 @@ class UserController extends BaseController{
       BaseController.sendSuccess(res,"Address deleted",result)
    })
 
+
+   static updateProfile = BaseController.asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const updatedUser = await UserService.updateProfile(userId, req.body);
+
+  BaseController.logAction("PROFILE_UPDATED", req.user);
+
+  BaseController.sendSuccess(res, "Profile updated successfully", {
+    user: BaseController.sanitizeUser(updatedUser)
+  });
+});
+
 }
 export default UserController

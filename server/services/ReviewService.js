@@ -1,7 +1,9 @@
  
+const mongoose = require("mongoose");
 const cloudinary = require("../config/cloudinaryConfig");
 const Order = require("../models/Order");
 const Review = require("../models/Review");
+const { ErrorFactory } = require("../utils/errors");
 
 class ReviewService {
 
@@ -11,10 +13,31 @@ class ReviewService {
   static async addReview({ userId, productId, body, files }) {
   const { rating, comment } = body;
 
+const order = await Order.findOne({
+  userId: new mongoose.Types.ObjectId(userId),
+  "items.productId": new mongoose.Types.ObjectId(productId),
+});
+console.log(order)
+if (!order) {
+  
+  throw ErrorFactory.conflict("You can only review products you have purchased");
+}
+
   const hasPurchased = await Order.findOne({
-    user: userId,
-    "items.product": productId,
-  });
+  userId: new mongoose.Types.ObjectId(userId),
+  items: {
+    $elemMatch: {
+      productId: new mongoose.Types.ObjectId(productId),
+      status: "DELIVERED",
+    },
+  },
+});
+
+if (!hasPurchased) {
+  throw  ErrorFactory.conflict("Please wait until your order is delivered to add a review");
+}
+
+
 
 
   const images = [];

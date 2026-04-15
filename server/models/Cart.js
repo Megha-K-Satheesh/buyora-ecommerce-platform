@@ -10,6 +10,11 @@ const CartItemSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true, 
   },
+  categoryId: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Category",
+  default: null
+},
   name: { type: String, required: true },
   brandName: { type: String },
   image: { type: String },

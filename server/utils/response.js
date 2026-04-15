@@ -134,7 +134,7 @@ class ResponseFormatter {
     return res.status(401).json(response);
   }
 
-  static forbidden(res, message = 'Access denied') {
+  static forbidden(res, message = 'Access denied',extra = {}) {
     const response = {
       success: false,
       error: {
@@ -142,6 +142,7 @@ class ResponseFormatter {
         code: 'FORBIDDEN',
         statusCode: 403
       },
+      ...extra,
       timestamp: new Date().toISOString(),
       requestId: res.locals.requestId || null
     };

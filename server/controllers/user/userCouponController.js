@@ -3,17 +3,32 @@ const BaseController = require("../BaseController");
 
 class userCouponController extends BaseController{
 
-  static verifyCoupon = BaseController.asyncHandler(async(req,res)=>{
+  // static verifyCoupon = BaseController.asyncHandler(async(req,res)=>{
 
 
-   const userId = req.user?._id || null;
-   console.log("user id form the contollrer",userId)
-      const result = await UserCouponService.verifyCoupon({...req.body,userId})
+  //  const userId = req.user?._id || null;
+  //  console.log("user id form the contollrer",userId)
+  //     const result = await UserCouponService.verifyCoupon({...req.body,userId})
 
        
-    BaseController.logAction("COUPON VERIFYIED", result);
-    BaseController.sendSuccess(res, "COUPON VERIFYIED", result);
-  })
+  //   BaseController.logAction("COUPON VERIFYIED", result);
+  //   BaseController.sendSuccess(res, "COUPON VERIFYIED", result);
+  // })
+
+  static verifyCoupon = BaseController.asyncHandler(async (req, res) => {
+
+  const userId = req.user?._id || null;
+
+  const result = await UserCouponService.verifyCoupon({
+    ...req.body,
+    userId
+  });
+
+  await UserCouponService.applyCoupon(userId, result);
+
+  BaseController.logAction("COUPON VERIFIED", result);
+  BaseController.sendSuccess(res, "COUPON VERIFIED", result);
+});
 
    static removeCoupon = BaseController.asyncHandler(async (req, res) => {
 

@@ -263,7 +263,9 @@ static async googleLogin(idToken) {
     await user.save();
   }
 
-
+if (user.status === 'banned') {
+  throw new Error('Your account has been banned');
+}
   const token = generateUserToken({
     id: user._id,
     email: user.email,

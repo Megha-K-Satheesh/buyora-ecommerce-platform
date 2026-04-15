@@ -17,4 +17,7 @@ router.get('/get-address', checkUserStatus, authenticateUser, UserController.get
 router.get('/address/:addressId',checkUserStatus,authenticateUser,UserController.getAddressById)
 router.put('/edit-address/:addressId',checkUserStatus,authenticateUser,UserController.updateAddress);
 router.delete('/delete-address/:addressId',checkUserStatus,authenticateUser, UserController.deleteAddress)
+
+router.patch('/profile/edit-profile', checkUserStatus, authenticateUser, UserController.updateProfile);
+
 module.exports = router

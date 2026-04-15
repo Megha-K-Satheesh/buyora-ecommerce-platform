@@ -81,6 +81,36 @@ class UserService {
        await address.deleteOne()
        return true;
   }
+
+
+
+  static async updateProfile(userId, profileData) {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw ErrorFactory.notFound("User not found");
+  }
+
+
+  const allowedFields = [
+    "name",
+    "mobile",
+    "gender",
+    "dob",
+    "location",
+    "altMobile"
+  ];
+
+  allowedFields.forEach((field) => {
+    if (profileData[field] !== undefined) {
+      user[field] = profileData[field];
+    }
+  });
+
+  await user.save();
+
+  return user;
+}
 }
 
     

@@ -256,7 +256,7 @@ console.log("PRICE AGG RESULT:", priceAgg);
 
 static async getProductById(productId) {
   const product = await Product.findById(productId)
-    .populate("brand", "_id name") // brand info
+    .populate("brand", "_id name") 
     .populate("category", "_id name level slug") 
     .select("name description brand category sellingPrice mrp discountPercentage attributes variations images ratings");
 
