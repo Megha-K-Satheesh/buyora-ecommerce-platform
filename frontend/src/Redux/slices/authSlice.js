@@ -176,7 +176,9 @@ const authSlice = createSlice({
     state.role = null;
      state.isAuthenticated = false;
     state.error = null;
+    
     clearAuthToken();
+    localStorage.removeItem('otpUserId') 
     }
   },
   extraReducers: (builder) => {

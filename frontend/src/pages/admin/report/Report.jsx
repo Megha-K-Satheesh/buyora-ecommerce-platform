@@ -66,6 +66,10 @@ const SalesReportPage = () => {
     dispatch(setPage(page));
   };
 
+const handlePrint = () => {
+  window.print();
+};
+
   const handleExport = async (type) => {
     try {
       const filters = {
@@ -74,7 +78,7 @@ const SalesReportPage = () => {
         startDate,
         endDate,
         search,
-        category: selectedCategory,
+      categoryId: selectedCategory,
         fileType: type
       };
 
@@ -106,6 +110,7 @@ const SalesReportPage = () => {
       <div className="flex justify-end mr-20 mt-10 gap-3">
         <Button onClick={() => handleExport("excel")}>Export Excel</Button>
         <Button onClick={() => handleExport("pdf")}>Export PDF</Button>
+        <Button onClick={() => handlePrint()}>Print</Button>
       </div>
 
       <div className="flex ml-20 gap-5 mt-10">

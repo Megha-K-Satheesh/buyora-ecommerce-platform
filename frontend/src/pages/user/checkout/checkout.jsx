@@ -1,4 +1,10 @@
 
+
+
+
+
+
+
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -22,9 +28,10 @@ const CheckoutPage = () => {
 
   const {
     items,
+    mrpSubtotal,
     subtotal,
-    totalDiscount,
-    discountAmount,
+    productDiscount,
+    couponDiscount,
     finalAmount,
     loading: checkoutLoading,
   } = useSelector((state) => state.checkout);
@@ -32,91 +39,69 @@ const CheckoutPage = () => {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("COD");
 
-
   useEffect(() => {
     dispatch(getAddresses());
     dispatch(getOrderSummary());
   }, [dispatch]);
 
-
- 
-useEffect(() => {
-  if (!checkoutLoading && items.length === 0) {
-    navigate("/product/cart");
-  }
-}, [checkoutLoading, items, navigate]);
-
-
+  useEffect(() => {
+    if (!checkoutLoading && items.length === 0) {
+      navigate("/product/cart");
+    }
+  }, [checkoutLoading, items, navigate]);
 
   useEffect(() => {
     if (addresses.length > 0) {
-      const defaultAddress = addresses.find(
-        (addr) => addr.isDefault === true
-      );
-
+      const defaultAddress = addresses.find((addr) => addr.isDefault === true);
       if (defaultAddress) {
         setSelectedAddress(defaultAddress._id);
       } else {
-      
         setSelectedAddress(addresses[0]._id);
       }
     }
   }, [addresses]);
 
-const handlePlaceOrder = async () => {
-  if (!selectedAddress) {
-    showInfo("Please select address");
-    return;
-  }
-
-  try {
-    const res = await dispatch(
-      placeOrder({
-        addressId: selectedAddress,
-        paymentMethod,
-      })
-    ).unwrap();
-
-   
-    if (!res.paymentRequired) {
-      navigate(`/order-success/${res.order._id}`);
+  const handlePlaceOrder = async () => {
+    if (!selectedAddress) {
+      showInfo("Please select address");
       return;
     }
 
-  
-    openRazorpay(
-      {
-      data: res,
-      dispatch,
-      verifyPayment,
-      navigate,
-      selectedAddress,
-      addresses,
-    }
-    );
+    try {
+      const res = await dispatch(
+        placeOrder({
+          addressId: selectedAddress,
+          paymentMethod,
+        })
+      ).unwrap();
 
-  } catch (err) {
-     showInfo(err?.message || "Something went wrong");
-  }
-};
+      if (!res.paymentRequired) {
+        navigate(`/order-success/${res.order._id}`);
+        return;
+      }
+
+      openRazorpay({
+        data: res,
+        dispatch,
+        verifyPayment,
+        navigate,
+        selectedAddress,
+        addresses,
+      });
+    } catch (err) {
+      showInfo(err?.message || "Something went wrong");
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto p-6 grid lg:grid-cols-3 gap-8">
-      {/* LEFT SECTION */}
       <div className="lg:col-span-2 space-y-8">
-        
-        {/* ADDRESS SECTION */}
         <div className="bg-white shadow rounded-lg p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">
-              Select Delivery Address
-            </h2>
-
+            <h2 className="text-xl font-bold">Select Delivery Address</h2>
             <Button
               variant="text"
-              onClick={() =>
-                navigate("/account/address/add-address")
-              }
+              onClick={() => navigate("/account/address/add-address")}
               className="text-violet-600"
             >
               + Add Address
@@ -127,14 +112,8 @@ const handlePlaceOrder = async () => {
             <p>Loading...</p>
           ) : addresses.length === 0 ? (
             <div className="text-center py-6">
-              <p className="mb-3 text-gray-500">
-                No address found
-              </p>
-              <Button
-                onClick={() =>
-                  navigate("/account/address/add-address")
-                }
-              >
+              <p className="mb-3 text-gray-500">No address found</p>
+              <Button onClick={() => navigate("/account/address/add-address")}>
                 Add Address
               </Button>
             </div>
@@ -142,7 +121,7 @@ const handlePlaceOrder = async () => {
             addresses.map((addr) => (
               <label
                 key={addr._id}
-                className={`block border p-4 rounded mb-3 cursor-pointer transition ${
+                className={`block border p-4 rounded mb-3 cursor-pointer ${
                   selectedAddress === addr._id
                     ? "border-pink-600 bg-pink-50"
                     : "border-gray-300"
@@ -155,32 +134,22 @@ const handlePlaceOrder = async () => {
                       name="address"
                       value={addr._id}
                       checked={selectedAddress === addr._id}
-                      onChange={() =>
-                        setSelectedAddress(addr._id)
-                      }
+                      onChange={() => setSelectedAddress(addr._id)}
                       className="mr-2"
                     />
-
                     <span className="font-semibold">
                       {addr.fullName} ({addr.label})
                     </span>
-
                     {addr.isDefault && (
                       <span className="ml-2 text-xs bg-black text-white px-2 py-1 rounded">
                         Default
                       </span>
                     )}
-
                     <p className="text-sm text-gray-600 mt-1">
-                      {addr.houseNumber}, {addr.addressLine},{" "}
-                      {addr.city} - {addr.pinCode}
+                      {addr.houseNumber}, {addr.addressLine}, {addr.city} - {addr.pinCode}
                     </p>
-                    <p className="text-sm text-gray-600">
-                      {addr.state}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      Mobile: {addr.phone}
-                    </p>
+                    <p className="text-sm text-gray-600">{addr.state}</p>
+                    <p className="text-sm text-gray-600">Mobile: {addr.phone}</p>
                   </div>
                 </div>
               </label>
@@ -188,11 +157,8 @@ const handlePlaceOrder = async () => {
           )}
         </div>
 
-        {/* PAYMENT SECTION */}
         <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-xl font-bold mb-4">
-            Choose Payment Method
-          </h2>
+          <h2 className="text-xl font-bold mb-4">Choose Payment Method</h2>
 
           <div className="space-y-4">
             <label
@@ -206,9 +172,7 @@ const handlePlaceOrder = async () => {
                 type="radio"
                 value="COD"
                 checked={paymentMethod === "COD"}
-                onChange={(e) =>
-                  setPaymentMethod(e.target.value)
-                }
+                onChange={(e) => setPaymentMethod(e.target.value)}
                 className="mr-2"
               />
               Cash On Delivery
@@ -225,57 +189,45 @@ const handlePlaceOrder = async () => {
                 type="radio"
                 value="ONLINE"
                 checked={paymentMethod === "ONLINE"}
-                onChange={(e) =>
-                  setPaymentMethod(e.target.value)
-                }
+                onChange={(e) => setPaymentMethod(e.target.value)}
                 className="mr-2"
               />
               Online Payment (UPI / Card / NetBanking)
             </label>
 
-            
-
             <label
-                className={`block border p-4 rounded cursor-pointer ${
-                  paymentMethod === "WALLET"
-                    ? "border-pink-600 bg-pink-50"
-                    : "border-gray-300"
-                }`}
-              >
-                <input
-                  type="radio"
-                  value="WALLET"
-                  checked={paymentMethod === "WALLET"}
-                  onChange={(e) => setPaymentMethod(e.target.value)}
-                  className="mr-2"
-                />
-                Wallet Payment
-              </label>
+              className={`block border p-4 rounded cursor-pointer ${
+                paymentMethod === "WALLET"
+                  ? "border-pink-600 bg-pink-50"
+                  : "border-gray-300"
+              }`}
+            >
+              <input
+                type="radio"
+                value="WALLET"
+                checked={paymentMethod === "WALLET"}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                className="mr-2"
+              />
+              Wallet Payment
+            </label>
           </div>
         </div>
       </div>
 
-      {/* RIGHT SECTION */}
       <div className="bg-white shadow rounded-lg p-6 h-fit sticky top-6">
-        <h2 className="text-lg font-bold mb-4">
-          Price Details
-        </h2>
+        <h2 className="text-lg font-bold mb-4">Price Details</h2>
 
         {checkoutLoading ? (
           <p>Loading summary...</p>
         ) : (
           <>
             {items.map((item) => (
-              <div
-                key={item.variationId}
-                className="flex justify-between mb-2 text-sm"
-              >
+              <div key={item.variationId} className="flex justify-between mb-2 text-sm">
                 <span>
                   {item.name} x {item.quantity}
                 </span>
-                <span>
-                  ₹{item.price * item.quantity}
-                </span>
+                <span>₹{item.price * item.quantity}</span>
               </div>
             ))}
 
@@ -283,17 +235,17 @@ const handlePlaceOrder = async () => {
 
             <div className="flex justify-between text-sm">
               <span>Total MRP</span>
-              <span>₹{subtotal}</span>
+              <span>₹{mrpSubtotal}</span>
             </div>
 
             <div className="flex justify-between text-green-600 text-sm">
               <span>Product Discount</span>
-              <span>-₹{totalDiscount}</span>
+              <span>-₹{productDiscount}</span>
             </div>
 
             <div className="flex justify-between text-green-600 text-sm">
               <span>Coupon Discount</span>
-              <span>-₹{discountAmount}</span>
+              <span>-₹{couponDiscount}</span>
             </div>
 
             <div className="flex justify-between font-bold text-lg mt-4">

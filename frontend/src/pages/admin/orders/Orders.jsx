@@ -8,6 +8,7 @@ import OrdersTable from "../../../components/Admin/OrderTable";
 import Pagination from "../../../components/ui/Pagination";
 import SearchInput from "../../../components/ui/SearchInput";
 
+import { useNavigate } from "react-router-dom";
 import { showError, showSuccess } from "../../../components/ui/Toastify";
 import {
   approveReturn,
@@ -19,7 +20,7 @@ import {
 
 const Orders = () => {
   const dispatch = useDispatch();
-
+const navigate = useNavigate()
 
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
@@ -230,6 +231,7 @@ const handleShip = async (orderId, productId,variantId) => {
         onApproveReturn={handleApproveReturn}
         onRejectReturn={handleRejectReturn}
           onMarkReturned={handleMarkReturned}
+         onView={(orderId) => navigate(`/admin-dashboard/orders/${orderId}`)}
       />
 
       {/* Pagination */}

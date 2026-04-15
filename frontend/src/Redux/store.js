@@ -13,6 +13,7 @@ import userWishlistReducer from "../Redux/slices/wishlistSlice";
 import adminSalesReducer from "././slices/admin/salesSlice";
 import adminBannerReducer from './slices/admin/adminBannerSlice';
 import adminOrderReducer from './slices/admin/adminOrderSlice';
+import adminUserReducer from "./slices/admin/adminUserSlice";
 import brandReducer from './slices/admin/brandSlice';
 import categoryReducer from './slices/admin/categorySlice';
 import couponReducer from './slices/admin/couponSlice';
@@ -40,6 +41,7 @@ export const store = configureStore({
       banner:adminBannerReducer,
       review:userReviewReducer ,
       sales:adminSalesReducer,
-      chatBot:userChatBotReducer
+      chatBot:userChatBotReducer,
+      adminUser:adminUserReducer
   },
 });

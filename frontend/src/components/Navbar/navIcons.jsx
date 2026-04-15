@@ -40,7 +40,7 @@ import ProfileDropdown from "./ProfileDropdown";
 
 const NavbarIcons = () => {
 
-  // Get cart items from Redux
+ 
   const { cartItems } = useSelector((state) => state.cart);
 
   return (
@@ -61,7 +61,7 @@ const NavbarIcons = () => {
       </div>
     </Link>
 
-      {/* Cart / Bag */}
+      {/* Bag */}
       <div className="flex flex-1 flex-col justify-center items-center">
         <Link
           to="/product/cart"

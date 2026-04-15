@@ -56,7 +56,7 @@ const Profile = ()=>{
       </tr>
       <tr>
         <td className="py-2 ">Date of Birth</td>
-        <td className="py-3  pl-20 lg:pl-20">{user?.dob || "- not added -"}</td>
+        <td className="py-3  pl-20 lg:pl-20">{user?.dob ? new Date(user.dob).toLocaleDateString("en-GB") : "- not added -"}</td>
       </tr>
       <tr>
         <td className="py-2 ">Location</td>
@@ -69,7 +69,7 @@ const Profile = ()=>{
      
     </tbody>
   </table>
-       <Button variant='primary'  className="mt-10 ml-20  ">
+       <Button variant='primary'  className="mt-10 ml-20 " onClick={()=>navigate("/account/profile/edit-profile")}>
         Edit
        </Button>
       </div>

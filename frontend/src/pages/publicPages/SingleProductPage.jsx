@@ -247,7 +247,7 @@ const SingleProductPage = () => {
         </div>
 
       </div>
-        <div className="max-w-7xl mx-auto px-6">
+       <div className="max-w-7xl mx-auto px-6 transition-height">
   <ReviewSection productId={id} />
 </div>
 <footer>

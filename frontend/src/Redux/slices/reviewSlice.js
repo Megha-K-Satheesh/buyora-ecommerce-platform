@@ -14,7 +14,7 @@ export const addReview = createAsyncThunk(
       return res.data.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(
-        err.response?.data?.message || "Add review failed"
+        err.response?.data?.message ||err.response?.data?.error?.message|| "Add review failed"
       );
     }
   }

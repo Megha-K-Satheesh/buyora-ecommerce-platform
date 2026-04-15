@@ -48,7 +48,7 @@ const Category = lazy(() => import("./pages/admin/category/Categories"));
 const AddCategoryForm = lazy(() => import("./pages/admin/category/AddCategory"));
 const UpdateCategoryForm = lazy(() => import("./pages/admin/category/UpdateCategory"));
 const Orders = lazy(() => import("./pages/admin/orders/Orders"));
-const Users = lazy(() => import("./pages/admin/user/Users"));
+ const Users = lazy(() => import("./pages/admin/user/Users"));
 const Banners = lazy(() => import("./pages/admin/banner/Banners"));
 const AddBanner = lazy(() => import("./pages/admin/banner/AddBanner"));
 const EditBanner = lazy(() => import("./pages/admin/banner/UpdateBanner"));
@@ -76,6 +76,9 @@ const CouponsList = lazy(() => import("./pages/user/coupon/UserCoupons"));
 import ChatWidget from "./components/ui/ChatWidGet";
 import NotFound from "./components/ui/NotFount";
 import ServerError from "./components/ui/ServerError";
+import NavbarOrderLayout from "./layouts/OrderLayout";
+import EditProfile from "./pages/user/profile/EditProfile";
+import AdminOrderView from "./pages/admin/orders/AdminOrderView";
 
 function App() {
   const location = useLocation();
@@ -121,12 +124,13 @@ function App() {
           {/* User Protected Routes */}
           <Route path="/product/checkout" element={<UserRoute><CheckoutPage /></UserRoute>} />
           <Route path="/order-success/:orderId" element={<UserRoute><OrderSuccessPage /></UserRoute>} />
-          <Route path="/orders" element={<UserRoute><AllOrdersPage /></UserRoute>} />
+          <Route path="/all-orders" element={<UserRoute><NavbarOrderLayout /></UserRoute>} />
           <Route path="/orders/:orderId" element={<UserRoute><SingleOrderPage /></UserRoute>} />
           <Route path="/products/wishlist" element={<UserRoute><WishlistLayout /></UserRoute>} />
           <Route path="/account" element={<UserRoute><ProfileLayout /></UserRoute>}>
             <Route index element={<Profile />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="profile/edit-profile" element={<EditProfile />} />
             <Route path="address" element={<Address />} />
             <Route path="address/add-address" element={<AddAddress />} />
             <Route path="address/edit-address/:addressId" element={<EditAddress />} />
@@ -149,6 +153,7 @@ function App() {
             <Route path="categories/add-category" element={<AddCategoryForm />} />
             <Route path="categories/update-category/:categoryId" element={<UpdateCategoryForm />} />
             <Route path="orders" element={<Orders />} />
+              <Route path="orders/:orderId" element={<AdminOrderView />} />
             <Route path="coupons" element={<Coupons />} />
             <Route path="coupons/add-coupon" element={<AddCoupon />} />
             <Route path="coupons/edit-coupon/:couponId" element={<EditCoupon />} />

@@ -103,10 +103,10 @@ return(
                      <Button type="submit" fullWidth className='mt-3'>
                        {loading ? "Loading...":"Login"}
                   </Button>
-                  <p className='flex justify-center mt-2.5'>or</p>
+                  {/* <p className='flex justify-center mt-2.5'>or</p>
                   <Button type='button' fullWidth className='mt-4 text-black' variant='outline'>
                     GOOGLE
-                  </Button>
+                  </Button> */}
                     {/* <div className="mt-4 text-center text-sm text-gray-600">
                         Don't have an account?{" "}
                         <Link

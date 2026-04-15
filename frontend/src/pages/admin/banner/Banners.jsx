@@ -122,6 +122,7 @@ const Banners = () => {
           <option value="home_slider">Home Slider</option>
           <option value="category_top">Category Top</option>
           <option value="category_slider">Category Slider</option>
+          <option value="home_trending">Home Trending</option>
         </select>
       </div>
 

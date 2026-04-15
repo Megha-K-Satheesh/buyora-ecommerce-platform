@@ -53,45 +53,51 @@ export const verifyPayment = createAsyncThunk(
 
 
 
+
 const initialState = {
   items: [],
-  subtotal: 0,
-  totalDiscount: 0,
-  discountAmount: 0,
-  finalAmount: 0,
-  appliedCoupon: null,
 
+  mrpSubtotal: 0,
+  subtotal: 0,
+
+  productDiscount: 0,
+  couponDiscount: 0,
+  totalDiscount: 0,
+
+  appliedCoupon: null,
+  finalAmount: 0,
 
   lastOrder: null,
   paymentRequired: false,
   razorpayOrderId: null,
 
-
-
-
   loading: false,
   error: null,
 };
-
-
 
 const checkoutSlice = createSlice({
   name: "checkout",
   initialState,
   reducers: {
-    clearCheckoutState: (state) => {
-      state.items = [];
-      state.subtotal = 0;
-      state.totalDiscount = 0;
-      state.discountAmount = 0;
-      state.finalAmount = 0;
-      state.appliedCoupon = null;
-      state.error = null;
- state.lastOrder = null;         
-    state.paymentRequired = false;  
-    state.razorpayOrderId = null; 
- 
-    },
+   clearCheckoutState: (state) => {
+  state.items = [];
+
+  state.mrpSubtotal = 0;
+  state.subtotal = 0;
+
+  state.productDiscount = 0;
+  state.couponDiscount = 0;
+  state.totalDiscount = 0;
+
+  state.finalAmount = 0;
+  state.appliedCoupon = null;
+
+  state.error = null;
+
+  state.lastOrder = null;
+  state.paymentRequired = false;
+  state.razorpayOrderId = null;
+},
   },
 
   extraReducers: (builder) => {
@@ -103,17 +109,25 @@ const checkoutSlice = createSlice({
         state.error = null;
       })
 
-      .addCase(getOrderSummary.fulfilled, (state, action) => {
-        state.loading = false;
+.addCase(getOrderSummary.fulfilled, (state, action) => {
+  state.loading = false;
 
-        state.items = action.payload?.items || [];
-        state.subtotal = action.payload?.subtotal || 0;
-        state.totalDiscount = action.payload?.totalDiscount || 0;
-        state.discountAmount = action.payload?.discountAmount || 0;
-        state.finalAmount = action.payload?.finalAmount || 0;
-        state.appliedCoupon = action.payload?.appliedCoupon || null;
-      })
+  const data = action.payload || {};
 
+  state.items = data.items || [];
+
+  state.mrpSubtotal = data.mrpSubtotal || 0;
+  state.subtotal = data.subtotal || 0;
+
+  state.productDiscount = data.productDiscount || 0;
+  state.couponDiscount = data.couponDiscount || 0;
+
+  state.totalDiscount =
+    (data.productDiscount || 0) + (data.couponDiscount || 0);
+
+  state.finalAmount = data.finalAmount || 0;
+  state.appliedCoupon = data.appliedCoupon || null;
+})
       .addCase(getOrderSummary.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;

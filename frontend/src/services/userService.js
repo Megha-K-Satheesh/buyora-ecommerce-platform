@@ -21,6 +21,11 @@ export const userService = {
      },
      deleteAddress(addressId) {
        return apiClient.delete(`/user/delete-address/${addressId}`);
-}
+},
+
+  updateUserProfile(data) {
+    return apiClient.patch('/user/profile/edit-profile', data);
+  },
+
 
 }

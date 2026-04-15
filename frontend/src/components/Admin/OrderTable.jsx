@@ -12,7 +12,8 @@ const OrdersTable = memo(
     onDeliver,
     onApproveReturn,
     onRejectReturn,
-      onMarkReturned
+      onMarkReturned,
+      onView
   }) => {
     return (
       <div className="mx-20 mt-10 rounded-t-xl shadow-xl overflow-hidden">
@@ -64,6 +65,14 @@ const OrdersTable = memo(
 
                     <td className="p-2 text-center">
                       <div className="flex justify-center gap-3 flex-wrap">
+
+{/* 
+                            <button
+      onClick={() => onView(order.orderId)}
+      className="bg-gray-700 text-white px-2 py-1 rounded"
+    >
+      View
+    </button> */}
                         {item.status === "PLACED" && (
                           <button
                             onClick={() => onConfirm(order.orderId, item.productId._id,item.variantId)}
@@ -139,7 +148,20 @@ const OrdersTable = memo(
   <span className="text-green-600 font-semibold">
     Completed
   </span>
+
+
+
 )}
+              <div className="">
+
+               <button
+      onClick={() => onView(order.orderId)}
+      className="border-pink-600 border-2  px-2 py-1 rounded"
+    >
+      View
+    </button>
+              </div>
+                
                       </div>
                     </td>
                   </tr>

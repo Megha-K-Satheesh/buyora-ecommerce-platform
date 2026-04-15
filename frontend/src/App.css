@@ -1,4 +1,42 @@
 
 
-@import 'tailwindcss'
+@import 'tailwindcss';
 
+@media print {
+
+ 
+  button {
+    display: none !important;
+  }
+
+
+  input, select {
+    display: none !important;
+  }
+
+
+  .pagination {
+    display: none !important;
+  }
+
+ 
+  body {
+    background: white !important;
+  }
+
+ 
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  th {
+    background: #4f46e5;
+    color: white;
+  }
+}

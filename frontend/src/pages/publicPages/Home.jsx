@@ -10,8 +10,8 @@ import Slider from "react-slick";
 import Footer from '../../components/ui/Footer';
 
 import Navbar from "../../components/ui/Navbar";
-import { heroSliderSettings, promoSliderSettings } from "../../utils/sliderSettings";
 import { getBannersUser } from "../../Redux/slices/admin/adminBannerSlice";
+import { heroSliderSettings, promoSliderSettings } from "../../utils/sliderSettings";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -150,7 +150,7 @@ const treandingPromoBanners = banners.filter(
      
 
 
-     {/* WATCHES SECTION */}
+    
 <section className="mt-30 px-6">
   <h1 className="text-xl lg:text-2xl font-extrabold tracking-widest text-gray-900 mb-10 border-l-4 border-blue-500 pl-3 uppercase">
   TRENDING NOW
