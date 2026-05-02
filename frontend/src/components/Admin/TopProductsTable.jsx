@@ -1,12 +1,10 @@
 
-
-
 const TopProductsTable = ({ products }) => {
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+    <div className="bg-bg-main p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
 
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-lg font-semibold text-gray-800">
+        <h2 className="text-lg font-semibold text-text-primary">
           Top Selling Products
         </h2>
       </div>
@@ -16,7 +14,7 @@ const TopProductsTable = ({ products }) => {
         <table className="w-full text-sm">
 
           <thead>
-            <tr className="border-b border-gray-300 text-gray-500 text-xs uppercase tracking-wider">
+            <tr className="border-b border-border text-text-muted text-xs uppercase tracking-wider">
               <th className="py-3 text-left">Product</th>
               <th className="py-3 text-left">Sold</th>
               <th className="py-3 text-left">Revenue</th>
@@ -29,8 +27,8 @@ const TopProductsTable = ({ products }) => {
 
               <tr
                 key={p.productId}
-                className={`border-b border-gray-300 hover:bg-gray-50 transition ${
-                  index % 2 === 0 ? "bg-white" : "bg-gray-50/40"
+                className={`border-b border-border hover:bg-bg-soft-hover transition ${
+                  index % 2 === 0 ? "bg-bg-main" : "bg-bg-muted"
                 }`}
               >
 
@@ -44,7 +42,7 @@ const TopProductsTable = ({ products }) => {
                       className="w-11 h-auto object-cover rounded-lg "
                     />
 
-                    <span className="font-medium text-gray-700">
+                    <span className="font-medium text-text-secondary">
                       {p.productName}
                     </span>
 
@@ -52,11 +50,11 @@ const TopProductsTable = ({ products }) => {
 
                 </td>
 
-                <td className="font-medium text-gray-700">
+                <td className="font-medium text-text-secondary">
                   {p.sold}
                 </td>
 
-                <td className="font-semibold text-green-600">
+                <td className="font-semibold text-success">
                   ₹{p.revenue}
                 </td>
 

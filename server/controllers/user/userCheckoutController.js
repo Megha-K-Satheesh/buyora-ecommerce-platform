@@ -42,7 +42,14 @@ static verifyPayment = BaseController.asyncHandler(async (req, res) => {
   BaseController.sendSuccess(res, "PAYMENT SUCCESSFUL", { order });
 });
 
+static paymentFailed = BaseController.asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  const { orderId } = req.body;
 
+  const order = await CheckoutService.paymentFailed(userId, orderId);
+
+  BaseController.sendSuccess(res, "Payment marked as failed", order);
+});
 
 
 }

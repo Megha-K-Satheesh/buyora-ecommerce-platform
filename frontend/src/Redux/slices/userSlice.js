@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { userService } from "../../services/userService";
+import { cleanAddressData } from "../../utils/cleanData";
 
 
 export const getUserProfile = createAsyncThunk('user/me',async(_,thunkAPI)=>{
@@ -28,7 +29,8 @@ export const updateUserProfile = createAsyncThunk(
 
 export const addAddress = createAsyncThunk('user/add-addAddress',async(data,thunkAPI)=>{
     try {
-        const res = await userService.addAddress(data)
+      const cleanData = cleanAddressData(data);
+        const res = await userService.addAddress(cleanData)
         return res.data
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data?.error?.message|| "Add addAddress Failed")
@@ -56,7 +58,8 @@ export const updateAddress = createAsyncThunk('user/updateAddress',async({
    addressId,data
 },thunkAPI)=>{
    try {
-      const res = await userService.updateAddress(addressId,data)
+        const cleanData = cleanAddressData(data);
+      const res = await userService.updateAddress(addressId,cleanData)
       return res.data
    } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data?.error?.message || "Failed to update address")

@@ -1,4 +1,5 @@
 import { memo } from "react";
+import TableLoader from "../ui/TableLoader";
 
 const SalesReportTable = memo(({ loading, tableData }) => {
   return (
@@ -20,13 +21,7 @@ const SalesReportTable = memo(({ loading, tableData }) => {
         </thead>
 
         <tbody>
-          {loading && (
-            <tr>
-              <td colSpan="10" className="text-center p-4">
-                Loading...
-              </td>
-            </tr>
-          )}
+             {loading && <TableLoader rows={5} columns={8} />}
 
           {!loading && tableData.length === 0 && (
             <tr>

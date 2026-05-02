@@ -17,7 +17,7 @@ export const mergeCart = createAsyncThunk('cart/mergeCart',
   async(_,thunkAPI)=>{
         try {
             const guestCart = JSON.parse(localStorage.getItem("cart")) || [];
-      if (guestCart.length === 0) return []; // nothing to merge
+      if (guestCart.length === 0) return [];
             const res = await userProductsService.mergeCart(guestCart)
 
               localStorage.removeItem("cart");

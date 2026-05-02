@@ -4,41 +4,117 @@ const cloudinary = require("../config/cloudinaryConfig");
 const Order = require("../models/Order");
 const Review = require("../models/Review");
 const { ErrorFactory } = require("../utils/errors");
+const Product = require("../models/admin/Product");
 
 class ReviewService {
 
 
 
 
-  static async addReview({ userId, productId, body, files }) {
+//   static async addReview({ userId, productId, body, files }) {
+//   const { rating, comment } = body;
+
+// const order = await Order.findOne({
+//   userId: new mongoose.Types.ObjectId(userId),
+//   "items.productId": new mongoose.Types.ObjectId(productId),
+// });
+// console.log(order)
+// if (!order) {
+  
+//   throw ErrorFactory.conflict("You can only review products you have purchased");
+// }
+
+//   const hasPurchased = await Order.findOne({
+//   userId: new mongoose.Types.ObjectId(userId),
+//   items: {
+//     $elemMatch: {
+//       productId: new mongoose.Types.ObjectId(productId),
+//       status: "DELIVERED",
+//     },
+//   },
+// });
+
+// if (!hasPurchased) {
+//   throw  ErrorFactory.conflict("Please wait until your order is delivered to add a review");
+// }
+
+
+
+
+//   const images = [];
+//   if (files && files.length > 0) {
+//     for (const file of files) {
+//       const result = await new Promise((resolve, reject) => {
+//         const stream = cloudinary.uploader.upload_stream(
+//           { folder: "reviews" },
+//           (err, result) => {
+//             if (err) return reject(err);
+//             resolve(result);
+//           }
+//         );
+//         stream.end(file.buffer);
+//       });
+//       images.push(result.secure_url);
+//     }
+//   }
+
+ 
+//   const review = await Review.create({
+//     user: userId,
+//     product: productId,
+//     rating,
+//     comment,
+//     images,
+//   });
+
+
+//   const reviews = await Review.find({ product: productId });
+//   const totalReviews = reviews.length;
+//   const avgRating =
+//     totalReviews > 0
+//       ? reviews.reduce((acc, r) => acc + r.rating, 0) / totalReviews
+//       : 0;
+
+//   const ratingCounts = [5, 4, 3, 2, 1].map(
+//     (star) => reviews.filter((r) => r.rating === star).length
+//   );
+
+ 
+//   return {
+//     review,
+//     stats: {
+//       totalReviews,
+//       avgRating: avgRating.toFixed(1),
+//       ratingCounts,
+//     },
+//   };
+// }
+ 
+static async addReview({ userId, productId, body, files }) {
   const { rating, comment } = body;
 
-const order = await Order.findOne({
-  userId: new mongoose.Types.ObjectId(userId),
-  "items.productId": new mongoose.Types.ObjectId(productId),
-});
-console.log(order)
-if (!order) {
-  
-  throw ErrorFactory.conflict("You can only review products you have purchased");
-}
+  const order = await Order.findOne({
+    userId: new mongoose.Types.ObjectId(userId),
+    "items.productId": new mongoose.Types.ObjectId(productId),
+  });
+
+  if (!order) {
+    throw ErrorFactory.conflict("You can only review products you have purchased");
+  }
 
   const hasPurchased = await Order.findOne({
-  userId: new mongoose.Types.ObjectId(userId),
-  items: {
-    $elemMatch: {
-      productId: new mongoose.Types.ObjectId(productId),
-      status: "DELIVERED",
+    userId: new mongoose.Types.ObjectId(userId),
+    items: {
+      $elemMatch: {
+        productId: new mongoose.Types.ObjectId(productId),
+        status: "DELIVERED",
+      },
     },
-  },
-});
+  });
 
-if (!hasPurchased) {
-  throw  ErrorFactory.conflict("Please wait until your order is delivered to add a review");
-}
-
-
-
+  if (!hasPurchased) {
+    throw ErrorFactory.conflict("Please wait until your order is delivered to add a review");
+  }
 
   const images = [];
   if (files && files.length > 0) {
@@ -57,7 +133,6 @@ if (!hasPurchased) {
     }
   }
 
- 
   const review = await Review.create({
     user: userId,
     product: productId,
@@ -66,30 +141,36 @@ if (!hasPurchased) {
     images,
   });
 
-
   const reviews = await Review.find({ product: productId });
   const totalReviews = reviews.length;
+
   const avgRating =
     totalReviews > 0
-      ? reviews.reduce((acc, r) => acc + r.rating, 0) / totalReviews
+      ? Number(
+          (
+            reviews.reduce((acc, r) => acc + r.rating, 0) / totalReviews
+          ).toFixed(1)
+        )
       : 0;
 
   const ratingCounts = [5, 4, 3, 2, 1].map(
     (star) => reviews.filter((r) => r.rating === star).length
   );
 
- 
+  await Product.findByIdAndUpdate(productId, {
+    rating: avgRating,
+    ratingCount: totalReviews,
+  });
+
   return {
     review,
     stats: {
       totalReviews,
-      avgRating: avgRating.toFixed(1),
+      avgRating,
       ratingCounts,
     },
   };
 }
- 
-
 
   static async getReviews(productId) {
   const reviews = await Review.find({ product: productId })

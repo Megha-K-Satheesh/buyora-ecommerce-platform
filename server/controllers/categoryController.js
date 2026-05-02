@@ -1,12 +1,14 @@
 const CategoryService = require("../services/CategoryService");
+const { addCategoryValidation } = require("../utils/adminValidation/categoryValidation");
 const BaseController = require("./BaseController");
 
 
 
 class CategoryController extends BaseController {
      static addCategory = BaseController.asyncHandler(async(req,res)=>{
+          const validatedData = BaseController.validateRequest(addCategoryValidation,req.body)
 
-            const result = await CategoryService.addCategory(req.body)
+            const result = await CategoryService.addCategory(validatedData)
 
             BaseController.logAction("CATEGORY ADDED",result);
             BaseController.sendSuccess(res,"CATEGORY ADDED",result);
@@ -27,7 +29,8 @@ class CategoryController extends BaseController {
 
      static updateCategory = BaseController.asyncHandler(async(req,res)=>{
           const {categoryId} = req.params;
-          const result = await CategoryService.updateCategory(categoryId,req.body);
+             const validatedData = BaseController.validateRequest(addCategoryValidation,req.body)
+          const result = await CategoryService.updateCategory(categoryId,validatedData);
           BaseController.logAction("CATEGORY UPDATED");
           BaseController.sendSuccess(res,"CATEGORY UPDATED",result)
      })

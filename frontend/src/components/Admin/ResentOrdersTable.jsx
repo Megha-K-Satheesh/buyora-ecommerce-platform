@@ -1,12 +1,10 @@
 
-
-
 const RecentOrdersTable = ({ orders }) => {
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+    <div className="bg-bg-main p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
 
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-lg font-semibold text-gray-800">
+        <h2 className="text-lg font-semibold text-text-primary">
           Recent Orders
         </h2>
       </div>
@@ -16,7 +14,7 @@ const RecentOrdersTable = ({ orders }) => {
         <table className="w-full text-sm">
 
           <thead>
-            <tr className="border-b border-gray-300 text-gray-500 text-xs  uppercase tracking-wider">
+            <tr className="border-b border-border text-text-muted text-xs uppercase tracking-wider">
               <th className="py-3 text-left">Order</th>
               <th className="py-3 text-left">Customer</th>
               <th className="py-3 text-left">Amount</th>
@@ -30,24 +28,24 @@ const RecentOrdersTable = ({ orders }) => {
 
               <tr
                 key={order.orderId}
-                className={`border-b border-gray-300 hover:bg-gray-50 transition ${
-                  index % 2 === 0 ? "bg-white" : "bg-gray-50/40"
+                className={`border-b border-border hover:bg-bg-soft-hover transition ${
+                  index % 2 === 0 ? "bg-bg-main" : "bg-bg-muted"
                 }`}
               >
 
-                <td className="py-4 font-medium text-gray-700">
+                <td className="py-4 font-medium text-text-secondary">
                   {order.orderNumber}
                 </td>
 
-                <td className="font-medium text-gray-700">
+                <td className="font-medium text-text-secondary">
                   {order.customer}
                 </td>
 
-                <td className="font-semibold text-green-600">
+                <td className="font-semibold text-success">
                   ₹{order.amount}
                 </td>
 
-                <td className="font-semibold text-pink-600">
+                <td className="font-semibold text-primary">
                   {order.status}
                 </td>
 

@@ -10,6 +10,7 @@ import SearchInput from "../../../components/ui/SearchInput";
 import { showError, showSuccess } from "../../../components/ui/Toastify";
 
 import ProductsTable from "../../../components/Admin/ProductsTable";
+import { useDebounce } from "../../../hook/useDebounce";
 import { getCategory } from "../../../Redux/slices/admin/categorySlice";
 import {
   deleteProduct,
@@ -22,17 +23,17 @@ const Products = () => {
   const dispatch = useDispatch();
 
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 400);
   const [status, setStatus] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const { products: tableData, loading, currentPage, totalPages, totalProducts } =
     useSelector((state) => state.product);
 
-    console.log("tabledata",tableData)
 
-  const { categories } = useSelector((state) => state.category); // load categories from Redux
 
-  // Recursive function to build category options hierarchically
+  const { categories } = useSelector((state) => state.category); 
+  
   const buildCategoryOptions = (cats, prefix = "") => {
     return cats.flatMap((cat) => {
       if (!cat || !cat._id) return [];
@@ -109,12 +110,12 @@ const Products = () => {
       getProductsList({
         page: currentPage,
         limit: 10,
-        search,
+        search :debouncedSearch,
         status,
         category: selectedCategory,
       })
     );
-  }, [dispatch, currentPage, search, status, selectedCategory]);
+  }, [ debouncedSearch,dispatch, currentPage, status, selectedCategory]);
 
   
   useEffect(() => {
@@ -145,7 +146,7 @@ const Products = () => {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="  px-3 py-2 rounded-lg shadow-sm bg-white w-[25%] font-medium"
+            className="  px-3 py-2 rounded-lg shadow-sm bg-bg-main w-[25%] font-medium"
              
           >
             <option value="">All Categories</option>
@@ -156,7 +157,7 @@ const Products = () => {
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="bg-white shadow px-3 py-2 rounded-lg w-[25%] font-medium"
+            className="bg-bg-main shadow px-3 py-2 rounded-lg w-[25%] font-medium"
           >
             <option value="">All Status</option>
             <option value="active">Active</option>
@@ -176,11 +177,13 @@ const Products = () => {
 
       {/* Pagination */}
       <div className="my-10">
-        <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
+          {!loading && (
+  <Pagination
+    currentPage={currentPage}
+    totalPages={totalPages}
+    onPageChange={handlePageChange}
+  />
+)}
       </div>
     </>
   );

@@ -23,10 +23,11 @@ class UserProductService {
     sort,
   }) {
 
-    console.log(level1,level2,level3)
-    console.log("search ",search)
-    console.log("pricerange",minPrice,maxPrice)
-    console.log("discount",discount)
+    // console.log(level1,level2,level3)
+    // console.log("search ",search)
+    // console.log("pricerange",minPrice,maxPrice)
+    // console.log("discount",discount)
+    console.log("sssssssssssssssssssssssssssssssssssss",sort)
   const filters = {};
 
   let level1Doc = null;
@@ -152,13 +153,13 @@ if (search) {
     if (discountFilter.length) filters.$or = discountFilter;
   }
 
-  // if (search) filters.name = { $regex: search, $options: "i" };
+const sortOption = {};
 
-  const sortOption = {};
-  if (sort === "priceAsc") sortOption.sellingPrice = 1;
-  else if (sort === "priceDesc") sortOption.sellingPrice = -1;
-  else sortOption.createdAt = -1;
-
+if (sort === "priceAsc") sortOption.sellingPrice = 1;
+else if (sort === "priceDesc") sortOption.sellingPrice = -1;
+else if (sort === "ratingDesc") sortOption.rating = -1;
+else if (sort === "ratingAsc") sortOption.rating = 1;
+else sortOption.createdAt = -1;
   const pageNum = Number(page);
   const limitNum = Number(limit);
   const skip = (pageNum - 1) * limitNum;

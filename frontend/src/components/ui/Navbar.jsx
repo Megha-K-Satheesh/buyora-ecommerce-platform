@@ -14,12 +14,12 @@ const Navbar=()=>{
     <>
      <div className="flex lg:h-[10vh] h-[6vh] mb-16 fixed top-0 left-0 w-full bg-white shadow z-50">
 
-           <div className="lg:hidden">
+          <div className="lg:hidden">
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             {mobileMenuOpen ? (
-              <FiX className="w-6 h-6 text-gray-800" />
+              <FiX className="w-6 h-6  text-gray-800" />
             ) : (
-              <FiMenu className="w-6 h-6 text-gray-800" />
+              <FiMenu className="mt-5 ml-2 w-6 h-6 text-gray-800" />
             )}
           </button>
         </div>

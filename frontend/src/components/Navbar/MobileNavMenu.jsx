@@ -15,7 +15,7 @@ const MobileNavbarMenu = ({ closeMenu }) => {
   }, [dispatch]);
 
   return (
-    <div className="lg:hidden bg-white shadow w-64 h-screen fixed top-0 left-0 z-50 overflow-auto">
+    <div className="lg:hidden bg-bg-main shadow w-64 h-screen fixed top-0 left-0 z-50 overflow-auto">
       {/* Header */}
       <div className="flex justify-between items-center p-4 border-b">
         <h2 className="font-bold text-lg">Categories</h2>
@@ -50,7 +50,7 @@ const MobileNavbarMenu = ({ closeMenu }) => {
               level1.children.map((level2) => (
                 <div key={level2._id} className="pl-4">
                   <div
-                    className="flex justify-between items-center py-1 cursor-pointer font-medium text-gray-600"
+                    className="flex justify-between items-center py-1 cursor-pointer font-medium text-text-muted"
                     onClick={() =>
                       setOpenSubCategory(
                         openSubCategory === level2._id ? null : level2._id
@@ -77,7 +77,7 @@ const MobileNavbarMenu = ({ closeMenu }) => {
                       <Link
                         key={level3._id}
                         to={`/${level1.slug}/${level2.slug}/${level3.slug}`}
-                        className="block py-1 pl-4 text-gray-700 hover:text-black"
+                        className="block py-1 pl-4 text-text-secondary hover:text-text-secondary"
                       >
                         {level3.name}
                       </Link>

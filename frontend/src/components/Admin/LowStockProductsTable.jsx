@@ -3,12 +3,15 @@
 
 
 
+
+
+
 const LowStockProductsTable = ({ products }) => {
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+    <div className="bg-bg-main p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
 
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-lg font-semibold text-gray-800">
+        <h2 className="text-lg font-semibold text-text-primary">
           Low Stock Products
         </h2>
       </div>
@@ -18,7 +21,7 @@ const LowStockProductsTable = ({ products }) => {
         <table className="w-full text-sm">
 
           <thead>
-            <tr className="border-b border-gray-300 text-gray-500 text-xs uppercase tracking-wider">
+            <tr className="border-b border-border text-text-muted text-xs uppercase tracking-wider">
               <th className="py-3 text-left">Product</th>
               <th className="py-3 text-left">Stock Left</th>
             </tr>
@@ -30,8 +33,8 @@ const LowStockProductsTable = ({ products }) => {
 
               <tr
                 key={p.productId}
-                className={`border-b border-gray-300 hover:bg-gray-50 transition ${
-                  index % 2 === 0 ? "bg-white" : "bg-gray-50/40"
+                className={`border-b border-border hover:bg-bg-soft-hover transition ${
+                  index % 2 === 0 ? "bg-bg-main" : "bg-bg-muted"
                 }`}
               >
 
@@ -45,7 +48,7 @@ const LowStockProductsTable = ({ products }) => {
                       className="w-11 h-auto object-cover rounded-lg"
                     />
 
-                    <span className="font-medium text-gray-700">
+                    <span className="font-medium text-text-secondary">
                       {p.name}
                     </span>
 
@@ -53,7 +56,7 @@ const LowStockProductsTable = ({ products }) => {
 
                 </td>
 
-                <td className="font-bold text-red-500">
+                <td className="font-bold text-danger">
                   {p.stockLeft}
                 </td>
 

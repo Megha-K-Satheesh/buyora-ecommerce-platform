@@ -22,7 +22,11 @@ const adminAuthSlice = createSlice({
      error:null,
      loading:false
    },
-   reducers:{},
+   reducers:{ adminLogout: (state) => {
+      state.admin = null;
+      state.isAuthenticated = false;
+      state.error = null;
+    }},
    extraReducers:(builder)=>{
      builder.
      addCase(adminLogin.pending ,(state)=>{
@@ -45,3 +49,4 @@ const adminAuthSlice = createSlice({
 })
 export default  adminAuthSlice.reducer
 
+export const { adminLogout} = adminAuthSlice.actions;

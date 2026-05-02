@@ -43,7 +43,7 @@ const DashboardPage = () => {
     <>
 
           <AdminOutletHead heading={"DASHBOARD"} />
-    <div className="p-6 space-y-8 bg-gray-50 min-h-screen">
+    <div className="p-6 space-y-8 bg-bg-soft min-h-screen">
         
 
 

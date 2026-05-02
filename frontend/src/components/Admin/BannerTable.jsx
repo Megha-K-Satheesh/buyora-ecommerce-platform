@@ -1,12 +1,20 @@
+
+
+
+
+
+
+
 import { memo } from "react";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
+import TableLoader from "../ui/TableLoader";
 
-const BannersTable = memo(({ loading, tableData=[], total, onEdit, onDelete }) => {
+const BannersTable = memo(({ loading, tableData = [], total, onEdit, onDelete }) => {
   return (
-    <div className="mx-20 mt-10 rounded-t-xl shadow-xl overflow-hidden">
-      <table className="w-full border border-gray-200 border-collapse">
+    <div className="mx-4 md:mx-10 lg:mx-20 mt-10 rounded-t-xl shadow-xl overflow-x-auto">
+      <table className="w-full min-w-[700px] border border-border-light border-collapse">
         <thead>
-          <tr className="border text-white text-xl border-gray-200 h-15 bg-pink-600 hover:bg-pink-100 hover:text-black">
+          <tr className="border text-white text-xl border-border-light h-15 bg-primary hover:bg-bg-soft-hover hover:text-text-primary">
             <th className="p-2 text-center">Title</th>
             <th className="p-2 text-center">Type</th>
             <th className="p-2 text-center">Page</th>
@@ -19,13 +27,7 @@ const BannersTable = memo(({ loading, tableData=[], total, onEdit, onDelete }) =
         </thead>
 
         <tbody>
-          {loading && (
-            <tr>
-              <td colSpan="8" className="text-center p-4">
-                Loading...
-              </td>
-            </tr>
-          )}
+             {loading && <TableLoader rows={5} columns={8} />}
 
           {!loading && tableData.length === 0 && (
             <tr>
@@ -37,23 +39,23 @@ const BannersTable = memo(({ loading, tableData=[], total, onEdit, onDelete }) =
 
           {!loading &&
             tableData.map((banner) => (
-              <tr key={banner._id} className="hover:bg-pink-50 bg-white border border-gray-200">
-                <td className="p-2 text-center">{banner.title}</td>
-                <td className="p-2 text-center">{banner.type}</td>
-                <td className="p-2 text-center">{banner.page}</td>
-                <td className="p-2 text-center">{banner.section}</td>
-                <td className="p-2 text-center">{banner.order}</td>
-                <td className="p-2 text-center">{banner.isActive ? "Yes" : "No"}</td>
-                <td className="p-2 text-center">{banner.isVisible ? "Yes" : "No"}</td>
+              <tr key={banner._id} className="hover:bg-bg-soft bg-bg-main border border-border-light">
+                <td className="p-2 text-center whitespace-nowrap">{banner.title}</td>
+                <td className="p-2 text-center whitespace-nowrap">{banner.type}</td>
+                <td className="p-2 text-center whitespace-nowrap">{banner.page}</td>
+                <td className="p-2 text-center whitespace-nowrap">{banner.section}</td>
+                <td className="p-2 text-center whitespace-nowrap">{banner.order}</td>
+                <td className="p-2 text-center whitespace-nowrap">{banner.isActive ? "Yes" : "No"}</td>
+                <td className="p-2 text-center whitespace-nowrap">{banner.isVisible ? "Yes" : "No"}</td>
                 <td className="p-2 text-center">
                   <div className="flex justify-around">
                     <FiEdit
-                      className="cursor-pointer hover:text-pink-600"
+                      className="cursor-pointer hover:text-primary"
                       size={20}
                       onClick={() => onEdit(banner._id)}
                     />
                     <FiTrash2
-                      className="cursor-pointer text-red-500 hover:text-red-700"
+                      className="cursor-pointer text-danger hover:text-danger-hover"
                       size={20}
                       onClick={() => onDelete(banner._id)}
                     />

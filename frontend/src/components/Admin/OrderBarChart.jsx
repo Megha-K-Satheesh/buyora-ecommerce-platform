@@ -13,9 +13,9 @@ import {
 
 const OrdersBarChart = ({ data }) => {
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition">
+    <div className="bg-bg-main p-6 rounded-2xl shadow-lg hover:shadow-xl transition">
 
-      <h2 className="font-semibold text-lg mb-4 text-gray-700">
+      <h2 className="font-semibold text-lg mb-4 text-text-primary">
         Monthly Orders
       </h2>
 
@@ -76,4 +76,6 @@ const OrdersBarChart = ({ data }) => {
 };
 
 export default OrdersBarChart;
+
+
 

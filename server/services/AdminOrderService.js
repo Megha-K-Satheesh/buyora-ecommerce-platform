@@ -13,63 +13,95 @@ class AdminOrderService {
 
 
 
+// static async getAllOrdersAdmin({ page = 1, limit = 5, status = "", search = "" }) {
+//   const skip = (page - 1) * limit;
+
+ 
+//   const orders = await Order.find()
+//     .sort({ createdAt: -1 })
+//     .populate("userId", "name email")
+//     .populate("items.productId", "name images price")
+//     .lean();
+
+
+//   const filteredOrders = orders
+//     .map(order => {
+//       let filteredItems = status
+//         ? order.items.filter(item => item.status === status)
+//         : order.items;
+
+//       if (search) {
+//         const searchLower = search.toLowerCase();
+//         filteredItems = filteredItems.filter(
+//           item =>
+//             (item.productId?.name || item.name || "")
+//               .toLowerCase()
+//               .includes(searchLower) ||
+//             (order.orderNumber || "").toLowerCase().includes(searchLower)
+//         );
+//       }
+
+//       if (filteredItems.length === 0) return null;
+
+//       return {
+//         orderId: order._id,
+//         orderNumber: order.orderNumber,
+//         totalAmount: order.totalAmount,
+//         orderStatus: order.orderStatus,
+//         paymentStatus: order.paymentStatus,
+//         createdAt: order.createdAt,
+//         items: filteredItems
+//       };
+//     })
+//     .filter(order => order !== null);
+
+
+//   const totalOrders = filteredOrders.length;
+//   const totalPages = Math.ceil(totalOrders / limit);
+//   const paginatedOrders = filteredOrders.slice(skip, skip + limit);
+
+
+//   return {
+//     orders: paginatedOrders,
+//     totalOrders,
+//     totalPages,
+//     currentPage: Number(page)
+//   };
+// }
+
 static async getAllOrdersAdmin({ page = 1, limit = 5, status = "", search = "" }) {
   const skip = (page - 1) * limit;
 
- 
-  const orders = await Order.find()
+  const query = {};
+
+  if (status) {
+    query["items.status"] = status;
+  }
+
+  if (search) {
+    query.$or = [
+      { orderNumber: { $regex: search, $options: "i" } },
+      { "items.name": { $regex: search, $options: "i" } }
+    ];
+  }
+
+  const totalOrders = await Order.countDocuments(query);
+
+  const orders = await Order.find(query)
     .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit)
     .populate("userId", "name email")
     .populate("items.productId", "name images price")
     .lean();
 
-
-  const filteredOrders = orders
-    .map(order => {
-      let filteredItems = status
-        ? order.items.filter(item => item.status === status)
-        : order.items;
-
-      if (search) {
-        const searchLower = search.toLowerCase();
-        filteredItems = filteredItems.filter(
-          item =>
-            (item.productId?.name || item.name || "")
-              .toLowerCase()
-              .includes(searchLower) ||
-            (order.orderNumber || "").toLowerCase().includes(searchLower)
-        );
-      }
-
-      if (filteredItems.length === 0) return null;
-
-      return {
-        orderId: order._id,
-        orderNumber: order.orderNumber,
-        totalAmount: order.totalAmount,
-        orderStatus: order.orderStatus,
-        paymentStatus: order.paymentStatus,
-        createdAt: order.createdAt,
-        items: filteredItems
-      };
-    })
-    .filter(order => order !== null);
-
-
-  const totalOrders = filteredOrders.length;
-  const totalPages = Math.ceil(totalOrders / limit);
-  const paginatedOrders = filteredOrders.slice(skip, skip + limit);
-
-
   return {
-    orders: paginatedOrders,
+    orders,
     totalOrders,
-    totalPages,
+    totalPages: Math.ceil(totalOrders / limit),
     currentPage: Number(page)
   };
 }
-
-
 
 
 static async getSingleOrder(orderId) {

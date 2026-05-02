@@ -69,9 +69,9 @@ const VerifyOtpPage = () => {
 };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FFF1F6]">
-      <div className="card bg-white shadow-lg p-6 rounded-md w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl ">
-       <h1 className='text-3xl sm:text-3xl md:text-4xl lg:text-5xl text-center font-bold mt-6 mb-10'>Verify OTP</h1>
+    <div className="min-h-screen flex items-center justify-center bg-bg-soft">
+      <div className="card bg-bg-main shadow-lg p-6 rounded-md w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl ">
+       <h1 className='text-3xl sm:text-3xl md:text-4xl lg:text-5xl text-center font-bold text-text-primary mt-6 mb-10'>Verify OTP</h1>
 
         <OtpInput
           length={6}
@@ -94,14 +94,14 @@ const VerifyOtpPage = () => {
         >
           Verify OTP
         </Button>
-         <div className="mt-4 text-center text-lg text-gray-600">
+         <div className="mt-4 text-center text-lg text-text-secondary">
                Haven’t received the OTP yet?{" "}
                  <Button
                 variant="text"
                 onClick={handleResendClick}
                 disabled={loading}
                 
-                className="pl-0 text-lg text-pink-500"
+                className="pl-0 text-lg text-primary"
                 >
                   Resend OTP
                 </Button>

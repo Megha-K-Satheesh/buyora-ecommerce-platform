@@ -1,51 +1,54 @@
 const CartService = require("../../services/CartService");
+const { addToCartValidation, mergeCartValidation, updateCartQuantityValidation, variationIdParamValidation } = require("../../utils/cartValidation");
 const BaseController = require("../BaseController");
 
 
 class CartController extends BaseController {
 
   static addToCart = BaseController.asyncHandler(async (req, res) => {
-    const { productId, variationId, name, brandName, image, price, mrp, discountPercentage, size, color, quantity } = req.body;
+  
+
+    const validatedData = BaseController.validateRequest(addToCartValidation,req.body)
     const userId = req.user._id;
+   
 
-    const cartItem = {
-      productId,
-      variationId,
-      name,
-      brandName,
-      image,
-      price,
-      mrp,
-      discountPercentage,
-      size,
-      color,
-      quantity,
-    };
 
-    const result = await CartService.addToCart(userId, cartItem);
+
+    const result = await CartService.addToCart(userId, validatedData);
 
     BaseController.logAction("ITEM ADDED TO CART", result);
     BaseController.sendSuccess(res, "ITEM ADDED TO CART", result);
   });
 
  
-  static mergeCart = BaseController.asyncHandler(async (req, res) => {
-    const userId = req.user._id;
-    const guestCart = req.body.guestCart || [];
-    console.log("from merge cart",req.body)
 
-    if (guestCart.length === 0) return BaseController.sendSuccess(res, "NO GUEST CART TO MERGE", []);
+static mergeCart = BaseController.asyncHandler(async (req, res) => {
 
-    const result = await CartService.mergeCart(userId, guestCart);
+  const validatedData = BaseController.validateRequest(
+    mergeCartValidation,
+    req.body
+  );
 
-    BaseController.logAction("GUEST CART MERGED", result);
-    BaseController.sendSuccess(res, "GUEST CART MERGED", result);
-  });
+  const userId = req.user._id;
+
+  if (validatedData.guestCart.length === 0)
+    return BaseController.sendSuccess(res, "NO GUEST CART TO MERGE", []);
+
+  const result = await CartService.mergeCart(userId, validatedData.guestCart);
+
+  BaseController.logAction("GUEST CART MERGED", result);
+  BaseController.sendSuccess(res, "GUEST CART MERGED", result);
+});
 
 
   static removeFromCart = BaseController.asyncHandler(async (req, res) => {
     const userId = req.user._id;
-    const { variationId } = req.params;
+      BaseController.validateRequest(
+    variationIdParamValidation,
+    req.params
+  );
+
+  const { variationId } = req.params;
 
     const result = await CartService.removeFromCart(userId, variationId);
 
@@ -53,19 +56,30 @@ class CartController extends BaseController {
     BaseController.sendSuccess(res, "ITEM REMOVED FROM CART", result);
   });
 
- 
-  static updateCartQuantity = BaseController.asyncHandler(async (req, res) => {
-    const userId = req.user._id;
-     const variationId = req.params.variationId;
-     console.log("variation id" ,variationId)
-    const { quantity } = req.body;
 
-    const result = await CartService.updateCartQuantity(userId, variationId, quantity);
 
-    BaseController.logAction("CART ITEM QUANTITY UPDATED", result);
-    BaseController.sendSuccess(res, "CART ITEM QUANTITY UPDATED", result);
-  });
+static updateCartQuantity = BaseController.asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  BaseController.validateRequest(
+  variationIdParamValidation,
+    req.params
+  );
+  const variationId = req.params.variationId;
 
+  const validatedData = BaseController.validateRequest(
+    updateCartQuantityValidation,
+    req.body
+  );
+
+  const result = await CartService.updateCartQuantity(
+    userId,
+    variationId,
+    validatedData.quantity
+  );
+
+  BaseController.logAction("CART ITEM QUANTITY UPDATED", result);
+  BaseController.sendSuccess(res, "CART ITEM QUANTITY UPDATED", result);
+});
 
   static getCart = BaseController.asyncHandler(async (req, res) => {
     const userId = req.user._id;

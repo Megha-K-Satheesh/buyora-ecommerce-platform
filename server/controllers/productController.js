@@ -1,14 +1,40 @@
 const ProductService = require("../services/ProductService");
+const { productValidation, updateProductValidation, objectId } = require("../utils/adminValidation/productValidation");
 const BaseController = require("./BaseController");
 
 
 
 class ProductController extends BaseController{
-    static addProduct = BaseController.asyncHandler(async(req,res)=>{
-        const result = await ProductService.addProduct({body:req.body,files:req.files})
-         BaseController.logAction("PRODUCT ADDED",result);
-          BaseController.sendSuccess(res,"PRODUCT ADDED",result)
-    })
+
+ 
+
+
+
+
+  static addProduct = BaseController.asyncHandler(async (req, res) => {
+
+const dataToValidate = {
+  ...req.body,
+
+  attributes: req.body.attributes
+    ? JSON.parse(req.body.attributes)
+    : {}
+};
+
+const validatedData = BaseController.validateRequest(
+  productValidation,
+  dataToValidate
+);
+
+    const result = await ProductService.addProduct({body: validatedData,
+  files: req.files});
+
+    BaseController.logAction("PRODUCT ADDED", result);
+    BaseController.sendSuccess(res, "PRODUCT ADDED", result);
+  });
+
+
+
 
     static getProductsList = BaseController.asyncHandler(async (req, res) => {
   const { page, limit, category, status, search = "", priceSort } = req.query;
@@ -60,18 +86,41 @@ class ProductController extends BaseController{
 
 
 
-  static updateProduct = BaseController.asyncHandler(async (req, res) => {
-    const { id } = req.params;
 
-    const result = await ProductService.updateProduct({
-      id,
-      body: req.body,
-      files: req.files,
-    });
 
-    BaseController.logAction("PRODUCT UPDATED", result);
-    BaseController.sendSuccess(res, "PRODUCT UPDATED", result);
+static updateProduct = BaseController.asyncHandler(async (req, res) => {
+
+  const { id } = req.params;
+
+  BaseController.validateRequest(objectId, id);
+
+const dataToValidate = {
+  ...req.body,
+  attributes: req.body.attributes
+    ? JSON.parse(req.body.attributes)
+    : {},
+
+  existingImages: req.body.existingImages
+    ? JSON.parse(req.body.existingImages)
+    : []
+};
+console.log("DATA SEND TO JOI",dataToValidate)
+
+  const validatedData = BaseController.validateRequest(
+    updateProductValidation,
+    dataToValidate
+  );
+
+  const result = await ProductService.updateProduct({
+    id,
+    body: validatedData,
+    files: req.files,
   });
+
+  BaseController.logAction("PRODUCT UPDATED", result);
+  BaseController.sendSuccess(res, "PRODUCT UPDATED", result);
+});
+
 
   static deleteProduct = BaseController.asyncHandler(async (req, res) => {
   const { id } = req.params;

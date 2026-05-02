@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from "../../components/ui/Button";
 import FormCheckbox from "../../components/ui/FormCheckbox";
 import FormInput from "../../components/ui/FormInput";
@@ -34,17 +34,17 @@ const  AdminLoginForm = ()=>{
   }
    
 return(
-  <div className="min-h-screen flex justify-evenly bg-gradient-to-br  bg-[#FFF1F6]  ">
+  <div className="min-h-screen flex justify-evenly   bg-bg-soft  ">
       
    
 
-      <div className=" w-full md:w-1/3     p-10 m-10  rounded-lg shadow-md bg-white mt-10">
+      <div className=" w-full md:w-1/3     p-10 m-10  rounded-lg shadow-md bg-bg-main mt-10">
       
          
          {/* <Logo className="m-auto my-0"/>  */}
 
         <h1 className='text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center font-bold mt-6'>Welcome Back Admin !</h1>
-         <h6 className='text-sm sm:text-base md:text-lg lg:text-xl text-center text-pink-600 mt-2 mb-6'>  Sign in to your admin dashboard to manage users and products </h6>
+         <h6 className='text-sm sm:text-base md:text-lg lg:text-xl text-center text-primary mt-2 mb-6'>  Sign in to your admin dashboard to manage users and products </h6>
        
          <form onSubmit={handleSubmit(onSubmit)}>
 
@@ -96,26 +96,14 @@ return(
             error={errors.agreeToTerms?.message}
             />
 
-            <p className="text-sm text-blue-600"><Link to='/forgetpassword'>Forget Password?</Link></p>
+            {/* <p className="text-sm text-blue-600"><Link to='/forgetpassword'>Forget Password?</Link></p> */}
                   </div>
 
 
                      <Button type="submit" fullWidth className='mt-3'>
                        {loading ? "Loading...":"Login"}
                   </Button>
-                  {/* <p className='flex justify-center mt-2.5'>or</p>
-                  <Button type='button' fullWidth className='mt-4 text-black' variant='outline'>
-                    GOOGLE
-                  </Button> */}
-                    {/* <div className="mt-4 text-center text-sm text-gray-600">
-                        Don't have an account?{" "}
-                        <Link
-                          to="/"
-                          className="text-blue-600 font-medium hover:underline"
-                        >
-                          Sign Up
-                        </Link>
-                    </div> */}
+             
 
          </form>
                    

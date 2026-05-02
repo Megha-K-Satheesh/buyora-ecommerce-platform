@@ -16,15 +16,14 @@ const Button = memo(
     const baseStyle =
       "inline-flex items-center justify-center gap-2 rounded-md font-medium transition focus:outline-none";
 
-    const variants = {
     
-        primary: "bg-[#E91E63] text-white hover:bg-[#C2185B]",
-      secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
-      danger: "bg-red-600 text-white hover:bg-red-700",
-      outline:"border border-pink-600 text-black hover:bg-pink-100",
-      text:"bg-transparent text-blue-600 hover:underline",
-     };
-
+    const variants = {
+  primary: "bg-primary text-white hover:bg-primary-hover",
+  secondary: "bg-surface text-textPrimary hover:bg-border",
+  danger: "bg-danger text-white hover:opacity-90",
+  outline: "border border-primary text-textPrimary hover:bg-accent-soft",
+  text: "bg-transparent text-primary hover:underline",
+};
     const sizes = {
       sm: "px-3 py-1.5 text-sm",
       md: "px-4 py-2 text-base",

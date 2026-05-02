@@ -38,7 +38,7 @@ const ProfileLayout = () => {
      {isAccountRoot && (<>
 
       
-      <div className=' h-[10vh] lg:h-[15vh]   lg:mx-[10%]  border-b border-gray-200 '>
+      <div className=' h-[10vh] lg:h-[15vh]   lg:mx-[10%]  border-b border-border-light '>
         <AccountHaad/>
       </div> 
       <div className=' flex min-h-screen '>

@@ -44,13 +44,13 @@ const navigate = useNavigate()
   
    
 return(
-  <div className="min-h-screen flex justify-center items-center bg-pink-50 shadow-2xl ">
+  <div className="min-h-screen flex justify-center items-center bg-bg-soft shadow-2xl ">
       
    
 
-      <div className=" w-full md:w-1/3  h-1/2    p-10 m-10  rounded-lg shadow-md bg-white mt-10">
-        <h1 className='text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center font-bold mt-5'>Reset Password</h1>
-         <h6 className='text-xs sm:text-base md:text-sm lg:text-lg xl:text:lg text-center text-pink-600 mt-4 mb-6'>Enter the New Password here.
+      <div className=" w-full md:w-1/3  h-1/2    p-10 m-10  rounded-lg shadow-md bg-bg-main mt-10">
+        <h1 className='text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center font-bold text-text-secondary mt-5'>Reset Password</h1>
+         <h6 className='text-xs sm:text-base md:text-sm lg:text-lg xl:text:lg text-center text-primary mt-4 mb-6'>Enter the New Password here.
 </h6>
        
          <form onSubmit={handleSubmit(onSubmit)}>

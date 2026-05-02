@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Button from "../../../components/ui/Button";
 import FormCheckbox from "../../../components/ui/FormCheckbox";
 import FormInput from "../../../components/ui/FormInput";
+import Navbar from "../../../components/ui/Navbar";
 import { showError, showSuccess } from "../../../components/ui/Toastify";
 import { getAddressById, updateAddress } from "../../../Redux/slices/userSlice";
 
@@ -37,7 +38,7 @@ const EditAddress = () => {
 
   
   const handleCancel = () => {
-    navigate("/profile/address");
+    navigate("/account/address");
   };
 
   useEffect(()=>{
@@ -67,10 +68,14 @@ const EditAddress = () => {
      }
   }
   return (
-     <div className="  lg:w-3/5 md:w-3/5       rounded-lg s bg-white  lg:ml-40 lg:mt-10 mb-20 px-20">
+    <>
+    <div className="lg:hidden block">
+      <Navbar/>
+    </div>
+     <div className="  lg:w-3/5 md:w-3/5   mt-25    rounded-lg s bg-bg-main  lg:ml-40 lg:mt-10 mb-20 px-20">
 
     
-        <h1 className='text-xl sm:text-xl md:text-2xl lg:text-2xl ml-10 text-gray-700 font-medium  mt-8 '>Update Your Address</h1>
+        <h1 className='text-xl sm:text-xl md:text-2xl lg:text-2xl ml-10 text-text-secondary font-medium  mt-8 '>Update Your Address</h1>
 
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4  rounded ">
       
@@ -207,7 +212,7 @@ required
   </div>
 
   {errors.label && (
-    <p className="text-red-500 text-sm mt-1">{errors.label.message}</p>
+    <p className="text-danger text-sm mt-1">{errors.label.message}</p>
   )}
 </div>
 
@@ -232,6 +237,7 @@ required
       </div>
     </form>
    </div>
+    </>
   );
 };
 

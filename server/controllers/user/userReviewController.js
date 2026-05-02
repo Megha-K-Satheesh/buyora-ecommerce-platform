@@ -1,5 +1,6 @@
 
 const ReviewService = require("../../services/ReviewService");
+const { createReviewValidation, productIdValidation } = require("../../utils/validation");
 const BaseController = require("../BaseController");
 
 
@@ -7,12 +8,19 @@ class ReviewController extends BaseController {
 
   
   static addReview = BaseController.asyncHandler(async (req, res) => {
-    const result = await ReviewService.addReview({
-      userId: req.user.id,
-      productId: req.params.productId,
-      body: req.body,
-      files: req.files
-    });
+      BaseController.validateRequest(productIdValidation, req.params);
+
+ 
+  const validatedBody = BaseController.validateRequest(
+    createReviewValidation,
+    req.body
+  );
+  const result = await ReviewService.addReview({
+    userId: req.user.id,
+    productId: req.params.productId,
+    body: validatedBody,
+    files: req.files
+  });
 
     BaseController.logAction("REVIEW ADDED", result);
     BaseController.sendSuccess(res, "REVIEW ADDED", result);

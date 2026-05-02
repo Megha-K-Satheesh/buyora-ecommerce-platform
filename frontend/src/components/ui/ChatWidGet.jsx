@@ -135,7 +135,15 @@ const ChatWidget = () => {
       </button>
 
       {isOpen && (
-        <div className="fixed bottom-24 right-6 w-[380px] h-[520px] bg-white rounded-2xl z-50 shadow-2xl flex flex-col overflow-hidden">
+        <div className="fixed 
+  bottom-0 right-0 
+  w-full h-full 
+  sm:bottom-24 sm:right-6 
+  sm:w-[380px] sm:h-[520px] 
+  bg-white 
+  sm:rounded-2xl 
+  z-50 shadow-2xl 
+  flex flex-col overflow-hidden">
 
           <div className="bg-gradient-to-r from-pink-500 to-pink-600 text-white p-4 flex items-center justify-between">
             <div className="flex items-center space-x-3">

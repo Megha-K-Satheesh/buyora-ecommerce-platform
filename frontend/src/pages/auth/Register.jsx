@@ -53,7 +53,7 @@ const RegisterForm = () => {
 
 
 
-      <div className="     lg:px-5   bg-white   rounded-r-2xl  lg:w-[40%] w-[90%] rounded-2xl mt-10">
+      <div className="     lg:px-5   bg-bg-main   rounded-r-2xl  lg:w-[40%] w-[90%] rounded-2xl mt-10">
 
             {/* <Logo
               
@@ -61,8 +61,8 @@ const RegisterForm = () => {
             /> */}
         
 
-        <h1 className='text-xl sm:text-2xl md:text-2xl lg:text-3xl text-center text-gray-700 font-medium  py-5'>Create Your Account</h1>
-         <h6 className='text-sm sm:text-base md:text-sm lg:text-lg text-center text-pink-600 font-medium mt-2 mb-3 h'>Join Buyora and start shopping smarter</h6>
+        <h1 className='text-xl sm:text-2xl md:text-2xl lg:text-3xl text-center text-text-secondary font-medium  py-5'>Create Your Account</h1>
+         <h6 className='text-sm sm:text-base md:text-sm lg:text-lg text-center text-primary font-medium mt-2 mb-3 h'>Join Buyora and start shopping smarter</h6>
         <form onSubmit={handleSubmit(onSubmit)} className='mx-5 mt-10  '>
           <div className='flex justify-between'>
            <div className=' flex-1 mr-4 '>
@@ -153,9 +153,9 @@ const RegisterForm = () => {
             label={
               <span>
                 I agree to the{' '}
-                <Link to="/terms" className="text-pink-500 ">Terms</Link>
+                <Link to="/terms" className="text-primary ">Terms</Link>
                 {' '}and{' '}
-                <Link to="/privacy" className="text-pink-500 ">Privacy Policy</Link>
+                <Link to="/privacy" className="text-primary ">Privacy Policy</Link>
               </span>
             }
             error={errors.agreeToTerms?.message}
@@ -212,7 +212,7 @@ const RegisterForm = () => {
                 Already have an account?{" "}
                 <Link
                   to="/login"
-                  className="text-pink-600 font-medium hover:underline"
+                  className="text-primary font-medium hover:underline"
                   >
                   Sign in
                 </Link>

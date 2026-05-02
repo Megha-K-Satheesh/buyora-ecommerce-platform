@@ -1,8 +1,11 @@
 
+
+
 import { memo } from "react";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
+import TableLoader from "../ui/TableLoader";
 
-const CategoryTable =memo (({
+const CategoryTable = memo(({
   loading,
   tableData,
   total,
@@ -11,30 +14,24 @@ const CategoryTable =memo (({
 }) => {
   return (
     <div className="mx-20 mt-10 rounded-t-xl shadow-xl overflow-hidden">
-      <table className="w-full border border-gray-200 border-collapse">
+      <table className="w-full border border-border border-collapse">
         <thead>
-          <tr className="  border  text-white text-xl border-gray-200 h-15 bg-pink-600 hover:bg-pink-100 hover:text-black  " >
-            <th className="  p-2 text-center">Category</th>
-            <th className=" p-2 text-center">Parent</th>
-            <th className=" p-2 text-center">Level</th>
-            <th className=" p-2 text-center">Active</th>
-            <th className=" p-2 text-center">Visible</th>
-            <th className=" p-2 text-center">Actions</th>
+          <tr className="border border-border-light text-white text-xl h-15 bg-primary hover:bg-bg-soft-hover hover:text-text-primary">
+            <th className="p-2 text-center">Category</th>
+            <th className="p-2 text-center">Parent</th>
+            <th className="p-2 text-center">Level</th>
+            <th className="p-2 text-center">Active</th>
+            <th className="p-2 text-center">Visible</th>
+            <th className="p-2 text-center">Actions</th>
           </tr>
         </thead>
 
         <tbody>
-          {loading && (
-            <tr>
-              <td colSpan="6" className="text-center p-4">
-                Loading...
-              </td>
-            </tr>
-          )}
+             {loading && <TableLoader rows={5} columns={8} />}
 
           {!loading && tableData.length === 0 && (
-            <tr>
-              <td colSpan="6" className="text-center p-4">
+            <tr className="border border-border-light">
+              <td colSpan="6" className="text-center p-4 text-text-secondary">
                 No categories found
               </td>
             </tr>
@@ -42,34 +39,39 @@ const CategoryTable =memo (({
 
           {!loading &&
             tableData.map((cat) => (
-              <tr key={cat._id} className="hover:bg-pink-50 bg-white border border-gray-200 ">
-                <td className="  p-3 text-center">{cat.name}</td>
+              <tr
+                key={cat._id}
+                className="hover:bg-bg-soft bg-bg-main border border-border-light"
+              >
+                <td className="p-3 text-center text-text-primary">
+                  {cat.name}
+                </td>
 
-                <td className=" p-2 text-center">
+                <td className="p-2 text-center text-text-secondary">
                   {cat.parentId?.name || "Top Level"}
                 </td>
 
-                <td className=" p-2 text-center">
+                <td className="p-2 text-center text-text-secondary">
                   Level {cat.level}
                 </td>
 
-                <td className=" p-2 text-center">
+                <td className="p-2 text-center text-text-secondary">
                   {cat.status === "active" ? "Active" : "Inactive"}
                 </td>
 
-                <td className=" p-2 text-center">
+                <td className="p-2 text-center text-text-secondary">
                   {cat.isVisible ? "Yes" : "No"}
                 </td>
 
-                <td className=" p-2 text-center">
+                <td className="p-2 text-center">
                   <div className="flex justify-around">
                     <FiEdit
-                      className="cursor-pointer hover:text-pink-600"
+                      className="cursor-pointer hover:text-primary"
                       size={20}
                       onClick={() => onEdit(cat._id)}
                     />
                     <FiTrash2
-                      className="cursor-pointer text-red-500 hover:text-red-700"
+                      className="cursor-pointer text-danger hover:text-danger-hover"
                       size={20}
                       onClick={() => onDelete(cat._id)}
                     />
@@ -78,8 +80,8 @@ const CategoryTable =memo (({
               </tr>
             ))}
 
-          <tr>
-            <td colSpan="6" className="text-right p-2">
+          <tr className="border border-border-light">
+            <td colSpan="6" className="text-right p-2 text-text-primary">
               <strong>Total: {total}</strong>
             </td>
           </tr>

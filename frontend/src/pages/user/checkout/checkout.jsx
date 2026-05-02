@@ -1,15 +1,12 @@
 
 
 
-
-
-
-
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   getOrderSummary,
+  paymentFailed,
   placeOrder,
   verifyPayment,
 } from "../../../Redux/slices/checkoutSlice";
@@ -17,12 +14,11 @@ import { getAddresses } from "../../../Redux/slices/userSlice";
 import Button from "../../../components/ui/Button";
 import { showInfo } from "../../../components/ui/Toastify";
 import { openRazorpay } from "../../../utils/razorpay";
-
 const CheckoutPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { addresses, loading: addressLoading } = useSelector(
+  const { addresses, loading: addressLoading ,error} = useSelector(
     (state) => state.user
   );
 
@@ -84,25 +80,28 @@ const CheckoutPage = () => {
         data: res,
         dispatch,
         verifyPayment,
+       paymentFailed,
         navigate,
         selectedAddress,
         addresses,
       });
     } catch (err) {
-      showInfo(err?.message || "Something went wrong");
+     
+  showInfo(err || "Something went wrong");
+
     }
   };
 
   return (
     <div className="max-w-7xl mx-auto p-6 grid lg:grid-cols-3 gap-8">
       <div className="lg:col-span-2 space-y-8">
-        <div className="bg-white shadow rounded-lg p-6">
+        <div className="bg-bg-main shadow rounded-lg p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">Select Delivery Address</h2>
+            <h2 className="text-xl font-bold text-text-primary">Select Delivery Address</h2>
             <Button
               variant="text"
               onClick={() => navigate("/account/address/add-address")}
-              className="text-violet-600"
+              className="text-primary"
             >
               + Add Address
             </Button>
@@ -112,7 +111,7 @@ const CheckoutPage = () => {
             <p>Loading...</p>
           ) : addresses.length === 0 ? (
             <div className="text-center py-6">
-              <p className="mb-3 text-gray-500">No address found</p>
+              <p className="mb-3 text-text-muted">No address found</p>
               <Button onClick={() => navigate("/account/address/add-address")}>
                 Add Address
               </Button>
@@ -123,8 +122,8 @@ const CheckoutPage = () => {
                 key={addr._id}
                 className={`block border p-4 rounded mb-3 cursor-pointer ${
                   selectedAddress === addr._id
-                    ? "border-pink-600 bg-pink-50"
-                    : "border-gray-300"
+                    ? "border-border-primary bg-bg-soft"
+                    : "border-border"
                 }`}
               >
                 <div className="flex justify-between items-start">
@@ -137,19 +136,19 @@ const CheckoutPage = () => {
                       onChange={() => setSelectedAddress(addr._id)}
                       className="mr-2"
                     />
-                    <span className="font-semibold">
+                    <span className="font-semibold text-text-primary">
                       {addr.fullName} ({addr.label})
                     </span>
                     {addr.isDefault && (
-                      <span className="ml-2 text-xs bg-black text-white px-2 py-1 rounded">
+                      <span className="ml-2 text-xs bg-text-primary text-white px-2 py-1 rounded">
                         Default
                       </span>
                     )}
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-text-secondary mt-1">
                       {addr.houseNumber}, {addr.addressLine}, {addr.city} - {addr.pinCode}
                     </p>
-                    <p className="text-sm text-gray-600">{addr.state}</p>
-                    <p className="text-sm text-gray-600">Mobile: {addr.phone}</p>
+                    <p className="text-sm text-text-secondary">{addr.state}</p>
+                    <p className="text-sm text-text-secondary">Mobile: {addr.phone}</p>
                   </div>
                 </div>
               </label>
@@ -157,15 +156,15 @@ const CheckoutPage = () => {
           )}
         </div>
 
-        <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-xl font-bold mb-4">Choose Payment Method</h2>
+        <div className="bg-bg-main shadow rounded-lg p-6">
+          <h2 className="text-xl font-bold mb-4 text-text-primary">Choose Payment Method</h2>
 
           <div className="space-y-4">
             <label
               className={`block border p-4 rounded cursor-pointer ${
                 paymentMethod === "COD"
-                  ? "border-pink-600 bg-pink-50"
-                  : "border-gray-300"
+                  ? "border-border-primary bg-bg-soft"
+                  : "border-border"
               }`}
             >
               <input
@@ -181,8 +180,8 @@ const CheckoutPage = () => {
             <label
               className={`block border p-4 rounded cursor-pointer ${
                 paymentMethod === "ONLINE"
-                  ? "border-pink-600 bg-pink-50"
-                  : "border-gray-300"
+                  ? "border-border-primary bg-bg-soft"
+                  : "border-border"
               }`}
             >
               <input
@@ -198,8 +197,8 @@ const CheckoutPage = () => {
             <label
               className={`block border p-4 rounded cursor-pointer ${
                 paymentMethod === "WALLET"
-                  ? "border-pink-600 bg-pink-50"
-                  : "border-gray-300"
+                  ? "border-border-primary bg-bg-soft"
+                  : "border-border"
               }`}
             >
               <input
@@ -215,15 +214,15 @@ const CheckoutPage = () => {
         </div>
       </div>
 
-      <div className="bg-white shadow rounded-lg p-6 h-fit sticky top-6">
-        <h2 className="text-lg font-bold mb-4">Price Details</h2>
+      <div className="bg-bg-main shadow rounded-lg p-6 h-fit sticky top-6">
+        <h2 className="text-lg font-bold mb-4 text-text-primary">Price Details</h2>
 
         {checkoutLoading ? (
           <p>Loading summary...</p>
         ) : (
           <>
             {items.map((item) => (
-              <div key={item.variationId} className="flex justify-between mb-2 text-sm">
+              <div key={item.variationId} className="flex justify-between mb-2 text-sm text-text-secondary">
                 <span>
                   {item.name} x {item.quantity}
                 </span>
@@ -231,31 +230,31 @@ const CheckoutPage = () => {
               </div>
             ))}
 
-            <hr className="my-4" />
+            <hr className="my-4 border-border-light" />
 
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between text-sm text-text-secondary">
               <span>Total MRP</span>
               <span>₹{mrpSubtotal}</span>
             </div>
 
-            <div className="flex justify-between text-green-600 text-sm">
+            <div className="flex justify-between text-success text-sm">
               <span>Product Discount</span>
               <span>-₹{productDiscount}</span>
             </div>
 
-            <div className="flex justify-between text-green-600 text-sm">
+            <div className="flex justify-between text-success text-sm">
               <span>Coupon Discount</span>
               <span>-₹{couponDiscount}</span>
             </div>
 
-            <div className="flex justify-between font-bold text-lg mt-4">
+            <div className="flex justify-between font-bold text-lg mt-4 text-text-primary">
               <span>Total Amount</span>
               <span>₹{finalAmount}</span>
             </div>
 
             <button
               onClick={handlePlaceOrder}
-              className="mt-6 w-full bg-pink-600 text-white py-3 rounded font-semibold hover:bg-pink-700 transition"
+              className="mt-6 w-full bg-primary text-white py-3 rounded font-semibold hover:bg-primary-hover transition"
             >
               Place Order
             </button>

@@ -143,9 +143,9 @@ useEffect(() => {
     <>
       <AdminOutletHead heading={"EDIT PRODUCT"} />
 
-      <div className="flex justify-center items-start lg:bg-[#FFF1F6] mt-20 min-h-screen">
-        <div className="bg-white rounded-2xl lg:w-[40%] w-[90%] mt-10 px-5 py-6">
-          <h1 className="text-2xl text-center text-gray-700 font-medium">
+      <div className="flex justify-center items-start lg:bg-bg-soft mt-20 min-h-screen">
+        <div className="bg-bg-main rounded-2xl lg:w-[40%] w-[90%] mt-10 px-5 py-6">
+          <h1 className="text-2xl text-center text-text-primary font-medium">
             Edit Product
           </h1>
 
@@ -172,7 +172,7 @@ useEffect(() => {
 
             {/* BRAND DROPDOWN */}
             <div className="flex flex-col gap-1 pb-3">
-              <label className="text-sm md:text-lg text-gray-900">
+              <label className="text-sm md:text-lg text-text-primary">
                 Brand
               </label>
 
@@ -206,7 +206,7 @@ useEffect(() => {
               />
 
               {errors.brand && (
-                <p className="text-red-600">{errors.brand.message}</p>
+                <p className="text-danger">{errors.brand.message}</p>
               )}
             </div>
 
@@ -256,7 +256,7 @@ useEffect(() => {
               max={5}
             />
 
-            <Button type="submit">Update Product</Button>
+            <Button type="submit"  className="w-full">Update Product</Button>
 
           </form>
         </div>

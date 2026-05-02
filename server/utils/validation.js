@@ -234,20 +234,81 @@ const forgotPasswordValidation = Joi.object({
 //   otp: otpPattern,
 //   purpose: Joi.string().valid('PASSWORD_RESET').required()
 // });
+
 const updateAddressValidation = Joi.object({
   fullName: Joi.string().min(2).optional(),
   label: Joi.string().valid('Home', 'Work', 'Other').optional(),
   houseNumber: Joi.string().optional(),
-  addressLine: Joi.string().optional(),
+  addressLine: Joi.string().min(5).optional(),
   locality: Joi.string().optional(),
   city: Joi.string().optional(),
   pinCode: Joi.string().pattern(/^\d{6}$/).optional(),
   state: Joi.string().optional(),
   phone: Joi.string().pattern(/^[6-9]\d{9}$/).optional(),
   isDefault: Joi.boolean().optional()
-}).min(1)
-.unknown(false); // rejects extra fields like _id and userId
+})
+  .min(1)
+  .unknown(false)
+  .messages({
+    'object.min': 'At least one field must be updated',
+    ...customMessages
+  });
 
+const updateProfileValidation = Joi.object({
+  name: Joi.string()
+    .min(2)
+    .max(50)
+    .trim()
+    .optional(),
+
+  email: Joi.string()
+    .email()
+    .lowercase()
+    .trim()
+    .optional(),
+
+  mobile: Joi.string()
+    .pattern(/^[6-9]\d{9}$/)
+    .optional()
+    .messages({
+      "string.pattern.base": "Mobile number must be 10 digits starting with 6-9"
+    }),
+
+  altMobile: Joi.string()
+    .pattern(/^[6-9]\d{9}$/)
+    .optional()
+    .allow(null, ""),
+
+  gender: Joi.string()
+    .valid("MALE", "FEMALE", "OTHER")
+    .optional(),
+
+  dob: Joi.date()
+    .optional()
+    .allow(null, ""),
+
+  location: Joi.string()
+    .min(2)
+    .max(100)
+    .trim()
+    .optional()
+})
+.min(1)
+.messages({
+  "object.min": "At least one field is required to update profile"
+});
+
+
+const objectId = Joi.string().regex(/^[0-9a-fA-F]{24}$/);
+
+const createReviewValidation = Joi.object({
+  rating: Joi.number().min(1).max(5).required(),
+  comment: Joi.string().min(2).max(1000).required()
+});
+
+const productIdValidation = Joi.object({
+  productId: objectId.required()
+});
 
 const ValidationHelpers = {
   validatePagination: (query) => {
@@ -298,5 +359,8 @@ module.exports = {
   verifyOtpValidation,
   resendOtpValidation,
   addAddressValidation,
-  updateAddressValidation
+  updateAddressValidation,
+updateProfileValidation,
+createReviewValidation,
+productIdValidation,
 };

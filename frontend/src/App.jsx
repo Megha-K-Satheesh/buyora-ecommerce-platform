@@ -17,15 +17,22 @@ import { getUserProfile } from "./Redux/slices/userSlice";
 // Protected routes
 import { AdminRoute, UserRoute } from "./components/protectedRoutes/ProtectedRoutes";
 
-// Layouts
-import WishlistLayout from "./layouts/WishlistLayout";
 
-// Public pages
-import AddReviewPage from "./pages/publicPages/AddReviewPage";
-import CartPage from "./pages/publicPages/CartPage";
-import Home from "./pages/publicPages/Home";
-import ProductListingPage from "./pages/publicPages/ProductListingPage";
-import SingleProductPage from "./pages/publicPages/SingleProductPage";
+
+
+const Home = lazy(() => import("./pages/publicPages/Home"));
+const CartPage = lazy(() => import("./pages/publicPages/CartPage"));
+const ProductListingPage = lazy(() => import("./pages/publicPages/ProductListingPage"));
+const SingleProductPage = lazy(() => import("./pages/publicPages/SingleProductPage"));
+const AddReviewPage = lazy(() => import("./pages/publicPages/AddReviewPage"));
+
+const WishlistLayout = lazy(() => import("./layouts/WishlistLayout"));
+const NavbarOrderLayout = lazy(() => import("./layouts/OrderLayout"));
+
+const ChatWidget = lazy(() => import("./components/ui/ChatWidGet"));
+
+
+
 
 // Auth pages
 const RegisterForm = lazy(() => import("./pages/auth/Register"));
@@ -73,12 +80,33 @@ const Wallet = lazy(() => import("./pages/user/wallet/walletDisplay"));
 const CouponsList = lazy(() => import("./pages/user/coupon/UserCoupons"));
 
 // UI components
-import ChatWidget from "./components/ui/ChatWidGet";
+// import ChatWidget from "./components/ui/ChatWidGet";
 import NotFound from "./components/ui/NotFount";
 import ServerError from "./components/ui/ServerError";
-import NavbarOrderLayout from "./layouts/OrderLayout";
-import EditProfile from "./pages/user/profile/EditProfile";
-import AdminOrderView from "./pages/admin/orders/AdminOrderView";
+// import NavbarOrderLayout from "./layouts/OrderLayout";
+import Loader from "./components/ui/Loader";
+import { connectSocket, listenUserStatus } from "./utils/socket";
+// import Brand from "./pages/admin/brand/Brand";
+// import UpdateBrand from "./pages/admin/brand/UpdateBrand";
+const Brand = lazy(() => import("./pages/admin/brand/Brand"));
+const UpdateBrand = lazy(() => import("./pages/admin/brand/UpdateBrand"));
+
+// import AdminRealtimeChat from "./pages/admin/contact/AdminRealtimeChat";
+const AdminOrderView = lazy(() =>
+  import("./pages/admin/orders/AdminOrderView")
+);
+// import EditProfile from "./pages/user/profile/EditProfile";
+const EditProfile = lazy(() =>
+  import("./pages/user/profile/EditProfile")
+);
+// import UserRealtimeChat from "./pages/user/contact/UserRealTimeChat";
+const AdminRealtimeChat = lazy(() =>
+  import("./pages/admin/contact/AdminRealtimeChat")
+);
+
+const UserRealtimeChat = lazy(() =>
+  import("./pages/user/contact/UserRealTimeChat")
+);
 
 function App() {
   const location = useLocation();
@@ -86,7 +114,7 @@ function App() {
 
   const showChat = !location.pathname.includes("/admin");
 
-  // Initialize user and cart
+  
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (token) {
@@ -98,9 +126,43 @@ function App() {
     }
   }, [dispatch]);
 
+
+
+useEffect(() => {
+  const token = localStorage.getItem("authToken");
+  if (!token) return;
+
+  const socket = connectSocket();
+  if (!socket) return;
+
+  const cleanup = listenUserStatus(
+    (data) => {
+      console.log("BANNED:", data);
+
+      localStorage.removeItem("authToken");
+      window.location.href = "/login";
+    },
+    (data) => {
+      console.log("FORCE LOGOUT:", data);
+
+      localStorage.removeItem("authToken");
+      window.location.href = "/login";
+    },
+    (data) => {
+      console.log("UNBANNED:", data);
+
+      localStorage.removeItem("authToken");
+      window.location.href = "/login";
+    }
+  );
+
+  return () => {
+    cleanup?.(); 
+  };
+}, []);
   return (
     <>
-      <Suspense fallback={<div style={{ textAlign: "center" }}>Loading...</div>}>
+      <Suspense fallback={<Loader/>}>
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
@@ -127,6 +189,7 @@ function App() {
           <Route path="/all-orders" element={<UserRoute><NavbarOrderLayout /></UserRoute>} />
           <Route path="/orders/:orderId" element={<UserRoute><SingleOrderPage /></UserRoute>} />
           <Route path="/products/wishlist" element={<UserRoute><WishlistLayout /></UserRoute>} />
+           <Route path="user-chat" element={<UserRealtimeChat/>}/>
           <Route path="/account" element={<UserRoute><ProfileLayout /></UserRoute>}>
             <Route index element={<Profile />} />
             <Route path="profile" element={<Profile />} />
@@ -138,6 +201,7 @@ function App() {
             <Route path="all-orders" element={<AllOrdersPage />} />
             <Route path="wallet" element={<Wallet />} />
             <Route path="user-coupons" element={<CouponsList />} />
+            
           </Route>
 
           {/* Admin Routes */}
@@ -148,12 +212,15 @@ function App() {
             <Route path="products" element={<Products />} />
             <Route path="products/add-product" element={<AddProducts />} />
             <Route path="products/update-product/:id" element={<EditProduct />} />
-            <Route path="brands" element={<AddBrand />} />
+            <Route path="brands" element={<Brand />} />
+            <Route path="brands/add-brand" element={<AddBrand />} />
+            <Route path="brands/update-brand/:brandId" element={<UpdateBrand />} />
             <Route path="categories" element={<Category />} />
             <Route path="categories/add-category" element={<AddCategoryForm />} />
             <Route path="categories/update-category/:categoryId" element={<UpdateCategoryForm />} />
             <Route path="orders" element={<Orders />} />
               <Route path="orders/:orderId" element={<AdminOrderView />} />
+              <Route path="users/chat/:userId" element={<AdminRealtimeChat />} />
             <Route path="coupons" element={<Coupons />} />
             <Route path="coupons/add-coupon" element={<AddCoupon />} />
             <Route path="coupons/edit-coupon/:couponId" element={<EditCoupon />} />

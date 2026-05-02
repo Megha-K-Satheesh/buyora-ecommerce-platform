@@ -32,24 +32,17 @@ export const UserRoute = ({ children }) => {
 };
 
 
-//later need getadminprofile
-export const AdminRoute = ({ children,role="admin" }) => {
-  const { admin, isAuthenticated } = useSelector((state) => state.adminAuth);
-    console.log(admin,isAuthenticated)
 
-    const token = localStorage.getItem('adminAuthToken')
+
+export const AdminRoute = ({ children }) => {
+  const token = localStorage.getItem("adminAuthToken");
 
   if (!token) {
     return <Navigate to="/admin-login" replace />;
   }
 
-  if (role !== "admin") {
-    return <Navigate to="/" replace />;
-  }
-
   return children;
 };
-
 
 export const PublicRoute = ({ children }) => {
   const userToken = localStorage.getItem("authToken");

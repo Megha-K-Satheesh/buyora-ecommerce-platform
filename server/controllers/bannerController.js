@@ -1,12 +1,19 @@
 
 const { default: BannerService } = require("../services/BannerService");
+const { addBannerValidation, updateBannerValidation } = require("../utils/adminValidation/bannerValidation");
 const BaseController = require("./BaseController");
 
 class BannerController extends BaseController {
 
   static addBanner = BaseController.asyncHandler(async (req, res) => {
+
+const validatedData = BaseController.validateRequest(
+    addBannerValidation,
+    req.body
+  );
+
     const result = await BannerService.addBanner({
-      body: req.body,
+      body: validatedData,
       file: req.file,
     });
 
@@ -50,18 +57,24 @@ class BannerController extends BaseController {
     BaseController.sendSuccess(res, "BANNER FETCHED", result);
   });
 
-  static updateBanner = BaseController.asyncHandler(async (req, res) => {
-    const { id } = req.params;
+static updateBanner = BaseController.asyncHandler(async (req, res) => {
 
-    const result = await BannerService.updateBanner({
-      id,
-      body: req.body,
-      file: req.file,
-    });
+  const { id } = req.params;
 
-    BaseController.logAction("BANNER UPDATED", result);
-    BaseController.sendSuccess(res, "BANNER UPDATED", result);
+  const validatedData = BaseController.validateRequest(
+    updateBannerValidation,
+    req.body
+  );
+
+  const result = await BannerService.updateBanner({
+    id,
+    body: validatedData,
+    file: req.file,
   });
+
+  BaseController.logAction("BANNER UPDATED", result);
+  BaseController.sendSuccess(res, "BANNER UPDATED", result);
+});
 
   static deleteBanner = BaseController.asyncHandler(async (req, res) => {
     const { id } = req.params;

@@ -1,35 +1,4 @@
 
-// import { FiHeart, FiShoppingBag } from "react-icons/fi";
-// import { Link } from "react-router-dom";
-// import ProfileDropdown from "./ProfileDropdown";
-// const NavbarIcons = ()=>{
-//   return(
-//     <>
-//       <div className="flex flex-row h-full">
-       
-        
-//         <ProfileDropdown/>
-
-//         <div className=" flex flex-1 justify-center items-center flex-col ">
-//           <FiHeart className="text-2xl  "/>
-//           <span className="text-sm mt-1 font-medium">
-//               Wishlist
-//             </span>
-//         </div>
-//         <div className=" flex flex-1 flex-col
-//         justify-center items-center ">
-//           <Link to='/product/cart'>
-//           <FiShoppingBag className="text-2xl lg:text-3xl "/>
-//           <span className="text-sm font-medium">
-//               Bag
-//             </span>
-//           </Link>
-//         </div>
-//       </div>
-//     </>
-//   )
-// }
-// export default NavbarIcons
 
 
 
@@ -53,9 +22,9 @@ const NavbarIcons = () => {
 
 
       <Link to="/products/wishlist">
-      <div className="flex flex-1 justify-center items-center mt-5 flex-col cursor-pointer ">
+      <div className="flex flex-1 justify-center items-center mt-5  flex-col cursor-pointer ">
         <FiHeart className="text-2xl" />
-        <span className="text-sm mt-1 font-medium">
+        <span className="text-sm mt-1 font-medium hidden lg:block md:block">
           Wishlist
         </span>
       </div>
@@ -72,13 +41,13 @@ const NavbarIcons = () => {
 
           {/* Cart Badge */}
           {cartItems.length > 0 && (
-            <span className="absolute -top-2 -right-3 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
+            <span className="absolute -top-2 -right-3 bg-danger text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
               {cartItems.length}
             </span>
           )}
 
           {/* Label */}
-          <span className="text-sm font-medium">
+          <span className="text-sm font-medium hidden lg:block md:block">
             Bag
           </span>
         </Link>
@@ -89,3 +58,6 @@ const NavbarIcons = () => {
 };
 
 export default NavbarIcons;
+
+
+

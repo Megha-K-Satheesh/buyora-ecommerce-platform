@@ -18,6 +18,8 @@ export const checkoutService = {
     return apiClient.post("/user/checkout/verify-payment", data);
   },
 
-
+  paymentFailed(data) {
+    return apiClient.post("/user/checkout/payment-failed", data);
+  }
 
 };

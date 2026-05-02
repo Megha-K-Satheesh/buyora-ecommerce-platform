@@ -19,7 +19,7 @@ routers.post(
   authenticateUser,
   CheckoutController.verifyPayment
 );
-
+routers.post("/payment-failed", authenticateUser, CheckoutController.paymentFailed);
 
 
 

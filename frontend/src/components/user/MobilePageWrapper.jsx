@@ -7,7 +7,7 @@ const MobilePageWrapper = ({ title, children }) => {
   return (
     <div className="lg:hidden">
       {/* Back header */}
-      <div className="flex items-center h-14 px-4 border-b bg-white">
+      <div className="flex items-center h-14 px-4 border-b bg-bg-main">
         <button
           className="text-xl font-bold"
           onClick={() => navigate("/account")} 

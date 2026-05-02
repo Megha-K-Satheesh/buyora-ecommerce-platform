@@ -10,11 +10,13 @@ import { showError, showSuccess } from "../../../components/ui/Toastify";
 import { banUser, getUsersList, setCurrentPage, unbanUser } from "../../../Redux/slices/admin/adminUserSlice";
 import UsersTable from "../../../components/Admin/UserTable";
 import SearchInput from "../../../components/ui/SearchInput";
+import { useDebounce } from "../../../hook/useDebounce";
 
 
 const Users = () => {
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
+    const debouncedSearch = useDebounce(search, 400);
   const [status, setStatus] = useState("");
 
   const { users: tableData, loading, currentPage, totalPages, totalUsers } =
@@ -75,8 +77,8 @@ const Users = () => {
   }, [search, status, dispatch]);
 
   useEffect(() => {
-    dispatch(getUsersList({ page: currentPage, limit: 10, search, status }));
-  }, [dispatch, currentPage, search, status]);
+    dispatch(getUsersList({ page: currentPage, limit: 10, search:debouncedSearch, status }));
+  }, [dispatch, currentPage, debouncedSearch, status]);
 
   return (
     <>
@@ -101,7 +103,7 @@ const Users = () => {
     <select
       value={status}
       onChange={(e) => setStatus(e.target.value)}
-      className="bg-white shadow px-3 py-2 rounded-lg w-60 font-medium"
+      className="bg-bg-main shadow px-3 py-2 rounded-lg w-60 font-medium"
     >
       <option value="">All Status</option>
       <option value="active">Active</option>

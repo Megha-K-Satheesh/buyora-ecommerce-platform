@@ -1,12 +1,17 @@
+
+
+
+
 import { memo } from "react";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
+import TableLoader from "../ui/TableLoader";
 
 const CouponsTable = memo(({ loading, tableData, onEdit, onDelete ,total}) => {
   return (
     <div className="mx-20 mt-10 rounded-t-xl shadow-xl overflow-hidden">
-      <table className="w-full border border-gray-200 border-collapse">
+      <table className="w-full border border-border border-collapse">
         <thead>
-          <tr className="border text-white text-xl border-gray-200 h-15 bg-pink-600 hover:bg-pink-100 hover:text-black">
+          <tr className="border text-white text-xl border-border-light h-15 bg-primary hover:bg-bg-soft-hover hover:text-text-primary">
             <th className="p-2 text-center">Code</th>
             <th className="p-2 text-center">Description</th>
             <th className="p-2 text-center">Discount</th>
@@ -19,17 +24,11 @@ const CouponsTable = memo(({ loading, tableData, onEdit, onDelete ,total}) => {
         </thead>
 
         <tbody>
-          {loading && (
-            <tr>
-              <td colSpan="8" className="text-center p-4">
-                Loading...
-              </td>
-            </tr>
-          )}
+             {loading && <TableLoader rows={5} columns={8} />}
 
           {!loading && tableData.length === 0 && (
             <tr>
-              <td colSpan="8" className="text-center p-4">
+              <td colSpan="8" className="text-center p-4 text-text-secondary">
                 No coupons found
               </td>
             </tr>
@@ -39,12 +38,15 @@ const CouponsTable = memo(({ loading, tableData, onEdit, onDelete ,total}) => {
             tableData.map((coupon) => (
               <tr
                 key={coupon._id}
-                className="hover:bg-pink-50 bg-white border border-gray-200"
+                className="hover:bg-bg-soft bg-bg-main border border-border-light"
               >
-                <td className="p-3 text-center">{coupon.code}</td>
-                <td className="p-3 text-center">{coupon.description}</td>
+                <td className="p-3 text-center text-text-primary">{coupon.code}</td>
 
-                <td className="p-3 text-center">
+                <td className="p-3 text-center text-text-secondary">
+                  {coupon.description}
+                </td>
+
+                <td className="p-3 text-center text-text-secondary">
                   {coupon.discount.type === "FLAT"
                     ? `₹${coupon.discount.value}`
                     : `${coupon.discount.value}%`}
@@ -53,29 +55,31 @@ const CouponsTable = memo(({ loading, tableData, onEdit, onDelete ,total}) => {
                     ` (Max ₹${coupon.discount.maxDiscount})`}
                 </td>
 
-                <td className="p-3 text-center">{coupon.scope}</td>
+                <td className="p-3 text-center text-text-secondary">
+                  {coupon.scope}
+                </td>
 
-                <td className="p-3 text-center">
+                <td className="p-3 text-center text-text-secondary">
                   {coupon.isActive ? "Active" : "Inactive"}
                 </td>
 
-                <td className="p-3 text-center">
+                <td className="p-3 text-center text-text-secondary">
                   {new Date(coupon.validFrom).toLocaleDateString()}
                 </td>
 
-                <td className="p-3 text-center">
+                <td className="p-3 text-center text-text-secondary">
                   {new Date(coupon.validTill).toLocaleDateString()}
                 </td>
 
                 <td className="p-3 text-center">
                   <div className="flex justify-around">
                     <FiEdit
-                      className="cursor-pointer hover:text-pink-600"
+                      className="cursor-pointer hover:text-primary"
                       size={20}
                       onClick={() => onEdit(coupon._id)}
                     />
                     <FiTrash2
-                      className="cursor-pointer text-red-500 hover:text-red-700"
+                      className="cursor-pointer text-danger hover:text-danger-hover"
                       size={20}
                       onClick={() => onDelete(coupon._id)}
                     />
@@ -83,8 +87,9 @@ const CouponsTable = memo(({ loading, tableData, onEdit, onDelete ,total}) => {
                 </td>
               </tr>
             ))}
-            <tr>
-            <td colSpan="6" className="text-right p-2">
+
+          <tr>
+            <td colSpan="8" className="text-right p-2 text-text-primary">
               <strong>Total: {total}</strong>
             </td>
           </tr>

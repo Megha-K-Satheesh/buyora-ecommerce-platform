@@ -12,6 +12,7 @@ import Button from "../../../components/ui/Button";
 import Pagination from "../../../components/ui/Pagination";
 import SearchInput from "../../../components/ui/SearchInput";
 import { showError, showSuccess } from "../../../components/ui/Toastify";
+import { useDebounce } from "../../../hook/useDebounce";
 import { getCategory } from "../../../Redux/slices/admin/categorySlice";
 import { getSalesReport, setPage } from "../../../Redux/slices/admin/salesSlice";
 import { adminSalesReportService } from "../../../services/salesReportService";
@@ -20,6 +21,7 @@ const SalesReportPage = () => {
   const dispatch = useDispatch();
 
   const [search, setSearch] = useState("");
+   const debouncedSearch = useDebounce(search, 400);
   const [status, setStatus] = useState("");
   const [paymentStatus, setPaymentStatus] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -52,7 +54,7 @@ const SalesReportPage = () => {
       getSalesReport({
         page: currentPage,
         limit: 10,
-        search,
+        search:debouncedSearch,
         status,
         paymentStatus,
         startDate,
@@ -60,7 +62,7 @@ const SalesReportPage = () => {
         categoryId: selectedCategory,
       })
     );
-  }, [dispatch, currentPage, search, status, paymentStatus, startDate, endDate, selectedCategory]);
+  }, [dispatch, currentPage, debouncedSearch, status, paymentStatus, startDate, endDate, selectedCategory]);
 
   const handlePageChange = (page) => {
     dispatch(setPage(page));
@@ -123,18 +125,18 @@ const handlePrint = () => {
           type="date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
-          className="px-3 py-2 rounded-lg shadow-sm bg-white w-[10%]"
+          className="px-3 py-2 rounded-lg shadow-sm bg-bg-main w-[10%]"
         />
         <input
           type="date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
-          className="px-3 py-2 rounded-lg shadow-sm bg-white w-[10%]"
+          className="px-3 py-2 rounded-lg shadow-sm bg-bg-main w-[10%]"
         />
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="px-3 py-2 rounded-lg shadow-sm bg-white w-[15%]"
+          className="px-3 py-2 rounded-lg shadow-sm bg-bg-main w-[15%]"
         >
           <option value="">All Categories</option>
           {buildCategoryOptions(categories)}
@@ -142,7 +144,7 @@ const handlePrint = () => {
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="px-3 py-2 rounded-lg shadow-sm bg-white w-[15%]"
+          className="px-3 py-2 rounded-lg shadow-sm bg-bg-main w-[15%]"
         >
           <option value="">All Order Status</option>
           <option value="PENDING">Pending</option>
@@ -152,7 +154,7 @@ const handlePrint = () => {
         <select
           value={paymentStatus}
           onChange={(e) => setPaymentStatus(e.target.value)}
-          className="px-3 py-2 rounded-lg shadow-sm bg-white w-[15%]"
+          className="px-3 py-2 rounded-lg shadow-sm bg-bg-main w-[15%]"
         >
           <option value="">All Payment Status</option>
           <option value="PAID">Paid</option>

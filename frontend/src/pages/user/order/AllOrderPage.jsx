@@ -1,8 +1,11 @@
 
+
+
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getAllOrders } from "../../../Redux/slices/orderSlice";
+import Loader from "../../../components/ui/Loader";
 
 const AllOrdersPage = () => {
   const dispatch = useDispatch();
@@ -13,17 +16,16 @@ const AllOrdersPage = () => {
     dispatch(getAllOrders());
   }, [dispatch]);
 
-  if (loading) return <p className="text-center mt-10">Loading orders...</p>;
-  if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
+  if (loading) return <p className="text-center mt-10"><Loader/></p>;
+  if (error) return <p className="text-center mt-10 text-danger">{error}</p>;
   if (!allOrders || allOrders.length === 0)
     return <p className="text-center mt-10">No orders found.</p>;
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6">My Orders</h2>
+      <h2 className="text-2xl font-bold mb-6 text-text-primary">My Orders</h2>
 
       {allOrders.map((order) => {
-     
         const deliveryDates = order.items
           .filter((i) => i.status !== "CANCELLED")
           .map((i) => new Date(i.expectedDeliveryDate));
@@ -35,59 +37,55 @@ const AllOrdersPage = () => {
         return (
           <div
             key={order.orderId}
-            className="rounded-xl p-5 mb-6 shadow-sm hover:shadow-md transition-shadow duration-200 bg-white"
+            className="rounded-xl p-5 mb-6 shadow-sm hover:shadow-md transition-shadow duration-200 bg-bg-main"
           >
-         
-
             <div className="flex justify-between items-center mb-4 flex-wrap">
-  <p className="font-semibold text-lg">Order #{order.orderNumber}</p>
+              <p className="font-semibold text-lg text-text-primary">Order #{order.orderNumber}</p>
 
-  <p className="text-sm mt-1 md:mt-0">
-    {order.items.every((i) => i.status === "CANCELLED") ? (
-      <span className="font-medium text-red-600">Cancelled</span>
+              <p className="text-sm mt-1 md:mt-0">
+                {order.items.every((i) => i.status === "CANCELLED") ? (
+                  <span className="font-medium text-danger">Cancelled</span>
 
-    ) : order.items.every((i) => i.status === "DELIVERED") ? (
-      <span className="font-medium text-green-600">
-        Delivered on{" "}
-        {earliestDate &&
-          earliestDate.toLocaleDateString("en-US", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          })}
-      </span>
+                ) : order.items.every((i) => i.status === "DELIVERED") ? (
+                  <span className="font-medium text-success">
+                    Delivered on{" "}
+                    {earliestDate &&
+                      earliestDate.toLocaleDateString("en-US", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                  </span>
 
-    ) : order.items.some((i) => i.status === "RETURN_APPROVED") ? (
-      <span className="font-medium text-blue-600">Return Approved</span>
+                ) : order.items.some((i) => i.status === "RETURN_APPROVED") ? (
+                  <span className="font-medium text-primary">Return Approved</span>
 
-    ) : order.items.some((i) => i.status === "RETURN_REJECTED") ? (
-      <span className="font-medium text-red-500">Return Rejected</span>
+                ) : order.items.some((i) => i.status === "RETURN_REJECTED") ? (
+                  <span className="font-medium text-danger">Return Rejected</span>
 
-    ) : order.items.some((i) => i.status === "RETURN_REQUESTED") ? (
-      <span className="font-medium text-yellow-600">Return Requested</span>
+                ) : order.items.some((i) => i.status === "RETURN_REQUESTED") ? (
+                  <span className="font-medium text-warning">Return Requested</span>
 
-    ) : (
-      <span className="font-medium text-gray-600">
-        Expected Delivery on{" "}
-        {earliestDate &&
-          earliestDate.toLocaleDateString("en-US", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          })}
-      </span>
-    )}
-  </p>
-</div>
+                ) : (
+                  <span className="font-medium text-text-secondary">
+                    Expected Delivery on{" "}
+                    {earliestDate &&
+                      earliestDate.toLocaleDateString("en-US", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                  </span>
+                )}
+              </p>
+            </div>
 
-       
             <div className="flex flex-col gap-4 mb-4">
               {order.items.map((item) => (
                 <div
                   key={`${item.productId}-${item.variationId}`}
-                  className="flex items-center justify-between p-3 rounded hover:bg-gray-50 transition-colors duration-150"
+                  className="flex items-center justify-between p-3 rounded hover:bg-bg-muted transition-colors duration-150"
                 >
-           
                   <img
                     src={item.imageUrl?.[0] || "/placeholder.png"}
                     alt={item.name}
@@ -96,28 +94,26 @@ const AllOrdersPage = () => {
                     }`}
                   />
 
-                
                   <div className="flex-1 mx-4">
                     <p
                       className={`font-semibold ${
-                        item.status === "CANCELLED" ? "line-through text-gray-400" : ""
+                        item.status === "CANCELLED" ? "line-through text-text-light" : "text-text-primary"
                       }`}
                     >
                       {item.name}
                     </p>
-                    <p className={item.status === "CANCELLED" ? "text-gray-400" : ""}>
+                    <p className={item.status === "CANCELLED" ? "text-text-light" : "text-text-secondary"}>
                       Price: ₹{item.price}
                     </p>
-                    <p className={item.status === "CANCELLED" ? "text-gray-400" : ""}>
+                    <p className={item.status === "CANCELLED" ? "text-text-light" : "text-text-secondary"}>
                       Qty: {item.quantity}
                     </p>
                   </div>
 
-                  {/* Status */}
                   <div className="flex flex-col items-end">
                     <span
                       className={`font-semibold ${
-                        item.status === "CANCELLED" ? "text-red-600" : "text-green-600"
+                        item.status === "CANCELLED" ? "text-danger" : "text-success"
                       }`}
                     >
                       {item.status}
@@ -127,14 +123,13 @@ const AllOrdersPage = () => {
               ))}
             </div>
 
-            
             <div className="flex flex-col md:flex-row md:justify-between md:items-center  mt-4 gap-3">
-              <p className="font-semibold text-lg">
+              <p className="font-semibold text-lg text-text-primary">
                 Total Amount: ₹{order.totalAmount}
               </p>
               <button
                 onClick={() => navigate(`/orders/${order.orderId}`)}
-                className="px-4 py-2 rounded-lg border border-pink-600 text-pink-600 font-semibold hover:bg-pink-50 transition-colors"
+                className="px-4 py-2 rounded-lg border border-border-primary text-primary font-semibold hover:bg-bg-soft transition-colors"
               >
                 View Details
               </button>

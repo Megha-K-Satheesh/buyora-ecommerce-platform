@@ -22,6 +22,8 @@ const reviewRoutes = require("./review")
 const salesRoutes = require('./sales')
 const chatBotRoutes = require('./chatBot')
 const userListRoutes = require('./adminUser')
+const adminChatRoutes = require('./adminChat')
+const userChatRoutes = require('./userChat')
 const setupRoutes = (app) => {
     const authLimiter = createAuthLimiter();
     const shouldUseAuthLimiter = config.NODE_ENV === 'production';
@@ -47,6 +49,9 @@ const setupRoutes = (app) => {
     app.use('/api/admin/sales',salesRoutes)
     app.use('/api/user/chat-bot',chatBotRoutes)
     app.use('/api/admin/user-list',userListRoutes)
+    app.use('/api/admin/chat',adminChatRoutes)
+    app.use('/api/user/chat',userChatRoutes)
+    
 };
 
 module.exports = {

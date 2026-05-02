@@ -48,8 +48,7 @@ class Server {
         await runSeeders();
       }, 2000);
       
-    //    scheduleDeliveryCron()
-    // logger.info("Delivery cron job scheduled");
+   
     });
     
     this.setupGracefulShutdown();

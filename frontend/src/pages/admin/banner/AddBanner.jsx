@@ -1,3 +1,6 @@
+
+
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -58,7 +61,7 @@ const AddBanner = () => {
       await dispatch(addBanner(formData)).unwrap();
 
       showSuccess("Banner Added");
-       navigate("/admin-dashboard/banners");
+      navigate("/admin-dashboard/banners");
     } catch (err) {
       showError(err);
     }
@@ -68,10 +71,10 @@ const AddBanner = () => {
     <>
       <AdminOutletHead heading={"BANNERS"} />
 
-      <div className="flex justify-center items-start min-h-screen bg-gradient-to-br from-pink-50 to-white py-10">
-        <div className="bg-white shadow-xl rounded-3xl lg:w-[40%] w-[95%] px-6 py-8 border border-gray-100">
+      <div className="flex justify-center items-start min-h-screen bg-bg-soft py-10">
+        <div className="bg-bg-main shadow-xl rounded-3xl lg:w-[40%] w-[95%] px-6 py-8 border border-border-light">
 
-          <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">
+          <h1 className="text-3xl font-semibold text-center text-text-primary mb-6">
             Add Banner
           </h1>
 
@@ -90,10 +93,10 @@ const AddBanner = () => {
 
             {/* TYPE */}
             <div className="flex flex-col gap-1 pb-3">
-              <label className="text-sm md:text-lg text-gray-900">Type</label>
+              <label className="text-sm md:text-lg text-text-primary">Type</label>
               <select
                 {...register("type", { required: true })}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 lg:h-11 text-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full border border-border rounded-md px-3 py-2 lg:h-11 text-lg text-text-secondary focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">Select</option>
                 <option value="hero">Hero</option>
@@ -105,10 +108,10 @@ const AddBanner = () => {
 
             {/* PAGE */}
             <div className="flex flex-col gap-1 pb-3">
-              <label className="text-sm md:text-lg text-gray-900">Page</label>
+              <label className="text-sm md:text-lg text-text-primary">Page</label>
               <select
                 {...register("page", { required: true })}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 lg:h-11 text-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full border border-border rounded-md px-3 py-2 lg:h-11 text-lg text-text-secondary focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">Select</option>
                 <option value="home">Home</option>
@@ -120,10 +123,10 @@ const AddBanner = () => {
 
             {/* SECTION */}
             <div className="flex flex-col gap-1 pb-3">
-              <label className="text-sm md:text-lg text-gray-900">Section</label>
+              <label className="text-sm md:text-lg text-text-primary">Section</label>
               <select
                 {...register("section", { required: true })}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 lg:h-11 text-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full border border-border rounded-md px-3 py-2 lg:h-11 text-lg text-text-secondary focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">Select</option>
                 <option value="home_top">Home Top</option>
@@ -134,10 +137,10 @@ const AddBanner = () => {
 
             {/* REDIRECT TYPE */}
             <div className="flex flex-col gap-1 pb-3">
-              <label className="text-sm md:text-lg text-gray-900">Redirect Type</label>
+              <label className="text-sm md:text-lg text-text-primary">Redirect Type</label>
               <select
                 {...register("redirectType")}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 lg:h-11 text-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full border border-border rounded-md px-3 py-2 lg:h-11 text-lg text-text-secondary focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="url">URL</option>
                 <option value="category">Category</option>
@@ -163,10 +166,10 @@ const AddBanner = () => {
 
             {/* STATUS */}
             <div className="flex flex-col gap-1 pb-3">
-              <label className="text-sm md:text-lg text-gray-900">Status</label>
+              <label className="text-sm md:text-lg text-text-primary">Status</label>
               <select
                 {...register("isActive")}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 lg:h-11 text-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full border border-border rounded-md px-3 py-2 lg:h-11 text-lg text-text-secondary focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="true">Active</option>
                 <option value="false">Inactive</option>

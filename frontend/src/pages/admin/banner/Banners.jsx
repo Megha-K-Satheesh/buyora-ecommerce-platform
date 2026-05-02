@@ -1,5 +1,6 @@
 
 
+
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -47,11 +48,10 @@ const Banners = () => {
     navigate("/admin-dashBoard/banners/add-banner");
   };
 
-
-   const handleEdit = (id) => {
+  const handleEdit = (id) => {
     navigate(`/admin-dashboard/banner/update-banner/${id}`);
   };
-  
+
   const handleDelete = async (id) => {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -100,7 +100,7 @@ const Banners = () => {
             setPageFilter(e.target.value);
             dispatch(setCurrentPage(1));
           }}
-          className="px-3 py-2 rounded-lg shadow-sm bg-white w-[25%] font-medium"
+          className="px-3 py-2 rounded-lg shadow-sm bg-bg-main w-[25%] font-medium"
         >
           <option value="">All Pages</option>
           <option value="home">Home</option>
@@ -115,7 +115,7 @@ const Banners = () => {
             setSectionFilter(e.target.value);
             dispatch(setCurrentPage(1));
           }}
-          className="px-3 py-2 rounded-lg shadow-sm bg-white w-[25%] font-medium"
+          className="px-3 py-2 rounded-lg shadow-sm bg-bg-main w-[25%] font-medium"
         >
           <option value="">All Sections</option>
           <option value="home_top">Home Top</option>

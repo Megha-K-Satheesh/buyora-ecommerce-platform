@@ -1,8 +1,13 @@
 
+
+
+
+
 import { useEffect, useState } from "react";
 import { IoMdCopy } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCoupons } from "../../../Redux/slices/couponSlice";
+import Navbar from "../../../components/ui/Navbar";
 import Pagination from "../../../components/ui/Pagination";
 import { showSuccess } from "../../../components/ui/Toastify";
 
@@ -26,24 +31,25 @@ const CouponsList = () => {
   };
 
   if (loading) return <p className="text-center py-10">Loading coupons...</p>;
-  if (error) return <p className="text-center py-10 text-red-500">{error}</p>;
+  if (error) return <p className="text-center py-10 text-danger">{error}</p>;
   if (!coupons.length) return <p className="text-center py-10">No coupons available!</p>;
 
   return (
-    <div className="max-w-4xl ml-20 py-8 px-4">
-      <h2 className="text-3xl font-bold mb-8 text-gray-800 "> Coupons</h2>
+    <>
+    <div className="lg:hidden block "><Navbar/></div>
+    <div className="max-w-4xl ml-20 py-8 px-4 mt-15">
+      <h2 className="text-3xl font-bold mb-8 text-text-secondary "> Coupons</h2>
 
       <div className="flex flex-col gap-6">
         {coupons.map((coupon) => (
           <div
             key={coupon.couponId}
-            className=" rounded-lg shadow hover:shadow-lg transition bg-white p-4"
+            className=" rounded-lg shadow hover:shadow-lg transition bg-bg-main p-4"
           >
-            {/* Header: Coupon Code + Copy Icon */}
             <div className="flex justify-between items-center mb-2">
-              <span className="text-lg font-bold text-pink-600">{coupon.code}</span>
+              <span className="text-lg font-bold text-primary">{coupon.code}</span>
               <button
-                className="text-pink-600 text-2xl font-bold"
+                className="text-primary text-2xl font-bold"
                 onClick={() => handleCopy(coupon.code)}
                 title="Copy Coupon Code"
               >
@@ -51,8 +57,7 @@ const CouponsList = () => {
               </button>
             </div>
 
-            {/* Coupon Details */}
-            <div className="text-sm text-gray-700 space-y-1">
+            <div className="text-sm text-text-secondary space-y-1">
               <p><span className="font-semibold">Description:</span> {coupon.description}</p>
               <p>
                 <span className="font-semibold">Discount:</span>{" "}
@@ -82,11 +87,11 @@ const CouponsList = () => {
         ))}
       </div>
 
-    
       <div className="mt-10">
         <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
       </div>
     </div>
+    </>
   );
 };
 

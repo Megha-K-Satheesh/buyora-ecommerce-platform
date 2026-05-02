@@ -1,6 +1,10 @@
 
 
+
+
+
 import { memo } from "react";
+import TableLoader from "../ui/TableLoader";
 
 const OrdersTable = memo(
   ({
@@ -12,36 +16,31 @@ const OrdersTable = memo(
     onDeliver,
     onApproveReturn,
     onRejectReturn,
-      onMarkReturned,
-      onView
+    onMarkReturned,
+    onView
   }) => {
     return (
-      <div className="mx-20 mt-10 rounded-t-xl shadow-xl overflow-hidden">
-        <table className="w-full border-collapse">
+      <div className="mx-20 mt-10 rounded-t-xl shadow-xl overflow-hidden bg-bg-main">
+        <table className="w-full border-b border-border border-collapse">
           <thead>
-            <tr className="text-white text-xl h-15 bg-pink-600">
-              <th className="p-2 text-center border-b border-gray-200">Order ID</th>
-              <th className="p-2 text-center border-b border-gray-200">Product</th>
-              {/* <th className="p-2 text-center border-b border-gray-200">Category</th> */}
-              <th className="p-2 text-center border-b border-gray-200">Price</th>
-              <th className="p-2 text-center border-b border-gray-200">Quantity</th>
-              <th className="p-2 text-center border-b border-gray-200">Total</th>
-              <th className="p-2 text-center border-b border-gray-200">Payment</th>
-              <th className="p-2 text-center border-b border-gray-200">Status</th>
-              <th className="p-2 text-center border-b border-gray-200">Actions</th>
+            <tr className="text-white text-xl border-b border-border h-15 bg-primary">
+              <th className="p-2 text-center border-b border-border">Order ID</th>
+              <th className="p-2 text-center border-b border-border-light">Product</th>
+              <th className="p-2 text-center border-b border-border">Price</th>
+              <th className="p-2 text-center border-b border-border-light">Quantity</th>
+              <th className="p-2 text-center border-b border-border">Total</th>
+              <th className="p-2 text-center border-b border-border-light">Payment</th>
+              <th className="p-2 text-center border-b border-border-light">Status</th>
+              <th className="p-2 text-center border-b border-border-light">Actions</th>
             </tr>
           </thead>
 
           <tbody>
-            {loading && (
-              <tr>
-                <td colSpan="9" className="text-center p-4">Loading...</td>
-              </tr>
-            )}
+              {loading && <TableLoader rows={5} columns={8} />}
 
             {!loading && tableData.length === 0 && (
               <tr>
-                <td colSpan="9" className="text-center p-4">No orders found</td>
+                <td colSpan="9" className="text-center p-4 text-text-muted">No orders found</td>
               </tr>
             )}
 
@@ -49,51 +48,64 @@ const OrdersTable = memo(
               tableData.map((order) =>
                 order.items.map((item) => (
                   <tr
-                    key={`${order.orderId}-${item.productId._id}`}
-                    className="hover:bg-pink-50 bg-white"
+                    //  key={`${order.orderId}-${item.productId._id}`}
+                    key={`${order._id}-${item.productId._id}-${item._id}`}
+                
+                    className="hover:bg-bg-soft-hover bg-bg-main"
                   >
-                    {/* Repeat Order ID for each item */}
-                    <td className="p-2 text-center font-semibold">{order.orderNumber}</td>
+                    <td className="p-2 text-center font-semibold text-text-secondary">
+                      {order.orderNumber}
+                    </td>
 
-                    <td className="p-2 py-4 text-center">{item.name}</td>
-                    {/* <td className="p-2 text-center">{item.categoryName || "N/A"}</td> */}
-                    <td className="p-2 text-center">₹{item.price} / ₹{item.mrp}</td>
-                    <td className="p-2 text-center">{item.quantity}</td>
-                    <td className="p-2 text-center">₹{item.price * item.quantity}</td>
-                    <td className="p-2 text-center font-medium">{order.paymentStatus}</td>
-                    <td className="p-2 text-center">{item.status}</td>
+                    <td className="p-2 py-4 text-center text-text-secondary">
+                      {item.name}
+                    </td>
+
+                    <td className="p-2 text-center text-text-secondary">
+                      ₹{item.price} / ₹{item.mrp}
+                    </td>
+
+                    <td className="p-2 text-center text-text-secondary">
+                      {item.quantity}
+                    </td>
+
+                    <td className="p-2 text-center text-text-secondary">
+                      ₹{item.price * item.quantity}
+                    </td>
+
+                    <td className="p-2 text-center font-medium text-text-secondary">
+                      {order.paymentStatus}
+                    </td>
+
+                    <td className="p-2 text-center text-text-secondary">
+                      {item.status}
+                    </td>
 
                     <td className="p-2 text-center">
                       <div className="flex justify-center gap-3 flex-wrap">
 
-{/* 
-                            <button
-      onClick={() => onView(order.orderId)}
-      className="bg-gray-700 text-white px-2 py-1 rounded"
-    >
-      View
-    </button> */}
                         {item.status === "PLACED" && (
                           <button
-                            onClick={() => onConfirm(order.orderId, item.productId._id,item.variantId)}
-                            className="bg-blue-500 text-white px-2 py-1 rounded"
+                            onClick={() => onConfirm(order._id, item.productId._id, item.variantId)}
+                            className="bg-primary text-white px-2 py-1 rounded hover:bg-primary-hover"
                           >
                             Confirm
                           </button>
                         )}
-                         {item.status === "CONFIRMED" && (
-                              <button
-                      onClick={() => onShip(order.orderId, item.productId._id,item.variantId)}
-                     className="bg-yellow-500 text-white px-3 py-1 rounded"
-                                      >
-                                      Ship
-                               </button>
-                          )}
+
+                        {item.status === "CONFIRMED" && (
+                          <button
+                            onClick={() => onShip(order._id, item.productId._id, item.variantId)}
+                            className="bg-warning text-white px-3 py-1 rounded hover:bg-warning-hover"
+                          >
+                            Ship
+                          </button>
+                        )}
 
                         {item.status === "SHIPPED" && (
                           <button
-                            onClick={() => onDeliver(order.orderId, item.productId._id,item.variantId)}
-                            className="bg-green-500 text-white px-2 py-1 rounded"
+                            onClick={() => onDeliver(order._id, item.productId._id, item.variantId)}
+                            className="bg-success text-white px-2 py-1 rounded"
                           >
                             Deliver
                           </button>
@@ -102,66 +114,58 @@ const OrdersTable = memo(
                         {item.status === "RETURN_REQUESTED" && (
                           <>
                             <button
-                              onClick={() => onApproveReturn(order.orderId, item.productId._id,item.variantId)}
-                              className="bg-green-600 text-white px-2 py-1 rounded"
+                              onClick={() => onApproveReturn(order._id, item.productId._id, item.variantId)}
+                              className="bg-success text-white px-2 py-1 rounded"
                             >
                               Approve
                             </button>
                             <button
-                              onClick={() => onRejectReturn(order.orderId, item.productId._id,item.variantId)}
-                              className="bg-red-500 text-white px-2 py-1 rounded"
+                              onClick={() => onRejectReturn(order._id, item.productId._id, item.variantId)}
+                              className="bg-danger text-white px-2 py-1 rounded hover:bg-danger-hover"
                             >
                               Reject
                             </button>
                           </>
                         )}
 
-                        {/* {item.status === "RETURN_APPROVED" && (
-      <span className="text-green-700 font-semibold">
-        Return Approved
-      </span>
-    )} */}
-    {item.status === "RETURN_APPROVED" && (
-  <button
-    onClick={() =>
-      onMarkReturned(order.orderId, item.productId._id, item.variantId)
-    }
-    className="bg-purple-600 text-white px-2 py-1 rounded"
-  >
-    Mark Returned
-  </button>
-)}
+                        {item.status === "RETURN_APPROVED" && (
+                          <button
+                            onClick={() =>
+                              onMarkReturned(order._id, item.productId._id, item.variantId)
+                            }
+                            className="bg-primary text-white px-2 py-1 rounded"
+                          >
+                            Mark Returned
+                          </button>
+                        )}
 
-{item.status === "RETURNED" && (
-  <span className="text-purple-700 font-semibold">
-    Returned
-  </span>
-)}
+                        {item.status === "RETURNED" && (
+                          <span className="text-primary font-semibold">
+                            Returned
+                          </span>
+                        )}
 
-    {item.status === "RETURN_REJECTED" && (
-      <span className="text-red-600 font-semibold">
-        Return Rejected
-      </span>
-    )}
+                        {item.status === "RETURN_REJECTED" && (
+                          <span className="text-danger font-semibold">
+                            Return Rejected
+                          </span>
+                        )}
 
                         {item.status === "DELIVERED" && (
-  <span className="text-green-600 font-semibold">
-    Completed
-  </span>
+                          <span className="text-success font-semibold">
+                            Completed
+                          </span>
+                        )}
 
+                        <div>
+                          <button
+                            onClick={() => onView(order._id)}
+                            className="border-primary border-2 text-primary px-2 py-1 rounded hover:bg-bg-soft-hover"
+                          >
+                            View
+                          </button>
+                        </div>
 
-
-)}
-              <div className="">
-
-               <button
-      onClick={() => onView(order.orderId)}
-      className="border-pink-600 border-2  px-2 py-1 rounded"
-    >
-      View
-    </button>
-              </div>
-                
                       </div>
                     </td>
                   </tr>
@@ -169,7 +173,7 @@ const OrdersTable = memo(
               )}
 
             <tr>
-              <td colSpan="9" className="text-right p-2">
+              <td colSpan="9" className="text-right p-2 text-text-secondary">
                 <strong>Total Orders: {total}</strong>
               </td>
             </tr>

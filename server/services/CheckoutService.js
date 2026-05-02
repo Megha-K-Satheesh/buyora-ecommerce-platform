@@ -170,6 +170,25 @@ static async placeOrder(userId, data) {
 
   const finalAmount = Math.max(subtotal - couponDiscount, 0);
 
+
+  if (paymentMethod === "WALLET") {
+  let wallet = await Wallet.findOne({ userId });
+
+  if (!wallet) {
+    wallet = await Wallet.create({
+      userId,
+      balance: 0,
+      transactions: []
+    });
+  }
+
+  if (wallet.balance < finalAmount) {
+    throw ErrorFactory.conflict(
+      "Not enough wallet balance",
+      "INSUFFICIENT_WALLET"
+    );
+  }
+}
   const now = new Date();
 
   const orderItems = enrichedCartItems.map(item => ({
@@ -259,10 +278,9 @@ static async placeOrder(userId, data) {
         transactions: []
       });
     }
-
-    if (wallet.balance < finalAmount) {
-      throw ErrorFactory.validation("Insufficient wallet balance");
-    }
+//  if (wallet.balance < finalAmount) {
+//    throw ErrorFactory.conflict("Not enough wallet balance", "INSUFFICIENT_WALLET")
+//   }
 
     wallet.balance -= finalAmount;
 
@@ -331,7 +349,22 @@ static async verifyPayment(userId, body) {
   return order;
 }
 
+static async paymentFailed(userId, orderId) {
+  const order = await Order.findOne({ _id: orderId, userId });
 
+  if (!order) throw ErrorFactory.notFound("Order not found");
+
+  if (order.paymentStatus === "PAID") return order;
+
+  order.paymentStatus = "FAILED";
+  order.orderStatus = "PAYMENT_FAILED";
+  order.items.forEach(item => {
+    item.status = "CANCELLED";
+  });
+  await order.save();
+
+  return order;
+}
 
 }
 

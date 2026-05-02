@@ -24,10 +24,11 @@ apiClient.interceptors.response.use(
     const status = error.response?.status;
     const data = error.response?.data;
 
-    if (status === 403 && data?.banned) {
+    if (status === 403 && data?.banned ) {
       localStorage.removeItem("authToken");
       window.location.href = "/login";
     }
+    
 
     return Promise.reject(error);
   }

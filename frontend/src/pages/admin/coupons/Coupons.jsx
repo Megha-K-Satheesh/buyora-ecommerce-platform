@@ -1,3 +1,6 @@
+
+
+
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AdminOutletHead from "../../../components/Admin/AdminOutletHead";
@@ -8,25 +11,25 @@ import { getCategory } from "../../../Redux/slices/admin/categorySlice";
 import { deleteCoupon, getCouponsList, setCurrentPage } from "../../../Redux/slices/admin/couponSlice";
 
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import CouponsTable from "../../../components/Admin/CouponsTable";
 import { showError, showSuccess } from "../../../components/ui/Toastify";
-import Swal from "sweetalert2";
+import { useDebounce } from "../../../hook/useDebounce";
 
 const Coupons = () => {
   const dispatch = useDispatch();
 
-
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 400);
   const [status, setStatus] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const navigate = useNavigate()
- 
+  const navigate = useNavigate();
+
   const { coupons, loading, currentPage, totalPages, totalCoupons } = useSelector(
     (state) => state.coupon
   );
   const { categories } = useSelector((state) => state.category);
 
-  // Build category options recursively
   const buildCategoryOptions = (cats, prefix = "") => {
     return cats.flatMap((cat) => {
       if (!cat || !cat._id) return [];
@@ -39,73 +42,67 @@ const Coupons = () => {
     });
   };
 
- const handleAdd = () => {
+  const handleAdd = () => {
     navigate("/admin-dashboard/coupons/add-coupon");
   };
 
-
   const handleDelete = async (couponId) => {
-  const result = await Swal.fire({
-    title: "Are you sure?",
-    text: "Do you really want to delete this coupon?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Yes, delete it!",
-    cancelButtonText: "Cancel",
-    reverseButtons: true,
-  });
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete this coupon?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+    });
 
-  if (result.isConfirmed) {
-    try {
-      await dispatch(deleteCoupon(couponId)).unwrap();
-      showSuccess("Coupon deleted successfully");
+    if (result.isConfirmed) {
+      try {
+        await dispatch(deleteCoupon(couponId)).unwrap();
+        showSuccess("Coupon deleted successfully");
 
-      // Refresh the coupon list after deletion
-      dispatch(
-        getCouponsList({
-          page: currentPage,
-          limit: 10,
-          search,
-          status,
-          category: selectedCategory,
-        })
-      );
-    } catch (err) {
-      showError(err);
+        dispatch(
+          getCouponsList({
+            page: currentPage,
+            limit: 10,
+            search,
+            status,
+            category: selectedCategory,
+          })
+        );
+      } catch (err) {
+        showError(err);
+      }
     }
-  }
-};
+  };
 
- 
   useEffect(() => {
     dispatch(getCategory());
   }, [dispatch]);
 
-  
   useEffect(() => {
     dispatch(
       getCouponsList({
         page: currentPage,
         limit: 10,
-        search,
+        search:debouncedSearch,
         status,
         category: selectedCategory,
       })
     );
-  }, [dispatch, currentPage, search, status, selectedCategory]);
-
+  }, [debouncedSearch,dispatch, currentPage, status, selectedCategory]);
 
   useEffect(() => {
     dispatch(setCurrentPage(1));
   }, [search, status, selectedCategory, dispatch]);
-
 
   const handlePageChange = (page) => {
     dispatch(
       getCouponsList({
         page,
         limit: 10,
-        search,
+        search:debouncedSearch,
         status,
         category: selectedCategory,
       })
@@ -115,13 +112,11 @@ const Coupons = () => {
   return (
     <>
       <AdminOutletHead heading="COUPONS" />
-      <div className="flex justify-end mr-20 mt-10">
-            <Button 
-             onClick = {handleAdd}
-            >ADD COUPON</Button>
-          </div>
 
-      {/* Filters */}
+      <div className="flex justify-end mr-20 mt-10">
+        <Button onClick={handleAdd}>ADD COUPON</Button>
+      </div>
+
       <div className="flex ml-20 gap-5 mt-10">
         <div className="flex-1">
           <SearchInput
@@ -132,21 +127,19 @@ const Coupons = () => {
         </div>
 
         <div className="flex flex-2 gap-5">
-          {/* Category Filter */}
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-3 py-2 rounded-lg shadow-sm bg-white w-[25%] font-medium"
+            className="px-3 py-2 rounded-lg shadow-sm bg-bg-main border border-border-light w-[25%] font-medium text-text-primary"
           >
             <option value="">All Categories</option>
             {buildCategoryOptions(categories)}
           </select>
 
-          {/* Status Filter */}
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="bg-white shadow px-3 py-2 rounded-lg w-[25%] font-medium"
+            className="bg-bg-main border border-border-light shadow px-3 py-2 rounded-lg w-[25%] font-medium text-text-primary"
           >
             <option value="">All Status</option>
             <option value="active">Active</option>
@@ -155,16 +148,14 @@ const Coupons = () => {
         </div>
       </div>
 
-      {/* Coupons Table */}
       <CouponsTable
         loading={loading}
         tableData={coupons}
-          total={totalCoupons}
+        total={totalCoupons}
         onEdit={(couponId) => navigate(`/admin-dashboard/coupons/edit-coupon/${couponId}`)}
-  onDelete={(couponId) => handleDelete(couponId)}
+        onDelete={(couponId) => handleDelete(couponId)}
       />
 
-      {/* Pagination */}
       <div className="my-10 mx-20">
         <Pagination
           totalPages={totalPages}

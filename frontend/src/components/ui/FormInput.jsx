@@ -47,7 +47,7 @@ ${error ? 'border-red-600 focus:ring-red-500' : 'border-gray-300 focus:ring-pink
           />
         )}
 
-        { <p className="text-xs lg:text-sm text-red-600 h-3">{error}</p>}
+        { <p className="text-xs lg:text-sm text-red-500 h-3">{error}</p>}
         {!error && helpText && <span className="text-xs text-gray-500">{helpText}</span>}
       </div>
     );

@@ -20,6 +20,27 @@ export const getOrderSummary = createAsyncThunk(
 );
 
 
+// export const placeOrder = createAsyncThunk(
+//   "checkout/placeOrder",
+//   async (payload, thunkAPI) => {
+//     try {
+//       const res = await checkoutService.placeOrder(payload);
+//       return res.data.data;
+
+//     } catch (err) {
+//       console.log("FULL ERROR:", err);
+//       console.log("BACKEND ERROR:", err.response?.data);
+//       return thunkAPI.rejectWithValue(
+//         err.response?.data?.error?.message ||
+//         err.response?.data?.message ||
+//         err.message ||
+//         "Order failed"
+        
+//       );
+      
+//     }
+//   }
+// );
 export const placeOrder = createAsyncThunk(
   "checkout/placeOrder",
   async (payload, thunkAPI) => {
@@ -27,16 +48,21 @@ export const placeOrder = createAsyncThunk(
       const res = await checkoutService.placeOrder(payload);
       return res.data.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(
-          err.response?.data?.error?.message ||
-        err.response?.data?.message ||
+      console.log("FULL ERROR:", err);
+      console.log("BACKEND ERROR:", err.response?.data);
+
+      const backendError = err.response?.data;
+
+      const message =
+        backendError?.error?.message ||
+        backendError?.message ||
         err.message ||
-        "Order failed"
-      );
+        "Order failed";
+
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
-
 export const verifyPayment = createAsyncThunk(
   "checkout/verifyPayment",
   async (payload, thunkAPI) => {
@@ -51,7 +77,19 @@ export const verifyPayment = createAsyncThunk(
   }
 );
 
-
+export const paymentFailed = createAsyncThunk(
+  "checkout/paymentFailed",
+  async (payload, thunkAPI) => {
+    try {
+      const res = await checkoutService.paymentFailed(payload);
+      return res.data.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || "Failed to update payment status"
+      );
+    }
+  }
+);
 
 
 const initialState = {
@@ -149,7 +187,8 @@ const checkoutSlice = createSlice({
 
 .addCase(placeOrder.rejected, (state, action) => {
   state.loading = false;
-  state.error = action.payload;
+  state.error =  action.payload ||
+  "Something went wrong";
 })
 
 .addCase(verifyPayment.pending, (state) => {
@@ -170,7 +209,23 @@ const checkoutSlice = createSlice({
   state.loading = false;
   state.error = action.payload;
 })
+.addCase(paymentFailed.pending, (state) => {
+  state.loading = true;
+  state.error = null;
+})
 
+.addCase(paymentFailed.fulfilled, (state, action) => {
+  state.loading = false;
+
+  if (state.lastOrder?._id === action.payload?._id) {
+    state.lastOrder = action.payload;
+  }
+})
+
+.addCase(paymentFailed.rejected, (state, action) => {
+  state.loading = false;
+  state.error = action.payload;
+})
 
   },
 });

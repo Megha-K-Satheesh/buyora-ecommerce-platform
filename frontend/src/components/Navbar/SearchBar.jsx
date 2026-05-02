@@ -16,7 +16,7 @@ const SearchBar = () => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       dispatch(setSearchTerm(search));
-    dispatch(getProducts({ search: search }));
+     dispatch(getProducts({ search: search }));
 
      navigate(`/search?search=${search}`);
     }

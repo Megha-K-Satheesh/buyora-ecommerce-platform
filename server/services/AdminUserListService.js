@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const { ErrorFactory } = require("../utils/errors");
+const { notifyUserUnbanned, notifyUserBanned } = require("../utils/socket");
 
 class AdminUserListService {
 
@@ -45,11 +46,12 @@ class AdminUserListService {
     user.bannedBy = adminId || null;
 
     await user.save();
+      notifyUserBanned(user._id, user.name, adminId);
 
     return { message: "User has been banned", user: user.getPublicProfile() };
   }
 
-  static async unbanUser(userId) {
+  static async unbanUser(userId,adminId) {
     const user = await User.findById(userId);
     if (!user) throw ErrorFactory.notFound("User not found");
 
@@ -59,7 +61,7 @@ class AdminUserListService {
     user.bannedBy = null;
 
     await user.save();
-
+  notifyUserUnbanned(user._id, user.name, adminId);
     return { message: "User has been unbanned", user: user.getPublicProfile() };
   }
 

@@ -30,12 +30,12 @@ const ReviewImageUpload = ({ files, setFiles, max = 5 }) => {
    
       <div
         onClick={() => inputRef.current.click()}
-        className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-pink-500 transition"
+        className="border-2 border-dashed  rounded-lg p-4 text-center cursor-pointer border-text-light hover:border-primary transition"
       >
-        <p className="text-gray-500 text-sm">
+        <p className="text-text-muted text-sm">
           Click to upload images
         </p>
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-text-light">
           Max {max} images
         </p>
       </div>
@@ -57,7 +57,7 @@ const ReviewImageUpload = ({ files, setFiles, max = 5 }) => {
             <img
               src={URL.createObjectURL(file)}
               alt="preview"
-              className="w-20 h-20 object-cover rounded-md border"
+              className="w-20 h-20 object-cover rounded-md border border-border-light"
               onLoad={(e) => URL.revokeObjectURL(e.target.src)} // cleanup
             />
 
@@ -65,7 +65,7 @@ const ReviewImageUpload = ({ files, setFiles, max = 5 }) => {
             <button
               type="button"
               onClick={() => removeImage(index)}
-              className="absolute -top-2 -right-2 bg-red-600 text-white 
+              className="absolute -top-2 -right-2 bg-danger text-white 
                          rounded-full w-5 h-5 text-xs flex items-center justify-center"
             >
               ✕

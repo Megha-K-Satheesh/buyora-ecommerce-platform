@@ -7,11 +7,13 @@ import checkoutReducer from '../Redux/slices/checkoutSlice';
 import userCouponReducer from '../Redux/slices/couponSlice';
 import orderReducer from '../Redux/slices/orderSlice';
 import userReviewReducer from "../Redux/slices/reviewSlice";
+import userChatReducer from '../Redux/slices/userChatSlice';
 import userReducer from '../Redux/slices/userSlice';
 import userWalletReducer from '../Redux/slices/walletSlice';
 import userWishlistReducer from "../Redux/slices/wishlistSlice";
 import adminSalesReducer from "././slices/admin/salesSlice";
 import adminBannerReducer from './slices/admin/adminBannerSlice';
+import adminChatReducer from './slices/admin/adminChatSlice';
 import adminOrderReducer from './slices/admin/adminOrderSlice';
 import adminUserReducer from "./slices/admin/adminUserSlice";
 import brandReducer from './slices/admin/brandSlice';
@@ -20,6 +22,7 @@ import couponReducer from './slices/admin/couponSlice';
 import adminDashboardReducer from "./slices/admin/dashboardSlice";
 import adminProductReducer from './slices/admin/productSlice';
 import productsReducer from './slices/general/productSlice';
+
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -42,6 +45,8 @@ export const store = configureStore({
       review:userReviewReducer ,
       sales:adminSalesReducer,
       chatBot:userChatBotReducer,
-      adminUser:adminUserReducer
+      adminUser:adminUserReducer,
+       adminChat: adminChatReducer,
+       userChat:userChatReducer
   },
 });

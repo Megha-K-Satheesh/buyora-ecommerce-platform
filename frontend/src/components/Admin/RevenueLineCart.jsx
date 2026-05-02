@@ -9,7 +9,7 @@ import {
 
 const RevenueLineChart = ({ data }) => {
   return (
-    <div className="bg-white p-6 rounded-xl shadow">
+    <div className="bg-bg-main p-6 rounded-xl shadow">
 
       <h2 className="font-semibold mb-4">Revenue Growth</h2>
 
@@ -39,3 +39,4 @@ const RevenueLineChart = ({ data }) => {
 };
 
 export default RevenueLineChart;
+

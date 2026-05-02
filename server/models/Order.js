@@ -188,7 +188,8 @@ mrpSubtotal: {
     "RETURN_APPROVED",
     "PARTIALLY_RETURN_APPROVED",
     "PARTIALLY_RETURNED",
-    "RETURNED"
+    "RETURNED",
+  "PAYMENT_FAILED"
   ],
     default: "PLACED"
   },

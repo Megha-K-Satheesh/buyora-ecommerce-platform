@@ -2,6 +2,7 @@
 
 
 
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaStar } from "react-icons/fa";
@@ -32,7 +33,11 @@ const AddReviewPage = () => {
           <FaStar
             key={star}
             onClick={() => setRating(star)}
-            className={star <= rating ? "text-yellow-500" : "text-gray-300"}
+            className={
+              star <= rating
+                ? "text-warning"
+                : "text-text-light"
+            }
           />
         ))}
       </div>
@@ -58,7 +63,7 @@ const AddReviewPage = () => {
       await dispatch(addReview({ productId, formData })).unwrap();
 
       showSuccess("Review added successfully");
-      navigate(-1); 
+      navigate(-1);
     } catch (err) {
       showError(err || "Failed to add review");
     }
@@ -66,31 +71,33 @@ const AddReviewPage = () => {
 
   return (
     <>
-      <Navbar/>
-      <div className="flex justify-center items-start bg-[#FFF1F6] min-h-screen pt-24 mt-22">
-        <div className="bg-white rounded-2xl w-[90%] md:w-[500px] p-6 shadow-md">
+      <Navbar />
 
-          <h1 className="text-2xl font-bold text-center mb-6">
+      <div className="flex justify-center items-start bg-bg-soft min-h-screen pt-24">
+        <div className="bg-bg-main rounded-2xl w-[90%] md:w-[500px] p-6 shadow-md border border-border-light">
+
+          <h1 className="text-2xl font-bold text-center mb-6 text-text-primary">
             Add Review
           </h1>
 
           <form onSubmit={handleSubmit(onSubmit)}>
 
             <div className="mb-4">
-              <label className="block mb-2 font-medium">
+              <label className="block mb-2 font-medium text-text-secondary">
                 Rating
               </label>
               {renderStars()}
             </div>
 
             <div className="mb-4">
-              <label className="block mb-2 font-medium">
+              <label className="block mb-2 font-medium text-text-secondary">
                 Comment
               </label>
+
               <textarea
                 rows="4"
                 placeholder="Write your review..."
-                className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full border border-border-light rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary"
                 {...register("comment", {
                   required: "Comment is required",
                   minLength: {
@@ -99,15 +106,16 @@ const AddReviewPage = () => {
                   }
                 })}
               />
+
               {errors.comment && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-danger text-sm mt-1">
                   {errors.comment.message}
                 </p>
               )}
             </div>
 
             <div className="mb-4">
-              <label className="block mb-2 font-medium">
+              <label className="block mb-2 font-medium text-text-secondary">
                 Upload Images
               </label>
 
@@ -121,6 +129,7 @@ const AddReviewPage = () => {
             <Button type="submit">
               {loading ? "Submitting..." : "Submit Review"}
             </Button>
+
           </form>
         </div>
       </div>

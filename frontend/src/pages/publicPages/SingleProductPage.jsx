@@ -1,15 +1,10 @@
 
 
-
-
-
-
-
 import { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import Footer from '../../components/ui/Footer';
+import Footer from "../../components/ui/Footer";
 import Navbar from "../../components/ui/Navbar";
 import { showError, showSuccess } from "../../components/ui/Toastify";
 import ReviewSection from "../../components/user/ReviewSection";
@@ -38,22 +33,23 @@ const SingleProductPage = () => {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
 
+  useEffect(() => {
+    dispatch(getProductById(id));
+  }, [dispatch, id]);
 
   useEffect(() => {
     if (product?.images?.length) setMainImage(product.images[0]);
   }, [product]);
 
-  
-  useEffect(() => {
-    dispatch(getProductById(id));
-  }, [dispatch, id]);
-
-
   useEffect(() => {
     if (token) dispatch(getWishlist({ page: 1, limit: 100 }));
   }, [dispatch, token]);
 
- 
+  const totalStock =
+    product?.variations?.reduce((sum, v) => sum + (v.stock || 0), 0) || 0;
+
+  const isOutOfStock = totalStock === 0;
+
   const liked = wishlist.some((item) => item._id === product?._id);
 
   const isInCart = cartItems.some(
@@ -63,8 +59,9 @@ const SingleProductPage = () => {
       item.color === selectedColor
   );
 
-
   const handleAddToCart = () => {
+    if (isOutOfStock) return;
+
     if (!selectedSize || !selectedColor) {
       showError("Please select size and color");
       return;
@@ -75,6 +72,7 @@ const SingleProductPage = () => {
         v.attributes.Size === selectedSize &&
         v.attributes.Color === selectedColor
     );
+
     if (!selectedVariation) return;
 
     const cartItem = {
@@ -100,7 +98,6 @@ const SingleProductPage = () => {
     }
   };
 
-
   const handleWishlistToggle = async () => {
     if (!token) {
       showError("Please login to manage wishlist");
@@ -109,12 +106,10 @@ const SingleProductPage = () => {
 
     try {
       if (liked) {
-      
         dispatch(removeFromWishlistOptimistic(product._id));
         await dispatch(removeFromWishlist(product._id)).unwrap();
         showSuccess("Removed from wishlist");
       } else {
- 
         dispatch(addToWishlistOptimistic(product));
         await dispatch(addToWishlist(product._id)).unwrap();
         showSuccess("Added to wishlist");
@@ -124,9 +119,9 @@ const SingleProductPage = () => {
     }
   };
 
-  if (loading) return <p className="text-center mt-10">Loading...</p>;
-  if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
-  if (!product) return <p className="text-center mt-10">Product not found</p>;
+  if (loading) return <p className="text-center mt-10 text-text-muted">Loading...</p>;
+  if (error) return <p className="text-center mt-10 text-danger">{error}</p>;
+  if (!product) return <p className="text-center mt-10 text-text-muted">Product not found</p>;
 
   const sizes = [...new Set(product.variations.map((v) => v.attributes.Size))];
   const colors = [...new Set(product.variations.map((v) => v.attributes.Color))];
@@ -134,55 +129,69 @@ const SingleProductPage = () => {
   return (
     <>
       <Navbar />
-      <div className="max-w-7xl mx-auto p-6 flex flex-col md:flex-row gap-8 mt-25">
 
-        {/* Images Section */}
+      <div className="max-w-7xl mx-auto p-6 flex flex-col md:flex-row gap-8 mt-25 bg-bg-main">
+
         <div className="flex flex-col md:flex-row gap-4 flex-1">
-          <div className="order-1 md:order-2 flex-1 flex items-center justify-center rounded-lg p-2">
+
+          <div className="order-1 md:order-2 flex-1 flex items-center justify-center rounded-lg p-2 bg-bg-main relative">
+
+            {isOutOfStock && (
+              <div className="absolute top-4 left-4 bg-danger text-white px-3 py-1 rounded text-sm">
+                Out of Stock
+              </div>
+            )}
+
             <img
               src={mainImage}
               alt={product.name}
-              className="w-full h-[400px] md:h-[500px] object-contain rounded-lg"
+              className="w-full h-[400px] md:h-[500px] object-contain rounded-lg opacity-100"
             />
           </div>
 
-          <div className="order-2 md:order-1 flex flex-row md:flex-col gap-10 lg:gap-2 mt-3 md:mt-0">
+          <div className="order-2 md:order-1 flex flex-row md:flex-col gap-4 mt-3 md:mt-0">
             {product.images.map((img, index) => (
               <img
                 key={index}
                 src={img}
                 alt={`${product.name}-${index}`}
-                className={`w-20 h-auto object-contain cursor-pointer rounded border-2 ${
-                  mainImage === img ? "border-pink-500" : "border-gray-200"
+                className={`w-20 cursor-pointer rounded border-2 ${
+                  mainImage === img ? "border-border-primary" : "border-border-light"
                 }`}
                 onClick={() => setMainImage(img)}
               />
             ))}
           </div>
+
         </div>
 
-        {/* Product Info Section */}
-        <div className="flex-1 flex flex-col mt-3">
+        <div className="flex-1 flex flex-col text-text-primary">
+
           <h1 className="text-3xl font-bold">{product.brand.name}</h1>
-          <p className="text-gray-400 mt-1 text-2xl">{product.name}</p>
+
+          <p className="text-text-muted mt-1 text-2xl">{product.name}</p>
 
           <p className="mt-4 text-3xl font-semibold">
             ₹{product.sellingPrice}{" "}
-            <span className="line-through text-gray-400 text-2xl ml-1">
+            <span className="line-through text-text-muted text-2xl ml-1">
               ₹{product.mrp}
             </span>{" "}
-            <span className="text-orange-500 ml-2">({product.discountPercentage}% OFF)</span>
+            <span className="text-warning ml-2">
+              ({product.discountPercentage}% OFF)
+            </span>
           </p>
 
-          {/* Sizes */}
           <div className="mt-6">
             <h2 className="font-bold mb-2 text-lg">SELECT SIZE</h2>
-            <div className="flex gap-2 flex-wrap mt-5 text-lg">
+
+            <div className="flex gap-2 flex-wrap mt-3">
               {sizes.map((size) => (
                 <button
                   key={size}
-                  className={`px-3 py-1 w-auto h-12 border rounded font-medium text-gray-800 ${
-                    selectedSize === size ? "text-pink-500 border-pink-600" : "border-gray-300 bg-white"
+                  className={`px-3 py-2 border rounded ${
+                    selectedSize === size
+                      ? "text-primary border-border-primary"
+                      : "border-border-light text-text-secondary"
                   }`}
                   onClick={() => setSelectedSize(size)}
                 >
@@ -190,72 +199,93 @@ const SingleProductPage = () => {
                 </button>
               ))}
             </div>
+
+            {/* {!selectedSize && (
+  <p className="text-red-500 text-sm mt-3">
+    Please select a size
+  </p>
+)} */}
           </div>
 
-          {/* Colors */}
           <div className="mt-4">
-            <h2 className="font-bold mb-2 text-lg mt-2">SELECT COLOR</h2>
-            <div className="flex gap-2 flex-wrap mt-4 text-lg">
+            <h2 className="font-bold mb-2 text-lg">SELECT COLOR</h2>
+
+            <div className="flex gap-2 flex-wrap mt-3">
               {colors.map((color) => (
                 <button
                   key={color}
-                  className={`px-4 py-2 border rounded font-medium text-gray-800 ${
-                    selectedColor === color ? "text-pink-500 border-pink-600" : "border-gray-300 bg-white"
+                  className={`px-4 py-2 border rounded ${
+                    selectedColor === color
+                      ? "text-primary border-border-primary"
+                      : "border-border-light text-text-secondary"
                   }`}
                   onClick={() => setSelectedColor(color)}
                 >
                   {color}
                 </button>
+                
               ))}
+              
             </div>
+            {/* {!selectedColor && (
+  <p className="text-red-500 text-sm mt-1">
+    Please select a color
+  </p>
+)} */}
           </div>
 
-          {/* Buttons */}
-          <div className="flex flex-col md:flex-row gap-4 mt-8 text-2xl">
+          <div className="flex flex-col md:flex-row gap-4 mt-8">
+
             <button
-              disabled={!selectedSize || !selectedColor || isInCart}
+              disabled={isOutOfStock || isInCart }
               onClick={handleAddToCart}
-              className={`flex-1 py-3 rounded text-white font-semibold transition-all duration-200 ${
-                isInCart
-                  ? "bg-green-500 cursor-not-allowed"
+              className={`flex-1 py-3 text-xl border border-border rounded font-semibold text-white ${
+                isOutOfStock
+                  ? "bg-border cursor-not-allowed"
+                  : isInCart
+                  ? "bg-success cursor-not-allowed"
                   : selectedSize && selectedColor
-                  ? "bg-pink-600 hover:bg-pink-700"
-                  : "bg-gray-400 cursor-not-allowed"
+                  ? "bg-primary hover:bg-primary-hover"
+                  : "bg-border cursor-not-allowed"
               }`}
             >
-              {isInCart ? "Added ✓" : "Add to Cart"}
+              {isOutOfStock
+                ? "OUT OF STOCK"
+                : isInCart
+                ? "ADDED TO CART"
+                : "ADD TO CART"}
             </button>
 
             <button
               onClick={handleWishlistToggle}
-              className="flex items-center justify-center gap-2 flex-1 py-3 rounded border border-gray-400 font-semibold bg-white hover:bg-gray-100 transition-all duration-200"
+              className="flex items-center justify-center gap-2 flex-1 py-3 border border-border text-xl rounded text-text-primary"
             >
               {liked ? (
-                <AiFillHeart className="text-red-500 text-2xl" />
+                <AiFillHeart className="text-danger text-2xl" />
               ) : (
-                <AiOutlineHeart className="text-gray-500 text-2xl" />
+                <AiOutlineHeart className="text-text-light text-2xl" />
               )}
-              {liked ? "Wishlisted" : "Wishlist"}
+              {liked ? "WISHLISTED" : "WISHLIST"}
+
             </button>
+
           </div>
 
           <div className="mt-6">
-            <h2 className="font-semibold mb-2">Product Description</h2>
-            <p className="text-gray-700">{product.description}</p>
+            <h2 className="font-semibold mb-2">Description</h2>
+            <p className="text-text-secondary">{product.description}</p>
           </div>
 
         </div>
-
       </div>
-       <div className="max-w-7xl mx-auto px-6 transition-height">
-  <ReviewSection productId={id} />
-</div>
-<footer>
-   <Footer/>
-</footer>
+
+      <div className="max-w-7xl mx-auto px-6">
+        <ReviewSection productId={id} />
+      </div>
+
+      <Footer />
     </>
   );
 };
 
 export default SingleProductPage;
-

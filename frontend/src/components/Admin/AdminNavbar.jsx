@@ -11,11 +11,10 @@ const AdminNavbar=()=>{
         </div>
         <div className="lg:flex-5 bg-amber-900 hidden lg:block md:block"></div>
         <div className="lg:flex-4 flex-3 flex items-center justify-center ">
-          {/* <SearchBar/> */}
+        
         </div>
         <div className="flex-2 ">
-{/* 
-          <NavbarIcons/> */}
+
         </div>
         
      </div>

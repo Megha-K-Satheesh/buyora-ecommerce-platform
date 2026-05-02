@@ -1,3 +1,5 @@
+
+
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -94,10 +96,10 @@ const EditBanner = () => {
     <>
       <AdminOutletHead heading={"EDIT BANNER"} />
 
-      <div className="flex justify-center items-start min-h-screen bg-gradient-to-br from-pink-50 to-white py-10">
-        <div className="bg-white shadow-xl rounded-3xl lg:w-[40%] w-[95%] px-6 py-8 border border-gray-100">
+      <div className="flex justify-center items-start min-h-screen bg-bg-soft py-10">
+        <div className="bg-bg-main shadow-xl rounded-3xl lg:w-[40%] w-[95%] px-6 py-8 border border-border-light">
 
-          <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">
+          <h1 className="text-3xl font-semibold text-center text-text-primary mb-6">
             Edit Banner
           </h1>
 
@@ -111,27 +113,39 @@ const EditBanner = () => {
 
             <FormInput label="Subtitle" {...register("subtitle")} />
 
-            <select {...register("type")} className="input">
+            <select
+              {...register("type")}
+              className="input bg-bg-main border border-border text-text-secondary focus:ring-primary"
+            >
               <option value="hero">Hero</option>
               <option value="promo">Promo</option>
               <option value="category">Category</option>
               <option value="offer">Offer</option>
             </select>
 
-            <select {...register("page")} className="input">
+            <select
+              {...register("page")}
+              className="input bg-bg-main border border-border text-text-secondary focus:ring-primary"
+            >
               <option value="home">Home</option>
               <option value="men">Men</option>
               <option value="women">Women</option>
               <option value="kids">Kids</option>
             </select>
 
-            <select {...register("section")} className="input">
+            <select
+              {...register("section")}
+              className="input bg-bg-main border border-border text-text-secondary focus:ring-primary"
+            >
               <option value="home_top">Home Top</option>
               <option value="home_trending">Trending</option>
               <option value="home_slider">Slider</option>
             </select>
 
-            <select {...register("redirectType")} className="input">
+            <select
+              {...register("redirectType")}
+              className="input bg-bg-main border border-border text-text-secondary focus:ring-primary"
+            >
               <option value="url">URL</option>
               <option value="category">Category</option>
               <option value="product">Product</option>
@@ -141,7 +155,10 @@ const EditBanner = () => {
             <FormInput label="Discount" {...register("discountText")} />
             <FormInput label="Order" type="number" {...register("order")} />
 
-            <select {...register("isActive")} className="input">
+            <select
+              {...register("isActive")}
+              className="input bg-bg-main border border-border text-text-secondary focus:ring-primary"
+            >
               <option value="true">Active</option>
               <option value="false">Inactive</option>
             </select>

@@ -29,7 +29,7 @@ const AdminOrderView = () => {
   }, [dispatch, orderId]);
 
   if (loading) return <p className="text-center mt-10">Loading order...</p>;
-  if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
+  if (error) return <p className="text-center mt-10 text-danger">{error}</p>;
   if (!singleOrder) return null;
 
   const {
@@ -72,7 +72,7 @@ const AdminOrderView = () => {
         {items.map((item) => (
           <div
             key={`${item.productId}-${item.variantId}`}
-            className="flex bg-white rounded-xl shadow p-4"
+            className="flex bg-bg-main rounded-xl shadow p-4"
           >
             <img
               src={item.productId?.images?.[0] || "/placeholder.png"}
@@ -82,7 +82,7 @@ const AdminOrderView = () => {
 
             <div className="ml-5 flex-1">
               <h4 className="font-semibold">{item.name}</h4>
-              <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+              <p className="text-sm text-text-muted">Qty: {item.quantity}</p>
               <p className="text-sm">Price: ₹{item.price}</p>
               <p className="text-sm font-medium">
                 Total: ₹{item.price * item.quantity}
@@ -96,17 +96,17 @@ const AdminOrderView = () => {
              
               <div className="mt-2">
                 {item.status === "DELIVERED" && (
-                  <span className="text-green-600 text-sm font-medium">
+                  <span className="text-success text-sm font-medium">
                     Delivered
                   </span>
                 )}
                 {item.status === "CANCELLED" && (
-                  <span className="text-red-500 text-sm font-medium">
+                  <span className="text-danger text-sm font-medium">
                     Cancelled
                   </span>
                 )}
                 {item.status === "RETURN_REQUESTED" && (
-                  <span className="text-yellow-600 text-sm font-medium">
+                  <span className=" text-sm font-medium">
                     Return Requested
                   </span>
                 )}
@@ -120,14 +120,14 @@ const AdminOrderView = () => {
       <div className="grid md:grid-cols-2 gap-6 mb-6">
 
       
-        <div className="bg-white p-5 rounded-xl shadow">
+        <div className="bg-bg-main p-5 rounded-xl shadow">
           <h3 className="font-semibold mb-3">Order Summary</h3>
           <p>Total Amount: ₹{totalAmount}</p>
           <p>Status: {orderStatus}</p>
           <p>Payment: {paymentStatus}</p>
         </div>
 
-        <div className="bg-white p-5 rounded-xl shadow">
+        <div className="bg-bg-main p-5 rounded-xl shadow">
           <h3 className="font-semibold mb-3">Shipping Address</h3>
 
           {shippingAddress ? (
@@ -151,7 +151,7 @@ const AdminOrderView = () => {
       <div className="text-center">
         <button
           onClick={() => navigate("/admin-dashboard/orders")}
-          className="px-5 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
+          className="px-5 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover"
         >
           Back to Orders
         </button>

@@ -1,79 +1,4 @@
 
-
-// import {
-//   Cell,
-//   Legend,
-//   Pie,
-//   PieChart,
-//   ResponsiveContainer,
-//   Tooltip
-// } from "recharts";
-
-// // const COLORS = ["#ff3f6c", "#ff7a9a", "#9c27b0", "#ffc107", "#4caf50"];
-// const COLORS = [
-//   "#22c55e", // delivered - green
-//   "#ef4444", // cancelled - red
-//   "#f59e0b", // pending - orange
-//   "#3b82f6", // shipped - blue
-//   "#8b5cf6"  // returned - purple
-// ];
-// const renderLabel = ({ percent }) =>
-//   `${(percent * 100).toFixed(0)}%`;
-
-// const OrderStatusPieChart = ({ data }) => {
-//   return (
-//     <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
-
-//       <div className="flex items-center justify-between mb-5">
-//         <h2 className="text-lg font-semibold text-gray-800">
-//           Order Status Distribution
-//         </h2>
-//       </div>
-
-//       <ResponsiveContainer width="100%" height={320}>
-
-//         <PieChart>
-
-//           <Pie
-//             data={data}
-//             dataKey="count"
-//             nameKey="status"
-//             cx="50%"
-//             cy="50%"
-//             innerRadius={70}
-//             outerRadius={110}
-//             labelLine={false}
-//             label={renderLabel}
-//           >
-
-//             {data?.map((entry, index) => (
-//               <Cell
-//                 key={index}
-//                 fill={COLORS[index % COLORS.length]}
-//               />
-//             ))}
-
-//           </Pie>
-
-//           <Tooltip />
-
-//           <Legend
-//             verticalAlign="bottom"
-//             height={36}
-//             iconType="circle"
-//           />
-
-//         </PieChart>
-
-//       </ResponsiveContainer>
-
-//     </div>
-//   );
-// };
-
-// export default OrderStatusPieChart;
-
-
 import {
   Cell,
   Pie,
@@ -104,16 +29,16 @@ const renderLabel = ({ percent }) =>
 
 const OrderStatusPieChart = ({ data }) => {
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-lg">
+    <div className="bg-bg-main p-6 rounded-2xl shadow-lg">
 
-      <h2 className="text-lg font-semibold text-gray-800 mb-6">
+      <h2 className="text-lg font-semibold text-text-primary mb-6">
         Order Status Distribution
       </h2>
 
-      <div className="flex items-center">
+      <div className="flex flex-col md:flex-row items-center">
 
-        {/* LEFT SIDE → PIE CHART */}
-        <div className="w-2/2 h-[320px]">
+        {/* PIE CHART */}
+        <div className="w-full md:w-1/2 h-[260px] sm:h-[300px] md:h-[320px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
 
@@ -123,8 +48,8 @@ const OrderStatusPieChart = ({ data }) => {
                 nameKey="status"
                 cx="50%"
                 cy="50%"
-                innerRadius={80}
-                outerRadius={120}
+                innerRadius={50}   // smaller for mobile
+                outerRadius={90}   // smaller for mobile
                 labelLine={false}
                 label={renderLabel}
               >
@@ -142,32 +67,32 @@ const OrderStatusPieChart = ({ data }) => {
           </ResponsiveContainer>
         </div>
 
-        {/* RIGHT SIDE  CUSTOM LEGEND */}
-        <div className="w-1/2 flex flex-col gap-3 pl-8">
+        {/* LEGEND */}
+        <div className="w-full md:w-1/2 flex flex-col gap-3 mt-6 md:mt-0 md:pl-8">
 
           {data?.map((item, index) => (
             <div
               key={index}
-              className="flex items-center justify-between  text-sm"
+              className="flex items-center justify-between text-sm"
             >
 
               <div className="flex items-center gap-3">
 
                 <span
-                  className="w-7 h-7 rounded-full"
+                  className="w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 rounded-full"
                   style={{
                     backgroundColor:
                       STATUS_COLORS[item.status] || "#9ca3af"
                   }}
                 />
 
-                <span className="text-gray-700 font-medium">
+                <span className="text-text-muted font-medium text-xs sm:text-sm md:text-base">
                   {item.status.replaceAll("_", " ")}
                 </span>
 
               </div>
 
-              <span className="font-semibold text-gray-800 ">
+              <span className="font-semibold text-text-muted text-xs sm:text-sm md:text-base">
                 {item.count}
               </span>
 

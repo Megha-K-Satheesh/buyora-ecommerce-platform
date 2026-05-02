@@ -8,18 +8,31 @@ class BaseController {
     };
   }
 
+  // static validateRequest(schema, data) {
+  //   const { error, value } = schema.validate(data, { abortEarly: false });
+    
+  //   if (error) {
+  //     throw {
+  //       name: 'ValidationError',
+  //       details: error.details
+  //     };
+  //   }
+    
+  //   return value;
+  // }
   static validateRequest(schema, data) {
-    const { error, value } = schema.validate(data, { abortEarly: false });
-    
-    if (error) {
-      throw {
-        name: 'ValidationError',
-        details: error.details
-      };
-    }
-    
-    return value;
+  const { error, value } = schema.validate(data, { abortEarly: false,    stripUnknown: true });
+
+  if (error) {
+    const err = new Error(error.details[0].message);
+    err.name = "ValidationError";
+    err.statusCode = 400;
+    err.details = error.details;
+    throw err;
   }
+
+  return value;
+}
 
   static handleValidationError(res, error) {
     return sendValidationError(res, { error });

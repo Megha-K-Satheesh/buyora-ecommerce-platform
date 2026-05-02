@@ -23,11 +23,7 @@ const SideMenu = ()=>{
                     Address
                 </NavLink>
               </li>
-              <li className="my-1">
-                <NavLink to="change-password" className={linkClass}>
-                    Change Password
-                </NavLink>
-              </li>
+              
             <li className="text-sm lg:text-xl text-gray-300  my-4">SHOPPING</li>
               <li className="my-1">
                 <NavLink to="all-orders" className={linkClass}>
@@ -55,18 +51,18 @@ const SideMenu = ()=>{
               <li>
                 <button
                   
-                  className="block w-full text-left  py-3 rounded-lg hover:text-red-600 text-lg"
+                  className="block w-full text-left  py-3 rounded-lg hover:text-danger text-lg"
                 >
                   Logout
                 </button>
              </li>
 
              <li>
-                <button
+                {/* <button
                   
                   className="block w-full text-left  py-1 rounded-lg  hover:text-red-600 text-lg"   >
                   Delete Account
-                </button>
+                </button> */}
             </li>
 
         </ul>

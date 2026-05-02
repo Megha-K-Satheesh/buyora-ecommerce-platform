@@ -46,37 +46,35 @@ const OrderSuccessPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-pink-50 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-bg-soft flex items-center justify-center p-6">
 
       <motion.div
         initial={{ opacity: 0, scale: 0.8, y: 40 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white rounded-3xl shadow-2xl p-8 max-w-xl w-full text-center"
+        className="bg-bg-main rounded-3xl shadow-2xl p-8 max-w-xl w-full text-center"
       >
 
-        {/* Success Icon */}
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 200 }}
           className="flex justify-center mb-6"
         >
-          <div className="bg-green-100 text-green-600 w-20 h-20 rounded-full flex items-center justify-center text-4xl">
+          <div className="bg-success text-white w-20 h-20 rounded-full flex items-center justify-center text-4xl">
             ✓
           </div>
         </motion.div>
 
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl font-bold text-text-secondary mb-2">
           Order Confirmed!
         </h1>
 
-        <p className="text-gray-500 mb-6">
+        <p className="text-text-muted mb-6">
           Your payment was successful and your order has been placed.
         </p>
 
-        {/* Order Info */}
-        <div className="bg-gray-50 rounded-xl p-6 text-left space-y-3 mb-6 ">
+        <div className="bg-bg-muted rounded-xl p-6 text-left space-y-3 mb-6 ">
 
           <div className="flex justify-between">
             <span>Order Number</span>
@@ -94,34 +92,21 @@ const OrderSuccessPage = () => {
 
           <div className="flex justify-between">
             <span>Payment Status</span>
-            <span className="text-green-600 font-semibold">
+            <span className="text-success font-semibold">
               {singleOrder.paymentStatus}
             </span>
           </div>
 
           <div className="flex justify-between">
             <span>Order Status</span>
-            <span className="text-blue-600 font-semibold">
+            <span className="text-primary font-semibold">
               {singleOrder.orderStatus}
             </span>
           </div>
 
         </div>
 
-        {/* Message
-        <div className="bg-pink-50 border border-pink-200 rounded-lg p-4 mb-6 text-sm">
-           Your order is being prepared and will be shipped soon.
-        </div> */}
-
-        {/* Buttons */}
         <div className="flex flex-col gap-3">
-{/* 
-          <Button
-            onClick={() => navigate(`/order/${singleOrder.orderId}`)}
-            className="w-full"
-          >
-            Track Order
-          </Button> */}
 
           <Button
             onClick={() => navigate("/all-orders")}
