@@ -266,3 +266,4 @@ useEffect(() => {
 }
 
 export default EditProduct
+

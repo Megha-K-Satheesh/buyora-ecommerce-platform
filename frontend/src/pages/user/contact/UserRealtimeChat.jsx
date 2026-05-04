@@ -170,7 +170,7 @@ useEffect(() => {
                       <div
                         className={`
                           max-w-[85%] sm:max-w-[70%]
-                          px-3 sm:px-4 py-2
+                          px-3 sm:px-4 py-2 mt-5
                           text-[15px]
                           shadow-sm break-words
 

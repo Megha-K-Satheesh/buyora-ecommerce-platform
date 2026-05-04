@@ -16,7 +16,7 @@ const AllOrdersPage = () => {
     dispatch(getAllOrders());
   }, [dispatch]);
 
-  if (loading) return <p className="text-center mt-10"><Loader/></p>;
+  if (loading) return <div className="text-center mt-10"><Loader/></div>;
   if (error) return <p className="text-center mt-10 text-danger">{error}</p>;
   if (!allOrders || allOrders.length === 0)
     return <p className="text-center mt-10">No orders found.</p>;

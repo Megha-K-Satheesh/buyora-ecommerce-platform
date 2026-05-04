@@ -59,7 +59,7 @@ const updateProductValidation = Joi.object({
 stock: Joi.number().min(0).optional(),
 attributes: Joi.array().items(variationSchema).optional(),
  
-
+existingImages: Joi.array().items(Joi.string()).optional(),
   mrp: Joi.number().min(0).optional(),
 
   sellingPrice: Joi.number().min(0).optional(),

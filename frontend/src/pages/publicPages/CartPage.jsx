@@ -22,6 +22,7 @@ const CartPage = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   const {
+    couponLoading,
     cartItems,
     appliedCoupon,
     discountAmount,
@@ -65,7 +66,7 @@ const CartPage = () => {
     if (quantity < 1) return;
 
     dispatch(updateCartQuantity({ variationId, quantity }));
-    if (!isAuthenticated) {
+    if (!isAuthenticated ) {
       dispatch(clearCoupon());
     }
   };
@@ -230,7 +231,7 @@ const CartPage = () => {
               onClick={handleApplyCoupon}
               disabled={loading}
             >
-              {loading ? "Applying..." : "Apply"}
+              {couponLoading ? "Applying..." : "Apply"}
             </button>
           </div>
 

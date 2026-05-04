@@ -128,6 +128,7 @@ const cartSlice = createSlice({
   finalAmount: 0,
   isApplied:false,
   loading: false,
+   couponLoading: false,
   error: null,
   },
   reducers: {
@@ -258,6 +259,7 @@ state.finalAmount = action.payload?.finalAmount || 0;
     state.error = action.payload;
   })
    .addCase(verifyCoupon.pending, (state) => {
+      state.couponLoading = true
           state.loading = true;
           state.error = null;
         })
@@ -265,6 +267,7 @@ state.finalAmount = action.payload?.finalAmount || 0;
       
         .addCase(verifyCoupon.fulfilled, (state, action) => {
           state.loading = false;
+           state.couponLoading = false
           state.appliedCoupon= action.payload.appliedCoupon;
           state.discountAmount = action.payload.discountAmount;
           state.finalAmount = action.payload.finalAmount;
@@ -272,6 +275,7 @@ state.finalAmount = action.payload?.finalAmount || 0;
         })
   
         .addCase(verifyCoupon.rejected, (state, action) => {
+            state.couponLoading = false
           state.loading = false;
           state.error = action.payload;
           state.appliedCoupon = null;

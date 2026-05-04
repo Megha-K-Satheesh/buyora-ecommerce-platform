@@ -42,7 +42,7 @@ class CartService {
     cart.discountAmount = 0;
   
      cart.finalAmount = cart.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-
+    console.log("ccccccccccccccc",cart)
     await cart.save();
     return cart;
   }

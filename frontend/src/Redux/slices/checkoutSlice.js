@@ -20,27 +20,6 @@ export const getOrderSummary = createAsyncThunk(
 );
 
 
-// export const placeOrder = createAsyncThunk(
-//   "checkout/placeOrder",
-//   async (payload, thunkAPI) => {
-//     try {
-//       const res = await checkoutService.placeOrder(payload);
-//       return res.data.data;
-
-//     } catch (err) {
-//       console.log("FULL ERROR:", err);
-//       console.log("BACKEND ERROR:", err.response?.data);
-//       return thunkAPI.rejectWithValue(
-//         err.response?.data?.error?.message ||
-//         err.response?.data?.message ||
-//         err.message ||
-//         "Order failed"
-        
-//       );
-      
-//     }
-//   }
-// );
 export const placeOrder = createAsyncThunk(
   "checkout/placeOrder",
   async (payload, thunkAPI) => {

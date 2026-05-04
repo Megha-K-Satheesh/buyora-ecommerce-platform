@@ -211,7 +211,7 @@ const ProductListingPage = () => {
             <div className="border-t border-border">
 
               {loading ? (
-                <p className="text-text-muted"><Loader/></p>
+                <div className="text-text-muted"><Loader/></div>
               ) : (
                 <ProductGrid products={products} />
               )}

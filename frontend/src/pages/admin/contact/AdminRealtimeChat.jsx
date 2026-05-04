@@ -150,7 +150,7 @@ const AdminRealtimeChat = () => {
                     }`}
                   >
                     <div
-                      className={`max-w-[85%] sm:max-w-[70%] px-3 sm:px-4 py-2 text-[15px] shadow-sm break-words ${
+                      className={`max-w-[85%] sm:max-w-[70%] px-3 mt-5 sm:px-4 py-2 text-[15px] shadow-sm break-words ${
                         isAdmin
                           ? "bg-bg-soft rounded-l-2xl rounded-tr-2xl text-text-primary"
                           : "bg-white rounded-r-2xl rounded-tl-2xl text-text-secondary"

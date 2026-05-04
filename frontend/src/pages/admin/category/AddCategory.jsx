@@ -26,7 +26,7 @@ const AddCategoryForm = () => {
   } = useForm({
     defaultValues: {
       name: "",
-      parentId: "",
+      parentId: null,
       status:"active",
       isVisible: true,
       allowedAttributes: []
@@ -66,6 +66,7 @@ const AddCategoryForm = () => {
     try {
       const formattedData = {
         ...data,
+         parentId: data.parentId || null,
         allowedAttributes:
           parentLevel === 1
             ? data.allowedAttributes.map(attr => ({

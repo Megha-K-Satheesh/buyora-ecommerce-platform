@@ -97,7 +97,7 @@ const WishlistPage = () => {
     dispatch(removeFromWishlist(item._id));
   };
 
-  if (loading) return <p className="text-center mt-10"><Loader/></p>;
+  if (loading) return <div className="text-center mt-10"><Loader/></div>;
   if (error) return <p className="text-center mt-10 text-danger">{error}</p>;
   if (wishlist.length === 0)
     return <p className="text-center mt-10">Your wishlist is empty</p>;

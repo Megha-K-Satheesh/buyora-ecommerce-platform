@@ -14,6 +14,7 @@ import { getAddresses } from "../../../Redux/slices/userSlice";
 import Button from "../../../components/ui/Button";
 import { showInfo } from "../../../components/ui/Toastify";
 import { openRazorpay } from "../../../utils/razorpay";
+import Loader from "../../../components/ui/Loader";
 const CheckoutPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -218,7 +219,7 @@ const CheckoutPage = () => {
         <h2 className="text-lg font-bold mb-4 text-text-primary">Price Details</h2>
 
         {checkoutLoading ? (
-          <p>Loading summary...</p>
+          <div><Loader/></div>
         ) : (
           <>
             {items.map((item) => (

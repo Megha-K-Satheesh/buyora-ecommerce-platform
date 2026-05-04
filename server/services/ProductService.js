@@ -2,7 +2,9 @@
 
 
 
-const cloudinary = require('../config/cloudinaryConfig');
+const { S3, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+
+const { uploadToS3, s3 } = require('../config/s3Service');
 const Category = require('../models/admin/Category');
 const Product = require('../models/admin/Product');
 
@@ -13,24 +15,16 @@ class ProductService {
     const { name, description, brand, category, mrp, sellingPrice, stock, attributes,status,isVisible } = body;
 
 
-     console.log(brand)
      
-    const images = [];
-    for (const file of files) {
-      const result = await new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: 'products' },
-          (err, result) => {
-            if (err) return reject(err);
-            resolve(result);
-          }
-        );
-        stream.end(file.buffer);
-      });
+     
+    
+    
 
-      images.push(result.secure_url);
-    }
 
+
+const images = await Promise.all(
+  files.map(file => uploadToS3(file))
+);
     const discountPercentage = mrp && sellingPrice ? Math.round(((mrp - sellingPrice) / mrp) * 100) : 0;
 
     const parsedAttributes = attributes 
@@ -109,8 +103,11 @@ class ProductService {
   }
 
 
-  static async updateProduct({ id, body, files }) {
 
+
+static async updateProduct({ id, body, files }) {
+
+  
   const product = await Product.findById(id);
   if (!product) throw new Error("Product not found");
 
@@ -128,43 +125,65 @@ class ProductService {
     existingImages
   } = body;
 
-  const parsedExistingImages = existingImages
+
+const parsedExistingImages = Array.isArray(existingImages)
+  ? existingImages
+  : existingImages
     ? JSON.parse(existingImages)
     : [];
+
+ 
+ 
+
 
   const imagesToDelete = product.images.filter(
     (img) => !parsedExistingImages.includes(img)
   );
 
+  
+
+  const getKeyFromUrl = (url) => {
+    try {
+      return decodeURIComponent(new URL(url).pathname.substring(1));
+    } catch (err) {
+      console.log("Invalid URL:", url);
+      return null;
+    }
+  };
+
   for (const imageUrl of imagesToDelete) {
-    const publicId = imageUrl
-      .split("/")
-      .slice(-2)
-      .join("/")
-      .split(".")[0];
+    const Key = getKeyFromUrl(imageUrl);
 
-    await cloudinary.uploader.destroy(publicId);
-  }
+    if (!Key) continue;
 
-  const newImages = [];
-  if (files && files.length > 0) {
-    for (const file of files) {
-      const result = await new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: "products" },
-          (err, result) => {
-            if (err) return reject(err);
-            resolve(result);
-          }
-        );
-        stream.end(file.buffer);
-      });
+    try {
+      await s3.send(
+        new DeleteObjectCommand({
+          Bucket: process.env.AWS_BUCKET_NAME,
+          Key
+        })
+      );
 
-      newImages.push(result.secure_url);
+      console.log("Deleted from S3:", Key);
+    } catch (err) {
+      console.log("S3 delete error:", err.message);
     }
   }
 
-  const finalImages = [...parsedExistingImages, ...newImages];
+ 
+  const newImages = files?.length
+    ? await Promise.all(files.map(file => uploadToS3(file)))
+    : [];
+
+ 
+  
+  const finalImages = [
+    ...parsedExistingImages,
+    ...newImages
+  ];
+
+
+
 
   const updatedMrp = mrp ?? product.mrp;
   const updatedSellingPrice = sellingPrice ?? product.sellingPrice;
@@ -173,6 +192,7 @@ class ProductService {
     updatedMrp && updatedSellingPrice
       ? Math.round(((updatedMrp - updatedSellingPrice) / updatedMrp) * 100)
       : 0;
+
 
   const parsedVariations = attributes
     ? typeof attributes === "string"
@@ -184,6 +204,7 @@ class ProductService {
     (sum, v) => sum + Number(v.stock || 0),
     0
   );
+
 
   product.name = name ?? product.name;
   product.description = description ?? product.description;
@@ -201,8 +222,11 @@ class ProductService {
 
   await product.save();
 
+
+
   return product;
 }
+
 
 
 static async deleteProduct(id) {
@@ -210,22 +234,33 @@ static async deleteProduct(id) {
   const product = await Product.findById(id);
   if (!product) throw new Error("Product not found");
 
+ 
   for (const imageUrl of product.images) {
-    const publicId = imageUrl
-      .split("/")
-      .slice(-2)
-      .join("/")
-      .split(".")[0];
 
-    await cloudinary.uploader.destroy(publicId);
+    try {
+      const key = decodeURIComponent(
+        new URL(imageUrl).pathname.substring(1)
+      );
+
+      await s3.send(
+        new DeleteObjectCommand({
+          Bucket: process.env.AWS_BUCKET_NAME,
+          Key: key
+        })
+      );
+
+      console.log("Deleted from S3:", key);
+
+    } catch (err) {
+      console.log("S3 delete error:", err.message);
+    }
   }
+
 
   await Product.findByIdAndDelete(id);
 
   return { message: "Product deleted successfully" };
 }
-
-
 
   }
 

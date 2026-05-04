@@ -24,7 +24,7 @@ const SingleOrderPage = () => {
     return () => dispatch(clearOrderState());
   }, [dispatch, orderId]);
 
-  if (loading) return <p className="text-center mt-10"><Loader/></p>;
+  if (loading) return <div className="text-center mt-10"><Loader/></div>;
   if (error) return <p className="text-center mt-10 text-danger">{error}</p>;
   if (!singleOrder) return null;
 

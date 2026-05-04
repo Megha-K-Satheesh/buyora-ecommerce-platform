@@ -218,11 +218,11 @@ mrpSubtotal: {
 
 
 
-orderSchema.pre("save", function (next) {
+orderSchema.pre("save", function () {
   if (!this.orderNumber) {
     this.orderNumber = `ORD-${nanoid(8).toUpperCase()}`;
   }
-  next();
+  // next()
 });
 
 

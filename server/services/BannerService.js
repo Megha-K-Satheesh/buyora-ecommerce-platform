@@ -1,5 +1,8 @@
-import cloudinary from "../config/cloudinaryConfig.js";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { s3, uploadToS3 } from "../config/s3Service.js";
 import Banner from "../models/admin/Banner.js";
+import { ErrorFactory } from "../utils/errors.js";
+
 
 class BannerService {
   static async addBanner({ body, file }) {
@@ -21,19 +24,10 @@ class BannerService {
     } = body;
 
     if (!file) {
-      throw new Error("Image is required");
+      throw ErrorFactory.notFound("Image is required");
     }
+  const imageUrl = await uploadToS3(file);
 
-    const result = await new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        { folder: "banners" },
-        (err, result) => {
-          if (err) return reject(err);
-          resolve(result);
-        }
-      );
-      stream.end(file.buffer);
-    });
 
     const banner = new Banner({
       title,
@@ -50,7 +44,7 @@ class BannerService {
       order: order ?? 0,
       startDate,
       endDate,
-      image: result.secure_url,
+      image: imageUrl,
     });
 
     await banner.save();
@@ -106,74 +100,74 @@ class BannerService {
 }
 
 
-  static async updateBanner({ id, body, file }) {
-    const banner = await Banner.findById(id);
-    if (!banner) throw new Error("Banner not found");
+static async updateBanner({ id, body, file }) {
 
-    let imageUrl = banner.image;
+  const banner = await Banner.findById(id);
+  if (!banner) throw new Error("Banner not found");
 
-    if (file) {
-      const publicId = banner.image
-        .split("/")
-        .slice(-2)
-        .join("/")
-        .split(".")[0];
+  let imageUrl = banner.image;
 
-      await cloudinary.uploader.destroy(publicId);
+  if (file) {
 
-      const result = await new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: "banners" },
-          (err, result) => {
-            if (err) return reject(err);
-            resolve(result);
-          }
-        );
-        stream.end(file.buffer);
-      });
+   
+    const oldKey = decodeURIComponent(
+      new URL(banner.image).pathname.substring(1)
+    );
 
-      imageUrl = result.secure_url;
-    }
+    await s3.send(
+      new DeleteObjectCommand({
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: oldKey,
+      })
+    );
 
-    Object.assign(banner, {
-      title: body.title ?? banner.title,
-      subtitle: body.subtitle ?? banner.subtitle,
-      type: body.type ?? banner.type,
-      page: body.page ?? banner.page,
-      section: body.section ?? banner.section,
-      sliderId: body.sliderId ?? banner.sliderId,
-      redirectType: body.redirectType ?? banner.redirectType,
-      redirectValue: body.redirectValue ?? banner.redirectValue,
-      discountText: body.discountText ?? banner.discountText,
-      isActive: body.isActive ?? banner.isActive,
-      isVisible: body.isVisible ?? banner.isVisible,
-      order: body.order ?? banner.order,
-      startDate: body.startDate ?? banner.startDate,
-      endDate: body.endDate ?? banner.endDate,
-      image: imageUrl,
-    });
-
-    await banner.save();
-    return banner;
+   
+    imageUrl = await uploadToS3(file);
   }
 
-  static async deleteBanner(id) {
-    const banner = await Banner.findById(id);
-    if (!banner) throw new Error("Banner not found");
+  Object.assign(banner, {
+    title: body.title ?? banner.title,
+    subtitle: body.subtitle ?? banner.subtitle,
+    type: body.type ?? banner.type,
+    page: body.page ?? banner.page,
+    section: body.section ?? banner.section,
+    sliderId: body.sliderId ?? banner.sliderId,
+    redirectType: body.redirectType ?? banner.redirectType,
+    redirectValue: body.redirectValue ?? banner.redirectValue,
+    discountText: body.discountText ?? banner.discountText,
+    isActive: body.isActive ?? banner.isActive,
+    isVisible: body.isVisible ?? banner.isVisible,
+    order: body.order ?? banner.order,
+    startDate: body.startDate ?? banner.startDate,
+    endDate: body.endDate ?? banner.endDate,
+    image: imageUrl,
+  });
 
-    const publicId = banner.image
-      .split("/")
-      .slice(-2)
-      .join("/")
-      .split(".")[0];
+  await banner.save();
+  return banner;
+}
+  
+static async deleteBanner(id) {
 
-    await cloudinary.uploader.destroy(publicId);
+  const banner = await Banner.findById(id);
+  if (!banner) throw new Error("Banner not found");
 
-    await Banner.findByIdAndDelete(id);
 
-    return { message: "Banner deleted successfully" };
-  }
+  const key = decodeURIComponent(
+    new URL(banner.image).pathname.substring(1)
+  );
 
+  await s3.send(
+    new DeleteObjectCommand({
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: key,
+    })
+  );
+
+  await Banner.findByIdAndDelete(id);
+
+  return { message: "Banner deleted successfully" };
+}
   static async getBannerById(id) {
     const banner = await Banner.findById(id);
     if (!banner) throw new Error("Banner not found");

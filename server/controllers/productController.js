@@ -88,23 +88,26 @@ const validatedData = BaseController.validateRequest(
 
 
 
+
 static updateProduct = BaseController.asyncHandler(async (req, res) => {
 
   const { id } = req.params;
-
   BaseController.validateRequest(objectId, id);
 
-const dataToValidate = {
-  ...req.body,
-  attributes: req.body.attributes
-    ? JSON.parse(req.body.attributes)
-    : {},
+  let existingImages = req.body.existingImages;
 
-  existingImages: req.body.existingImages
-    ? JSON.parse(req.body.existingImages)
-    : []
-};
-console.log("DATA SEND TO JOI",dataToValidate)
+  if (typeof existingImages === "string") {
+    existingImages = JSON.parse(existingImages);
+  }
+
+  const dataToValidate = {
+    ...req.body,
+    attributes: req.body.attributes
+      ? JSON.parse(req.body.attributes)
+      : {},
+
+    existingImages: existingImages || []
+  };
 
   const validatedData = BaseController.validateRequest(
     updateProductValidation,
@@ -120,8 +123,6 @@ console.log("DATA SEND TO JOI",dataToValidate)
   BaseController.logAction("PRODUCT UPDATED", result);
   BaseController.sendSuccess(res, "PRODUCT UPDATED", result);
 });
-
-
   static deleteProduct = BaseController.asyncHandler(async (req, res) => {
   const { id } = req.params;
 

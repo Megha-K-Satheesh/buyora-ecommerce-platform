@@ -278,9 +278,7 @@ static async placeOrder(userId, data) {
         transactions: []
       });
     }
-//  if (wallet.balance < finalAmount) {
-//    throw ErrorFactory.conflict("Not enough wallet balance", "INSUFFICIENT_WALLET")
-//   }
+
 
     wallet.balance -= finalAmount;
 

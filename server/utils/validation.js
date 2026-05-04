@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const { resendOtp } = require('../services/AuthService');
 
-// const otpPurposeEnum = ['EMAIL_VERIFICATION', 'PASSWORD_RESET'];
+
 
 const commonPatterns = {
   name: Joi.string().min(2).max(100).trim().required(),
@@ -50,14 +50,6 @@ const loginValidation = Joi.object({
 
 const adminLoginValidation = loginValidation;
 
-// const profileUpdateValidation = Joi.object({
-//   name: commonPatterns.name.messages(customMessages),
-//   phone: Joi.string().pattern(/^\+?[\d\s\-\(\)]+$/).optional().messages({
-//     'string.pattern.base': 'Please provide a valid phone number'
-//   }),
-//   bio: Joi.string().max(500).optional(),
-//   avatar: Joi.string().uri().optional()
-// });
 
 const passwordChangeValidation = Joi.object({
   currentPassword: Joi.string().required().messages(customMessages),
@@ -75,23 +67,8 @@ const statusUpdateValidation = Joi.object({
   status: commonPatterns.status.required().messages(customMessages)
 });
 
-// const banUserValidation = Joi.object({
-//   reason: Joi.string().min(10).max(500).required().messages({
-//     'string.min': 'Ban reason must be at least 10 characters long',
-//     'string.max': 'Ban reason cannot exceed 500 characters',
-//     'any.required': 'Ban reason is required'
-//   })
-// });
 
-// const paginationValidation = Joi.object({
-//   page: Joi.number().integer().min(1).default(1),
-//   limit: Joi.number().integer().min(1).max(100).default(10),
-//   sortBy: Joi.string().valid('name', 'email', 'createdAt', 'updatedAt', 'lastLogin').default('createdAt'),
-//   sortOrder: Joi.string().valid('asc', 'desc').default('desc'),
-//   search: Joi.string().max(100).optional(),
-//   status: commonPatterns.status.optional(),
-//   role: commonPatterns.role.optional()
-// });
+
 
 const otpPattern = Joi.string()
   .length(6)
@@ -126,24 +103,13 @@ const verifyOtpValidation = Joi.object({
  
   });
   
-  //resendOtp
+
   const resendOtpValidation = Joi.object({
   userId: objectIdValidation,
   purpose: otpPurposeField
 });
    
-// const resetPasswordValidation = Joi.object({
-//   resetToken: Joi.string()
-//     .required()
-//     .messages({
-//       'any.required': 'Reset token is required',
-//       'string.empty': 'Reset token cannot be empty'
-//     }),
 
-//   newPassword: strongPasswordValidation.messages({
-//     'any.required': 'New password is required'
-//   })
-// });
 
 
 const resetPasswordValidation = Joi.object({
@@ -219,21 +185,7 @@ const forgotPasswordValidation = Joi.object({
   email:  commonPatterns.email.messages(customMessages)
 });
 
-// const baseOtpVerification = {
-//   otp: otpPattern,
-//   purpose: otpPurposeField
-// };
 
-// const verifyForgotOtpValidation = Joi.object({
-//   userId: commonPatterns.objectId
-//     .required()
-//     .messages({
-//       'string.pattern.base': 'Invalid user ID',
-//       'any.required': 'User ID is required'
-//     }),
-//   otp: otpPattern,
-//   purpose: Joi.string().valid('PASSWORD_RESET').required()
-// });
 
 const updateAddressValidation = Joi.object({
   fullName: Joi.string().min(2).optional(),
@@ -344,18 +296,17 @@ module.exports = {
   registerValidation,
   loginValidation,
   adminLoginValidation,
-  // profileUpdateValidation,
+
   passwordChangeValidation,
   statusUpdateValidation,
-  // banUserValidation,
-  // paginationValidation,
+  
   ValidationHelpers,
   commonPatterns,
   customMessages,
   strongPasswordValidation,
    resetPasswordValidation,
    forgotPasswordValidation,
-  // verifyForgotOtpValidation,
+
   verifyOtpValidation,
   resendOtpValidation,
   addAddressValidation,

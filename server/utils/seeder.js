@@ -11,10 +11,10 @@ const seedAdmin = async () => {
       const admin = new Admin({
         name: 'Admin',
         email: adminEmail,
-        password: process.env.ADMIN_PASSWORD || 'AAAAAA123',
+        password: process.env.ADMIN_PASSWORD || 'AAAAAA123897654',
         role: 'admin',
-       isVerified: Boolean,
-          lastLogin: Date
+        isVerified: true,
+    lastLogin: new Date()
       });
 
       await admin.save();

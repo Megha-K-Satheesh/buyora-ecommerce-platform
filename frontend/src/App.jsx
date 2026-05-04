@@ -11,8 +11,6 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 // Redux slices
-import { getCartBackend, setCart } from "./Redux/slices/cartSlice";
-import { getUserProfile } from "./Redux/slices/userSlice";
 
 // Protected routes
 import { AdminRoute, UserRoute } from "./components/protectedRoutes/ProtectedRoutes";
@@ -85,6 +83,8 @@ import NotFound from "./components/ui/NotFount";
 import ServerError from "./components/ui/ServerError";
 // import NavbarOrderLayout from "./layouts/OrderLayout";
 import Loader from "./components/ui/Loader";
+import { getCartBackend, setCart } from "./Redux/slices/cartSlice";
+import { getUserProfile } from "./Redux/slices/userSlice";
 import { connectSocket, listenUserStatus } from "./utils/socket";
 // import Brand from "./pages/admin/brand/Brand";
 // import UpdateBrand from "./pages/admin/brand/UpdateBrand";
