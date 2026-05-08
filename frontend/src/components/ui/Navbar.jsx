@@ -24,7 +24,7 @@ const Navbar=()=>{
           </button>
         </div>
           
-        <div className="flex-1 ">
+        <div className="flex-1   ">
           <Logo/>
         </div>
         <div className="lg:flex-5  hidden lg:block md:block">
@@ -34,7 +34,7 @@ const Navbar=()=>{
         <div className="lg:flex-4 flex-3 flex items-center justify-center ">
           <SearchBar/>
         </div>
-        <div className="flex-2 ">
+        <div className="flex-2  ">
 
           <NavbarIcons/>
         </div>

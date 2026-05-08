@@ -39,8 +39,8 @@ const FormInput = memo(
             type={type}
             placeholder={placeholder}
             className={` w-full border rounded-md px-3 py-1  lg:h-11  
-              placeholder:text-xl
-              text-xl
+              placeholder:text-[9px]
+              placeholder:lg:text-xl 
               focus:outline-none focus:ring-2 
 ${error ? 'border-red-600 focus:ring-red-500' : 'border-gray-300 focus:ring-pink-500'} ${className}`}
             {...props}

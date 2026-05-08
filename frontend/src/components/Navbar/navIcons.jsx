@@ -23,7 +23,7 @@ const NavbarIcons = () => {
 
       <Link to="/products/wishlist">
       <div className="flex flex-1 justify-center items-center mt-5  flex-col cursor-pointer ">
-        <FiHeart className="text-2xl" />
+        <FiHeart className="sm:text-2xl mt-1" />
         <span className="text-sm mt-1 font-medium hidden lg:block md:block">
           Wishlist
         </span>
@@ -37,11 +37,11 @@ const NavbarIcons = () => {
           className="relative flex flex-col items-center"
         >
           {/* Bag Icon */}
-          <FiShoppingBag className="text-2xl lg:text-3xl" />
+          <FiShoppingBag className="sm:text-2xl lg:text-3xl" />
 
           {/* Cart Badge */}
           {cartItems.length > 0 && (
-            <span className="absolute -top-2 -right-3 bg-danger text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
+            <span className="absolute lg:-top-2 lg:-right-3 -top-1 -right-2  bg-danger text-white lg:text-[10px] text-[6px] font-bold lg:w-5 lg:h-5 h-3 w-3 flex items-center justify-center rounded-full">
               {cartItems.length}
             </span>
           )}

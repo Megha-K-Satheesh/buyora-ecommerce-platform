@@ -3,12 +3,12 @@ import logo from "../../assets/BLogo.png";
 
 const Logo = ({ className = "" }) => {
   return (
-    <div className="h-full">
+    <div className="sm:h-20 w-auto sm:-mt-1 lg:-mt-7 ">
       <Link to="/">
         <img
           src={logo}
           alt="Buyors Logo"
-          className={`h-full w-full object-contain ${className}`}
+          className={`w-auto object-contain  ${className}`}
         />
       </Link>
     </div>

@@ -20,7 +20,9 @@ const setupMiddleware = (app) => {
     standardHeaders: true,
     legacyHeaders: false,
   });
-  const corsOptions = {
+
+ 
+ const corsOptions = {
     origin: config.CORS.ORIGIN,
     credentials: config.CORS.CREDENTIALS,
     optionsSuccessStatus: 200,

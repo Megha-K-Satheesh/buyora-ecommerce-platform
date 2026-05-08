@@ -77,9 +77,9 @@ const Sidebar = () => {
             const active = isActive(item.path);
 
             const base =
-              "lg:px-3 lg:py-2 my-4 mx-5 rounded-md duration-300 cursor-pointer flex gap-2 items-center relative group";
+              "lg:px-3 lg:py-2 my-5 mx-5 rounded-md duration-300 cursor-pointer flex gap-2 items-center relative group";
 
-            const activeStyle = "bg-primary text-white";
+           const activeStyle = "lg:bg-primary lg:text-white text-text-secondary";
             const normalStyle = "text-text-secondary hover:bg-bg-soft-hover";
 
             if (item.label === "Logout") {
@@ -89,7 +89,7 @@ const Sidebar = () => {
                   onClick={handleLogout}
                   className={`${base} text-danger hover:bg-danger/10`}
                 >
-                  <div className={`${active ? "text-white" : ""}`}>
+                  <div className={`${active ? "text-text-secondary lg:text-white" : ""} activeStyle`}>
                     {item.icon}
                   </div>
 
@@ -97,7 +97,7 @@ const Sidebar = () => {
                     className={`${
                       !open ? "w-0 translate-x-24" : "w-full"
                     } duration-500 overflow-hidden text-2xl ml-5 ${
-                      active ? "text-white" : "text-black"
+                      active ? "text-text-secondary lg:text-white": "text-black"
                     }`}
                   >
                     {item.label}
@@ -106,7 +106,7 @@ const Sidebar = () => {
                   {!open && (
                     <p
                       className={`absolute left-32 shadow-md rounded-md w-0 p-0 bg-white duration-100 overflow-hidden group-hover:w-fit group-hover:p-2 ${
-                        active ? "text-white bg-primary" : "text-black"
+                        active ? "text-text-secondary lg:text-white" : "text-black"
                       }`}
                     >
                       {item.label}
@@ -119,7 +119,7 @@ const Sidebar = () => {
             return (
               <Link to={item.path} key={index}>
                 <li className={`${base} ${active ? activeStyle : normalStyle}`}>
-                  <div className={`${active ? "text-white" : ""}`}>
+                  <div className={`${active ? "text-text-secondary lg:text-white " : ""}`}>
                     {item.icon}
                   </div>
 
@@ -127,7 +127,7 @@ const Sidebar = () => {
                     className={`${
                       !open ? "w-0 translate-x-24" : "w-full"
                     } duration-500 overflow-hidden text-2xl ml-5 ${
-                      active ? "text-white" : "text-black"
+                      active ? "text-text-secondary lg:text-white" : "text-black"
                     }`}
                   >
                     {item.label}
@@ -136,7 +136,7 @@ const Sidebar = () => {
                   {!open && (
                     <p
                       className={`absolute left-32 shadow-md rounded-md w-0 p-0 bg-white duration-100 overflow-hidden group-hover:w-fit group-hover:p-2 ${
-                        active ? "text-white bg-primary" : "text-black"
+                        active ? "text-text-secondary lg:text-white" : "text-black"
                       }`}
                     >
                       {item.label}
@@ -153,3 +153,6 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
+
+

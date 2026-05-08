@@ -75,27 +75,44 @@ const productSchema = new mongoose.Schema({
 },{timestamps:true})
 
 
-productSchema.pre('save',function(next){
-  if(!this.isModified("name")) return next();
-  this.slug = slugify(this.name,{
-    lower:true,
-    strict:true
-  })
-  next()
-})
 
 
-productSchema.pre("findOneAndUpdate", function (next) {
+
+// productSchema.pre("findOneAndUpdate", function (next) {
+//   const update = this.getUpdate();
+//   const name = update.name || update?.$set?.name;
+
+//   if (name) {
+//     const newSlug = slugify(name, { lower: true, strict: true });
+//     if (update.$set) update.$set.slug = newSlug;
+//     else update.slug = newSlug;
+//   }
+
+//   next();
+// });
+
+productSchema.pre('save', function () {
+  if (!this.isModified("name")) return;
+
+  this.slug = slugify(this.name, {
+    lower: true,
+    strict: true
+  });
+});
+
+productSchema.pre("findOneAndUpdate", function () {
   const update = this.getUpdate();
   const name = update.name || update?.$set?.name;
 
   if (name) {
     const newSlug = slugify(name, { lower: true, strict: true });
-    if (update.$set) update.$set.slug = newSlug;
-    else update.slug = newSlug;
-  }
 
-  next();
+    if (update.$set) {
+      update.$set.slug = newSlug;
+    } else {
+      update.slug = newSlug;
+    }
+  }
 });
 
 module.exports = mongoose.model("Product",productSchema)

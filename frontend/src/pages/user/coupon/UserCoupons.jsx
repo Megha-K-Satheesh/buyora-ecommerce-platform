@@ -37,7 +37,7 @@ const CouponsList = () => {
   return (
     <>
     <div className="lg:hidden block "><Navbar/></div>
-    <div className="max-w-4xl ml-20 py-8 px-4 mt-15">
+    <div className="max-w-4xl lg:ml-20 py-8 px-4 mt-15">
       <h2 className="text-3xl font-bold mb-8 text-text-secondary "> Coupons</h2>
 
       <div className="flex flex-col gap-6">

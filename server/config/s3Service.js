@@ -44,7 +44,7 @@ const testS3Connection = async () => {
 };
 
 testS3Connection();
-module.exports = {
+module.exports = { 
   s3,
   uploadToS3,
 };

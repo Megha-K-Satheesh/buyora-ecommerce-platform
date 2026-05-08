@@ -71,29 +71,31 @@ const categorySchema = new mongoose.Schema(
 );
 
 categorySchema.index({ parentId: 1, slug: 1 }, { unique: true });
-categorySchema.pre('save',function(next){
-  if(!this.isModified("name")) return next();
-  this.slug = slugify(this.name,{
-    lower:true,
-    strict:true
-  })
-  next()
-})
 
 
-categorySchema.pre("findOneAndUpdate", function (next) {
+categorySchema.pre("save", function () {
+  if (!this.isModified("name")) return;
+
+  this.slug = slugify(this.name, {
+    lower: true,
+    strict: true
+  });
+});
+
+categorySchema.pre("findOneAndUpdate", function () {
   const update = this.getUpdate();
   const name = update.name || update?.$set?.name;
 
   if (name) {
-    const newSlug = slugify(name, { lower: true, strict: true });
+    const newSlug = slugify(name, {
+      lower: true,
+      strict: true
+    });
+
     if (update.$set) update.$set.slug = newSlug;
     else update.slug = newSlug;
   }
-
-  next();
 });
-
 module.exports = mongoose.model("Category", categorySchema);
 
  

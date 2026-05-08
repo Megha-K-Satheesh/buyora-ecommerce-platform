@@ -27,7 +27,7 @@ const Wallet = () => {
      <div className="lg:hidden block">
       <Navbar/>
     </div>
-    <div className="max-w-4xl ml-20  p-4 mt-25">
+    <div className="max-w-4xl lg:ml-20  p-4 mt-25">
       <h1 className="text-3xl font-bold text-text-primary mb-6">
         My Wallet
       </h1>

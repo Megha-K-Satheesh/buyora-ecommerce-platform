@@ -6,7 +6,7 @@ import { getAdminToken } from "./authToken";
 
    const adminApiClient= axios.create({
     
-   baseURL:'http://localhost:5000/api/admin',
+   baseURL:`${import.meta.env.VITE_API_URL}/api/admin`,
    headers:{
     'Content-Type' :'application/json'
    }

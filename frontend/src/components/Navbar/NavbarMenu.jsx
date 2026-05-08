@@ -14,24 +14,26 @@ const NavbarMenu = () => {
 
   return (
     <nav className="lg:mt-5   ">
-      <div className="flex gap-8 px-10 py-4">
+      <div className="flex gap-8 px-16 py-4">
         {categories.map((level1) => (
           <div key={level1._id} className="relative group ">
             
             {/* LEVEL 1 */}
-            <span className="cursor-pointer font-semibold uppercase text-lg py-10 group-hover:underline group-hover:decoration-primary group-hover:decoration-2 group-hover:underline-offset-10">
+            <span className="cursor-pointer font-semibold uppercase text-lg py-10 group-hover:underline group-hover:decoration-primary px-3 group-hover:decoration-2 group-hover:underline-offset-10">
               {level1.name}
             </span>
 
             {/* MEGA MENU */}
-            <div className="absolute left-0 top-15 z-50 hidden w-[900px] bg-bg-main shadow-xl group-hover:flex px-10 py-8 gap-12">
-              {level1.children.map((level2) => (
-                <div key={level2._id} className="min-w-[100px] ">
+            <div className="absolute left-0 top-15 z-50 hidden w-auto bg-bg-main shadow-xl group-hover:flex  ">
+              {level1.children.map((level2 ,index) => (
+                <div key={level2._id} className={`min-w-[180px] px-10 py-5 ${
+      index % 2 === 0 ? "bg-white" : "bg-bg-muted"
+    }`}>
 
                   {/* LEVEL 2  */}
                   <Link
                     to={`/${level1.slug}/${level2.slug}`}
-                    className="block mb-2 font-semibold text-primary hover:text-primary-hover"
+                    className="block mb-2 font-semibold lg:text-[13px] text-primary hover:text-primary-hover "
                   >
                     {level2.name}
                   </Link>

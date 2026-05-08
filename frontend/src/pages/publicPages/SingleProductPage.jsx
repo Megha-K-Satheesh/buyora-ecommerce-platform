@@ -127,10 +127,10 @@ const SingleProductPage = () => {
   const colors = [...new Set(product.variations.map((v) => v.attributes.Color))];
 
   return (
-    <>
+    <div className="">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto p-6 flex flex-col md:flex-row gap-8 mt-25 bg-bg-main">
+      <div className="lg:max-w-7xl  mx-auto m-20 flex flex-col md:flex-row gap-8 mt-25 p-6 bg-bg-main">
 
         <div className="flex flex-col md:flex-row gap-4 flex-1">
 
@@ -149,7 +149,7 @@ const SingleProductPage = () => {
             />
           </div>
 
-          <div className="order-2 md:order-1 flex flex-row md:flex-col gap-4 mt-3 md:mt-0">
+          <div className="order-2  md:order-1 flex flex-row md:flex-col  gap-4 mt-3 md:mt-0">
             {product.images.map((img, index) => (
               <img
                 key={index}
@@ -284,8 +284,10 @@ const SingleProductPage = () => {
       </div>
 
       <Footer />
-    </>
+    </div>
   );
 };
 
 export default SingleProductPage;
+
+

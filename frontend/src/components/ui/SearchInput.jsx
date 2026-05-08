@@ -14,7 +14,7 @@ const SearchInput =memo( ({
       
            <FiSearch className="absolute left text-xl
            text-gray-600
-       -mt-5 ml-1   md:mt-3 md:ml-1 lg:mt-3 lg:ml-1"/>
+      mt-3 ml-1   md:mt-3 md:ml-1 lg:mt-3 lg:ml-1"/>
        <div className="rounded-lg     bg-white">
 
     <input

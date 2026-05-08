@@ -66,7 +66,7 @@ const Home = () => {
     <>
       <Navbar />
 
-      <div className="min-h-screen bg-bg-main mt-24">
+      <div className="min-h-screen bg-bg-main lg:mt-24 mt-1 sm:mt-6">
 
         <section className="my-6 ">
           {loading ? (

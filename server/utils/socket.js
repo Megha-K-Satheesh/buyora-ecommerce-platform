@@ -12,7 +12,7 @@ const connectedUsers = new Map();
 const initializeSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: process.env.FRONTEND_URL || "http://localhost:3000",
+      origin: 'http://buyora-frontend-352602573166-ap-south-1-an.s3-website-ap-south-1.amazonaws.com'|| "http://localhost:3000",
       methods: ["GET", "POST"],
       credentials: true,
     },

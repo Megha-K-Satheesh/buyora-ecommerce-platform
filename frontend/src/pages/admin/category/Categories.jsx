@@ -1,40 +1,41 @@
 
-
-
-
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import AdminOutletHead from "../../../components/Admin/AdminOutletHead"
-import Button from "../../../components/ui/Button"
-import { categoriesTable, deleteCategory, setCurrentPage } from "../../../Redux/slices/admin/categorySlice"
-
 import Swal from "sweetalert2"
+import AdminOutletHead from "../../../components/Admin/AdminOutletHead"
 import CategoryTable from "../../../components/Admin/CategoryTable"
+import Button from "../../../components/ui/Button"
 import Pagination from "../../../components/ui/Pagination"
 import SearchInput from "../../../components/ui/SearchInput"
 import { showError, showSuccess } from "../../../components/ui/Toastify"
 import { useDebounce } from "../../../hook/useDebounce"
+import { categoriesTable, deleteCategory, setCurrentPage } from "../../../Redux/slices/admin/categorySlice"
 
-const Category = ()=>{
+const Category = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [level,setLevel] = useState("");
-  const [status,setStatus] = useState("");
-  const [search,setSearch] = useState("");
-  const debouncedSearch = useDebounce(search, 400);
 
-  const { categoriesTable: tableData, loading,currentPage,totalPages,totalCategories:Total } = useSelector(
-    (state) => state.category
-  )
+  const [level, setLevel] = useState("")
+  const [status, setStatus] = useState("")
+  const [search, setSearch] = useState("")
+  const debouncedSearch = useDebounce(search, 400)
 
-  const handleClick = ()=>{
+  const {
+    categoriesTable: tableData,
+    loading,
+    currentPage,
+    totalPages,
+    totalCategories: Total
+  } = useSelector((state) => state.category)
+
+  const handleClick = () => {
     navigate("/admin-dashboard/categories/add-category")
   }
 
   const handleEdit = (id) => {
-    navigate(`/admin-dashboard/categories/update-category/${id}`);
-  };
+    navigate(`/admin-dashboard/categories/update-category/${id}`)
+  }
 
   const handleDelete = async (categoryId) => {
     const result = await Swal.fire({
@@ -45,49 +46,62 @@ const Category = ()=>{
       confirmButtonText: "Yes, delete it!",
       cancelButtonText: "Cancel",
       reverseButtons: true,
-    });
+    })
 
     if (result.isConfirmed) {
       try {
-        await dispatch(deleteCategory(categoryId)).unwrap();
-        showSuccess("Category deleted successfully");
+        await dispatch(deleteCategory(categoryId)).unwrap()
+        showSuccess("Category deleted successfully")
+        dispatch(categoriesTable({
+          page: currentPage,
+          limit: 10,
+          level,
+          status,
+          search: debouncedSearch,
+        }))
       } catch (err) {
-        showError(err);
+        showError(err)
       }
     }
-  };
+  }
 
   const handlePageChange = (page) => {
-    dispatch(categoriesTable({ page, limit:10, level, status, search }));
-  };
+    dispatch(setCurrentPage(page))
 
-  useEffect(()=>{
     dispatch(categoriesTable({
-      page:currentPage,
-      limit:10,
+      page,
+      limit: 10,
       level,
       status,
-      search:debouncedSearch,
+      search: debouncedSearch,
     }))
-  },[dispatch,currentPage,level,status,debouncedSearch])
+  }
 
   useEffect(() => {
-    dispatch(setCurrentPage(1));
-  }, [level, status, search]);
+    dispatch(setCurrentPage(1))
 
-  return(
+    dispatch(categoriesTable({
+      page: 1,
+      limit: 10,
+      level,
+      status,
+      search: debouncedSearch,
+    }))
+  }, [level, status, debouncedSearch, dispatch])
+
+  return (
     <>
-      <AdminOutletHead heading={"CATEGORIES"}/>
+      <AdminOutletHead heading={"CATEGORIES"} />
 
       <div className="flex justify-end mr-20 mt-10">
         <Button onClick={handleClick}>ADD CATEGORY</Button>
       </div>
-     
+
       <div className="flex ml-20 gap-5 mt-10">
         <div className="flex-1">
           <SearchInput
             value={search}
-            onChange={(e)=>setSearch(e.target.value)}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search Category ..."
           />
         </div>
@@ -103,7 +117,7 @@ const Category = ()=>{
             <option value="2">Level 2</option>
             <option value="3">Level 3</option>
           </select>
-       
+
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
@@ -125,13 +139,13 @@ const Category = ()=>{
       />
 
       <div className="my-10">
-          {!loading && (
-  <Pagination
-    currentPage={currentPage}
-    totalPages={totalPages}
-    onPageChange={handlePageChange}
-  />
-)}
+        {!loading && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
       </div>
     </>
   )

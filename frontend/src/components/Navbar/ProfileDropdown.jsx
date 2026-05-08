@@ -59,9 +59,9 @@ const ProfileDropdown = () => {
         onClick={() => {
           if (!canHover) setOpen((prev) => !prev);
         }}
-        className="flex flex-col items-center"
+        className="flex flex-col lg:mt-2 items-center"
       >
-        <FiUser className="text-2xl lg:text-3xl" />
+        <FiUser className="sm:text-2xl  lg:text-3xl" />
         <span className="text-sm font-medium hidden lg:block md:block">
           Profile
         </span>
