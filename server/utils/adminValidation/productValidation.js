@@ -29,8 +29,16 @@ const productValidation = Joi.object({
 
   sellingPrice: Joi.number().min(0).required(),
 
-  stock: Joi.number().min(0).required(),
-
+ 
+variations: Joi.array()
+    .items(
+      Joi.object({
+        attributes: Joi.object().required(),
+        stock: Joi.number().min(0).required(),
+        isActive: Joi.boolean().optional()
+      })
+    )
+    .required(),
 
 
   attributes: Joi.object().optional(),
@@ -57,7 +65,7 @@ const updateProductValidation = Joi.object({
 
  
 stock: Joi.number().min(0).optional(),
-attributes: Joi.array().items(variationSchema).optional(),
+variations: Joi.array().items(variationSchema).optional(),
  
 existingImages: Joi.array().items(Joi.string()).optional(),
   mrp: Joi.number().min(0).optional(),

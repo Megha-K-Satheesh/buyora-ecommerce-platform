@@ -57,12 +57,15 @@ const UsersTable = memo(({ loading, tableData, total, onBan, onUnban }) => {
 </div>
                 </td>
 
-                <td className="p-2 text-center">
+
+<td className="p-2 text-center">
   <Link
-      to={`chat/${user._id}`}
-    className="text-primary hover:text-primary-hover hover:underline"
+    to={`chat/${user._id}`}
+    className="relative inline-flex items-center gap-2 text-primary hover:text-primary-hover hover:underline"
   >
-   VIEW MESSAGE
+    VIEW MESSAGE
+
+
   </Link>
 </td>
               </tr>

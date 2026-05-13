@@ -46,7 +46,7 @@ const ProductImageUpload = memo(({
         multiple
         accept="image/*"
         onChange={handleFileChange}
-        className="border p-2 rounded-md w-full"
+        className="border border-gray-300 p-2 rounded-md w-full"
       />
 
       <div className="flex gap-3 flex-wrap mt-4">

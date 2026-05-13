@@ -7,69 +7,89 @@ const { S3, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const { uploadToS3, s3 } = require('../config/s3Service');
 const Category = require('../models/admin/Category');
 const Product = require('../models/admin/Product');
+const { ErrorFactory } = require('../utils/errors');
 
 
 
 class ProductService {
-  static async addProduct({ body, files }) {
-    const { name, description, brand, category, mrp, sellingPrice, stock, attributes,status,isVisible } = body;
 
+static async addProduct({ body, files }) {
+  const {
+    name,
+    description,
+    brand,
+    category,
+    mrp,
+    sellingPrice,
+    attributes,
+    status,
+    isVisible,
+    variations
+  } = body;
 
-     
-     
-    
-    
+  const images = await Promise.all(
+    files.map(file => uploadToS3(file))
+  );
 
+  const discountPercentage =
+    mrp && sellingPrice
+      ? Math.round(((mrp - sellingPrice) / mrp) * 100)
+      : 0;
 
+  const parsedAttributes =
+    typeof attributes === "string"
+      ? JSON.parse(attributes)
+      : attributes || {};
 
-const images = await Promise.all(
-  files.map(file => uploadToS3(file))
-);
-    const discountPercentage = mrp && sellingPrice ? Math.round(((mrp - sellingPrice) / mrp) * 100) : 0;
-
-    const parsedAttributes = attributes 
-  ? (typeof attributes === "string" ? JSON.parse(attributes) : attributes)
-  : {};
-  if (Object.keys(parsedAttributes).length === 0) {
-
-}
-
-
-
-    const variants = generateVariants(parsedAttributes).map((variant) => ({
-      attributes: new Map(Object.entries(variant)),
-      stock: Number(stock) || 0,
-      
-    }));
-     const totalStock = variants.reduce((sum, v) => sum + v.stock, 0);
-    const product = new Product({
-      name,
-      description,
-      brand,
-      category,
-      mrp,
-      sellingPrice,
-      discountPercentage,
-      totalStock,
-     status: status || "active",
-     isVisible,
-      stock:Number(stock) || 0,
-      attributes: parsedAttributes,
-       variations: variants,
-      images,
-    });
-
-    await product.save();
-    return product;
+  if (!variations || variations.length === 0) {
+    throw ErrorFactory.validation("Variations are required");
   }
 
+  const formattedVariants = variations.map((v) => ({
+    attributes: new Map(Object.entries(v.attributes)),
+    stock: Number(v.stock) || 0,
+  }));
 
-   static async getProductsList({ category, status, priceSort, page = 1, limit = 10 }) {
+  const totalStock = formattedVariants.reduce(
+    (sum, v) => sum + v.stock,
+    0
+  );
+
+  const product = new Product({
+    name,
+    description,
+    brand,
+    category,
+    mrp,
+    sellingPrice,
+    discountPercentage,
+    totalStock,
+    status: status || "active",
+    isVisible,
+    attributes: parsedAttributes,
+    variations: formattedVariants,
+    images,
+  });
+
+  await product.save();
+  return product;
+}
+
+   static async getProductsList({ category, status, priceSort, page = 1, limit = 10 ,search}) {
 
        page = parseInt(page)
      limit = parseInt(limit)
     const filter = {};
 
+
+
+
+  if (search) {
+    filter.name = {
+      $regex: search,
+      $options: "i",
+    };
+  }
    if (category) {
   const allCategories = await Category.find().lean();
   const getChildrenIds = (id) => {
@@ -119,7 +139,7 @@ static async updateProduct({ id, body, files }) {
     mrp,
     sellingPrice,
     stock,
-    attributes,
+   variations,
     status,
     isVisible,
     existingImages
@@ -132,7 +152,7 @@ const parsedExistingImages = Array.isArray(existingImages)
     ? JSON.parse(existingImages)
     : [];
 
- 
+
  
 
 
@@ -194,11 +214,9 @@ const parsedExistingImages = Array.isArray(existingImages)
       : 0;
 
 
-  const parsedVariations = attributes
-    ? typeof attributes === "string"
-      ? JSON.parse(attributes)
-      : attributes
-    : product.variations;
+
+
+  const parsedVariations = variations || product.variations;
 
   const totalStock = parsedVariations.reduce(
     (sum, v) => sum + Number(v.stock || 0),
@@ -276,7 +294,7 @@ function generateVariants(attributes) {
   let variants = [{}];
   keys.forEach((key) => {
     let values = attributes[key];
-
+    
    
     if (!Array.isArray(values)) {
       values = [values];

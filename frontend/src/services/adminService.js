@@ -30,11 +30,12 @@ search=""){
     headers: { "Content-Type": "multipart/form-data" }
   })
 },
-getProductsList({ category, status, priceSort, page = 1, limit = 10 }) {
+getProductsList({ category, status, priceSort, page = 1, limit = 10 ,search}) {
   return adminApiClient.get("/product/get-products-list", {
     params: {
       category,
       status,
+      search,
       priceSort,
       page,
       limit,

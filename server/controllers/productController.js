@@ -18,7 +18,10 @@ const dataToValidate = {
 
   attributes: req.body.attributes
     ? JSON.parse(req.body.attributes)
-    : {}
+    : {},
+      variations: req.body.variations
+      ? JSON.parse(req.body.variations)
+      : []
 };
 
 const validatedData = BaseController.validateRequest(
@@ -100,15 +103,18 @@ static updateProduct = BaseController.asyncHandler(async (req, res) => {
     existingImages = JSON.parse(existingImages);
   }
 
-  const dataToValidate = {
-    ...req.body,
-    attributes: req.body.attributes
-      ? JSON.parse(req.body.attributes)
-      : {},
+  
+const parsedVariations = req.body.variations
+  ? JSON.parse(req.body.variations)
+  : [];
 
-    existingImages: existingImages || []
-  };
+const dataToValidate = {
+  ...req.body,
 
+  variations: parsedVariations,
+
+  existingImages: existingImages || []
+};
   const validatedData = BaseController.validateRequest(
     updateProductValidation,
     dataToValidate

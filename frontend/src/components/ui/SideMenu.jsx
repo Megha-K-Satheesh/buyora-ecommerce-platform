@@ -4,10 +4,12 @@ import { NavLink } from "react-router-dom"
 
 const SideMenu = ()=>{
   
-  const linkClass = ({isActive})=>(
-    ` text-xl    hover:text-pink-600   transition
-    ${isActive?"text-green-500":""} `
-  )
+
+  const linkClass = ({ isActive }) => (
+  `text-xl hover:text-pink-600 transition
+   outline-none focus:outline-none focus:ring-0
+   ${isActive ? "text-green-500" : ""}`
+)
   return(
     <>
       <div className=" pl-20 lg:w-70 w-full  border-r   border-gray-200 ">

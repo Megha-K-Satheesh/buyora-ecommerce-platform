@@ -7,11 +7,11 @@ class CartController extends BaseController {
 
   static addToCart = BaseController.asyncHandler(async (req, res) => {
   
-console.log("RAW BODY:", req.body);
+
     const validatedData = BaseController.validateRequest(addToCartValidation,req.body)
     const userId = req.user._id;
    
-console.log("vvvvccc",validatedData)
+
 
 
     const result = await CartService.addToCart(userId, validatedData);

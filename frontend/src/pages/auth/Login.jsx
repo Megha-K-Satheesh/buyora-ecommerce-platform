@@ -1,6 +1,8 @@
 import { GoogleLogin } from "@react-oauth/google";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { AiOutlineEye } from "react-icons/ai";
+import { LuEyeClosed } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Button from "../../components/ui/Button";
@@ -11,11 +13,11 @@ import Navbar from "../../components/ui/Navbar";
 import { showError, showSuccess } from "../../components/ui/Toastify";
 import { googleLogin, login } from "../../Redux/slices/authSlice";
 import { connectSocket } from "../../utils/socket";
-
 const LoginForm = ()=>{
    
      const dispatch = useDispatch()
      const navigate = useNavigate()
+     const [showPassword, setShowPassword] = useState(false);
      const location = useLocation()
       const { error, loginLoading, isAuthenticated } = useSelector((state) => state.auth);
      const from = location.state?.from?.pathname || "/"
@@ -72,6 +74,8 @@ return(
                       type="email"
                       placeholder="Enter your email"
                        required
+
+                        
                       {...register('email', {
                         required: 'Email is required',
                         pattern: {
@@ -84,9 +88,21 @@ return(
           
                     <FormInput
                       label="Password"
-                      type="password"
+                     type={showPassword ? "text" : "password"}
                       placeholder="Enter password"
                        required
+                       rightIcon={
+    showPassword ? (
+      <AiOutlineEye
+      
+        onClick={() => setShowPassword(false)}
+      />
+    ) : (
+      <LuEyeClosed 
+        onClick={() => setShowPassword(true)}
+      />
+    )
+  }
                       {...register('password', {
                         required: 'Password is required',
                         minLength: {
@@ -145,7 +161,7 @@ text="continue_with"
         showSuccess("Google login successful");
 
       
-        navigate("/");
+        navigate("/",{replace:true});
       } catch (err) {
         
         showError(err);

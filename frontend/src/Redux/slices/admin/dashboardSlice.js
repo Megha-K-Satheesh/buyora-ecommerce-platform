@@ -5,7 +5,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { adminDashboardService } from "../../../services/dashboardService";
 
-// Async thunks
+
 export const getDashboardStats = createAsyncThunk(
   "dashboard/getStats",
   async (_, thunkAPI) => {
@@ -104,7 +104,7 @@ export const getOrderStatusDistribution = createAsyncThunk(
   }
 );
 
-// Initial state
+
 const initialState = {
   stats: null,
   monthlyOrders: [],

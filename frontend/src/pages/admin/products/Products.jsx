@@ -46,17 +46,17 @@ const Products = () => {
     });
   };
 
-  // Navigate to Add Product Page
+
   const handleAdd = () => {
     navigate("/admin-dashboard/products/add-product");
   };
 
-  // Edit Product
+
   const handleEdit = (id) => {
     navigate(`/admin-dashboard/products/update-product/${id}`);
   };
 
-  // Delete Product
+
   const handleDelete = async (id) => {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -87,8 +87,11 @@ const Products = () => {
       }
     }
   };
-
-  // Handle page change
+ const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+    dispatch(setCurrentPage(1));
+  };
+ 
   const handlePageChange = (page) => {
     dispatch(
       getProductsList({
@@ -102,9 +105,9 @@ const Products = () => {
   };
   useEffect(()=>{
          dispatch(getCategory())
-  },[dispatch,selectedCategory])
+  },[dispatch])
 
-  // Fetch products when filters/search/page changes
+
   useEffect(() => {
     dispatch(
       getProductsList({
@@ -118,9 +121,7 @@ const Products = () => {
   }, [ debouncedSearch,dispatch, currentPage, status, selectedCategory]);
 
   
-  useEffect(() => {
-    dispatch(setCurrentPage(1));
-  }, [search, status, selectedCategory, dispatch]);
+
 
   return (
     <>
@@ -135,7 +136,7 @@ const Products = () => {
         <div className="flex-1">
           <SearchInput
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={handleSearchChange}
             placeholder="Search Product..."
           />
         </div>

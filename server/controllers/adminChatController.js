@@ -22,7 +22,19 @@ class AdminChatController {
     BaseController.sendSuccess(res, "All chats fetched", chats);
   });
 
-  
+  static getUnreadMessagesCount = BaseController.asyncHandler(
+  async (req, res) => {
+
+    const count =
+      await AdminChatService.getUnreadMessagesCount();
+
+    BaseController.sendSuccess(
+      res,
+      "Unread messages count fetched",
+      count
+    );
+  }
+);
 }
 
 module.exports = AdminChatController;

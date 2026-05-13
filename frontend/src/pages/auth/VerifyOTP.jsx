@@ -39,7 +39,7 @@ const VerifyOtpPage = () => {
     try {
         await dispatch(verifyOtp({ userId, otp: otpValue, purpose:"EMAIL_VERIFICATION"})).unwrap()
         showSuccess("verification successful");
-        navigate("/login")
+        navigate("/login" ,{ replace: true })
     } catch (err) {
          showError(err)
     }

@@ -23,12 +23,12 @@ class UserProductService {
     sort,
   }) {
 
-    // console.log(level1,level2,level3)
-    // console.log("search ",search)
-    // console.log("pricerange",minPrice,maxPrice)
-    // console.log("discount",discount)
-    console.log("sssssssssssssssssssssssssssssssssssss",sort)
+  
+   
   const filters = {};
+
+filters.isVisible = true;
+filters.status = "active";
 
   let level1Doc = null;
   if (level1) {
@@ -115,12 +115,6 @@ if (search) {
 
 }
 
-
-
-
-
-
-
   if (brand) {
     const brandArr = Array.isArray(brand) ? brand : brand.split(",");
     if (brandArr.length) filters.brand = { $in: brandArr };
@@ -203,8 +197,7 @@ console.log("FINAL FILTERS:", filters);
 
     return { categories: [], brands, colors, sizes, discountRanges, priceRange };
   }
-  // if (!level1Slug) throw ErrorFactory.validation("Level1 slug is required");
-  // if (!level2Slug) throw ErrorFactory.validation("Level2 slug is required");
+
 
   const level1Category = await Category.findOne({ slug: level1Slug, level: 1 });
   if (!level1Category) throw ErrorFactory.notFound("Level1 category not found");
@@ -221,7 +214,7 @@ console.log("FINAL FILTERS:", filters);
   }).select("_id name");
 
   const priceAgg = await Product.aggregate([
-    { $match: { category: { $in: level3Ids }, status: "active" } },
+    { $match: { category: { $in: level3Ids }, status: "active", isVisible: true } },
     { $group: { _id: null, min: { $min: "$sellingPrice" }, max: { $max: "$sellingPrice" } } },
   ]);
   const priceRange = priceAgg[0] || { min: 0, max: 0 };
@@ -256,12 +249,20 @@ console.log("PRICE AGG RESULT:", priceAgg);
 }
 
 static async getProductById(productId) {
-  const product = await Product.findById(productId)
+  const product = await Product.findOne({
+    _id: productId,
+  
+  })
     .populate("brand", "_id name") 
     .populate("category", "_id name level slug") 
-    .select("name description brand category sellingPrice mrp discountPercentage attributes variations images ratings");
+    .select("name description brand category sellingPrice mrp discountPercentage attributes variations images rating ratingCount totalStock status isVisible");
 
   if (!product) throw ErrorFactory.notFound("Product not found");
+
+
+ product.variations = product.variations.filter(
+    (v) => v.isActive && v.stock > 0
+  );
 
   return product;
 }

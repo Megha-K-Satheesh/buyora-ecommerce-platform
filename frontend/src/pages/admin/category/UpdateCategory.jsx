@@ -107,6 +107,7 @@ const UpdateCategoryForm = () => {
     try {
       const formattedData = {
         ...data,
+          parentId: data.parentId || null,
         allowedAttributes:
           parentLevel === 1
             ? data.allowedAttributes.map((attr) => ({
@@ -133,7 +134,7 @@ const UpdateCategoryForm = () => {
     <>
       <AdminOutletHead heading={"CATEGORIES"}/>
 
-      <div className="flex justify-center items-start lg:bg-bg-soft mt-20 min-h-screen">
+      <div className="flex justify-center items-start  bg-bg-soft mt-20 min-h-screen">
         <div className="bg-bg-main rounded-2xl lg:w-[40%] w-[90%] mt-10 px-5 py-6 border border-border-light">
 
           <h1 className="text-2xl lg:text-3xl text-center text-text-secondary font-medium">

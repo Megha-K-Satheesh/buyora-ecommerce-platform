@@ -66,129 +66,167 @@ const Home = () => {
     <>
       <Navbar />
 
-      <div className="min-h-screen bg-bg-main lg:mt-24 mt-1 sm:mt-6">
+      <div className="min-h-screen bg-bg-main lg:mt-24 mt-6 sm:mt-10">
 
-        <section className="my-6 ">
+        {/* HERO SECTION */}
+        <section className="px-3 sm:px-6 lg:px-10 py-6 sm:py-10">
+
           {loading ? (
-            <p className="text-center text-lg text-text-muted">
-              Loading hero banners...
-            </p>
+            <div className="text-center text-text-muted py-20 text-sm">
+              Loading featured collections...
+            </div>
           ) : heroBanners.length > 0 ? (
             <Slider {...heroSliderSettings}>
+
               {heroBanners.map((b) => (
                 <div
                   key={b._id}
-                  className="cursor-pointer"
+                  className="cursor-pointer px-2"
                   onClick={() => navigate(b.redirectValue)}
                 >
-                  <img
-                    src={b.image}
-                    alt={b.title}
-                    className="w-full h-[300px] md:h-[450px] object-cover "
-                  />
+                  <div className="relative overflow-hidden rounded-2xl shadow-md border border-border-light">
 
-                  <div className="mt-4 text-center px-4">
+                    <img
+                      src={b.image}
+                      alt={b.title}
+                      className="w-full h-[260px] md:h-[460px] object-cover transition-transform duration-500 hover:scale-105"
+                    />
+
+      <div className="absolute inset-0    " />
+
+                    
+                  </div>
+
+<div className="mt-5 text-center px-4">
                     <h2 className="text-2xl md:text-4xl font-semibold uppercase text-text-primary">
-                      {b.title}
+                     {b.title}
                     </h2>
 
-                    <p className="text-text-muted mt-2 text-sm md:text-base">
+                     <p className="text-text-muted mt-2 text-sm md:text-base">
                       {b.subtitle}
                     </p>
 
-                    <button className="mt-3 text-text-secondary hover:text-text-primary">
-                      + Explore
-                    </button>
-                  </div>
+                    <button className="lg:mt-4 mt-2 lg:mb-2 text-text-secondary hover:text-text-primary">
+                     + Explore
+                  </button>
+                 </div>
                 </div>
               ))}
+
             </Slider>
           ) : (
-            <p className="text-center text-text-muted">
-              No hero banners available
-            </p>
+            <div className="text-center text-text-muted py-20">
+              No featured banners available
+            </div>
           )}
         </section>
 
-        <section className="mt-30 ">
-          <h1 className="text-xl lg:text-2xl font-extrabold tracking-widest text-text-primary mb-10 border-l-4 border-primary pl-3 uppercase">
-            Best Offers
-          </h1>
+        {/* BEST OFFERS */}
+        <section className="mt-10 px-3 sm:px-6 lg:px-10">
+
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-1 h-6 bg-primary rounded-full" />
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold tracking-wide text-text-primary uppercase">
+              Best Offers
+            </h1>
+          </div>
 
           {promoBanners.length > 0 ? (
             <Slider key={`promo-${slidesToShow}`} {...sliderSettings}>
+
               {promoBanners.map((b) => (
                 <div
                   key={b._id}
                   className="cursor-pointer px-2"
                   onClick={() => navigate(b.redirectValue)}
                 >
-                  <img
-                    src={b.image}
-                    alt={b.title}
-                    className="w-full h-[320px] object-cover rounded-lg"
-                  />
+                  <div className="rounded-2xl overflow-hidden border border-border-light  shadow-sm hover:shadow-md transition">
 
-                  <div className="text-center mt-3">
-                    <h3 className="text-sm lg:text-lg font-bold text-text-primary">
-                      {b.title}
-                    </h3>
+                    <img
+                      src={b.image}
+                      alt={b.title}
+                      className="w-full h-[300px] object-cover transition-transform duration-300 hover:scale-105"
+                    />
 
-                    {b.discountText && (
-                      <span className="text-xs lg:text-sm text-primary font-semibold">
-                        {b.discountText}% OFF
-                      </span>
-                    )}
+                    <div className="p-3 text-center ">
+
+                      <h3 className="text-sm lg:text-base font-semibold text-text-primary">
+                        {b.title}
+                      </h3>
+
+                      {b.discountText && (
+                        <span className="inline-block mt-1  px-3 py-1 text-xs rounded-full bg-primary/10 text-primary font-medium">
+                          {b.discountText}% OFF
+                        </span>
+                      )}
+
+                    </div>
+
                   </div>
                 </div>
               ))}
+
             </Slider>
           ) : (
-            <p className="text-center text-text-muted">
-              No promo banners available
-            </p>
+            <div className="text-center text-text-muted py-10">
+              No promo offers available
+            </div>
           )}
         </section>
 
-        <section className="mt-30 ">
-          <h1 className="text-xl lg:text-2xl font-extrabold tracking-widest text-text-primary mb-10 border-l-4 border-primary pl-3 uppercase">
-            TRENDING NOW
-          </h1>
+        {/* TRENDING */}
+        <section className="mt-12 px-3 sm:px-6 lg:px-10 pb-10">
+
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-1 h-6 bg-primary rounded-full" />
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold tracking-wide text-text-primary uppercase">
+              Trending Now
+            </h1>
+          </div>
 
           {treandingPromoBanners.length > 0 ? (
             <Slider key={`trend-${slidesToShow}`} {...sliderSettings}>
+
               {treandingPromoBanners.map((b) => (
                 <div
                   key={b._id}
                   className="cursor-pointer px-2"
                   onClick={() => b.redirectValue && navigate(b.redirectValue)}
                 >
-                  <img
-                    src={b.image}
-                    alt={b.title}
-                    className="w-full h-[250px] object-cover rounded-lg"
-                  />
+                  <div className="rounded-2xl overflow-hidden border border-border-light bg-bg-soft shadow-sm hover:shadow-md transition">
 
-                  <div className="text-center mt-3">
-                    <h3 className="text-sm lg:text-lg font-bold text-text-primary">
-                      {b.title}
-                    </h3>
+                    <img
+                      src={b.image}
+                      alt={b.title}
+                      className="w-full h-[240px] object-cover transition-transform duration-300 hover:scale-105"
+                    />
 
-                    {b.discountText && (
-                      <span className="text-xs lg:text-sm text-primary font-semibold">
-                        {b.discountText}% OFF
-                      </span>
-                    )}
+                    <div className="p-3 text-center">
+
+                      <h3 className="text-sm lg:text-base font-semibold text-text-primary">
+                        {b.title}
+                      </h3>
+
+                      {b.discountText && (
+                        <span className="inline-block mt-1 px-3 py-1 text-xs rounded-full bg-primary/10 text-primary font-medium">
+                          {b.discountText}% OFF
+                        </span>
+                      )}
+
+                    </div>
+
                   </div>
                 </div>
               ))}
+
             </Slider>
           ) : (
-            <p className="text-center text-text-muted">
-              No watch banners available
-            </p>
+            <div className="text-center text-text-muted py-10">
+              No trending items available
+            </div>
           )}
         </section>
+
       </div>
 
       <footer className="mt-10">

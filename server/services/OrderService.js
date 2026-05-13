@@ -217,45 +217,61 @@ static async cancelOrderItem(
   let refundAmount = 0;
   let itemCancelled = false;
 
+  
+
+
+
   for (const item of order.items) {
+  if (
+    item.productId.toString() === productId.toString() &&
+    ["PLACED", "CONFIRMED"].includes(item.status)
+  ) {
+    item.status = "CANCELLED";
+    item.cancelReason = cancelReason;
+    itemCancelled = true;
+
+    const product = await Product.findById(item.productId);
+    if (product) {
+      const variation = product.variations.find(v =>
+        v._id.toString() === (item.variationId?.toString() || "")
+      );
+
+      if (variation) {
+        variation.stock += item.quantity;
+      }
+
+      product.totalStock = product.variations.reduce(
+        (sum, v) => sum + v.stock,
+        0
+      );
+
+      await product.save();
+    }
+
     if (
-      item.productId.toString() === productId.toString() &&
-      ["PLACED", "CONFIRMED"].includes(item.status)
+     
+      order.paymentStatus === "PAID"
     ) {
-      item.status = "CANCELLED";
-      item.cancelReason = cancelReason;
-      itemCancelled = true;
+      const itemTotal = Number(item.price) * Number(item.quantity);
 
-      if (
-        order.paymentMethod === "ONLINE" &&
-        order.paymentStatus === "PAID"
-      ) {
-        const itemTotal =
-          Number(item.price) * Number(item.quantity);
+      if (couponType === "PERCENTAGE") {
+        const itemDiscount = isEligible(item)
+          ? Math.round((itemTotal / originalEligibleTotal) * totalDiscount)
+          : 0;
 
-        if (couponType === "PERCENTAGE") {
-          const itemDiscount = isEligible(item)
-            ? Math.round(
-                (itemTotal / originalEligibleTotal) * totalDiscount
-              )
-            : 0;
+        refundAmount += itemTotal - itemDiscount;
+      } else if (couponType === "FLAT") {
+        const itemDiscount = isEligible(item)
+          ? Math.round((itemTotal / originalEligibleTotal) * totalDiscount)
+          : 0;
 
-          refundAmount += itemTotal - itemDiscount;
-        } else if (couponType === "FLAT") {
-          const itemDiscount = isEligible(item)
-            ? Math.round(
-                (itemTotal / originalEligibleTotal) * totalDiscount
-              )
-            : 0;
-
-          refundAmount += itemTotal - itemDiscount;
-        } else {
-          refundAmount += itemTotal;
-        }
+        refundAmount += itemTotal - itemDiscount;
+      } else {
+        refundAmount += itemTotal;
       }
     }
   }
-
+}
   if (!itemCancelled) {
     throw ErrorFactory.validation(
       "Item cannot be cancelled or already cancelled"

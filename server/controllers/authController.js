@@ -35,7 +35,7 @@ class AuthController extends BaseController {
 
 
         static verifyPasswordResetOpt = BaseController.asyncHandler(async(req,res)=>{
-          //  const validateDate = BaseController.validateRequest(verifyForgotOtpValidation,req.body);
+          
             const validateData = BaseController.validateRequest(verifyOtpValidation,req.body)
            const result = await AuthService.verifyPasswordResetOtp(validateData)
 
@@ -72,7 +72,7 @@ class AuthController extends BaseController {
                                      
 
          static login = BaseController.asyncHandler(async (req, res) => {
-          console.log(req.body)
+       
            const validatedData = BaseController.validateRequest(loginValidation, req.body);
            const result = await AuthService.login(validatedData);
            BaseController.logAction('USER_LOGIN', result.user);
@@ -83,7 +83,7 @@ class AuthController extends BaseController {
 
   const { idToken } = req.body;
   
-  console.log("this isth token google",idToken)
+
   if (!idToken) {
     throw ErrorFactory.validation('Google token is required');
   }
@@ -97,10 +97,7 @@ class AuthController extends BaseController {
 });    
 
 
-        //  static logout = BaseController.asyncHandler(async (req, res) => {
-        //    BaseController.logAction('USER_LOGOUT', req.user);
-        //    BaseController.sendSuccess(res, 'Logged out successfully');
-        //  });
+        
        }
        
        module.exports = AuthController;

@@ -44,8 +44,8 @@ const VerifyPasswordOtp = () => {
      const res= await dispatch(
         verifyPasswordResetOtp({ userId, otp: otpValue, purpose:"PASSWORD_RESET"}),
       ).unwrap();
-      console.log(res)
-      navigate("/Reset-Password");
+     
+      navigate("/Reset-Password",{replace:true});
     } catch (err) {
       setError(err || "OTP verification failed");
     } finally {

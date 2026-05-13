@@ -1,7 +1,5 @@
 
 
-
-
 import { useEffect, useRef, useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,9 +29,6 @@ const AdminRealtimeChat = () => {
   useEffect(() => {
     const cleanup = listenAdminMessages((msg) => {
       if (!msg) return;
-
-     
-
       if (msg.userId !== userId) return;
 
       dispatch(
@@ -62,8 +57,6 @@ const AdminRealtimeChat = () => {
 
     setReply("");
   };
-
-
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -120,7 +113,6 @@ const AdminRealtimeChat = () => {
     }
 
     acc[key].messages.push(msg);
-
     return acc;
   }, {});
 
@@ -128,13 +120,15 @@ const AdminRealtimeChat = () => {
     <div className="h-screen w-full flex flex-col bg-bg-main">
       <AdminOutletHead heading={"USER CHAT"} />
 
+      <div className="flex-1 flex flex-col overflow-hidden bg-bg-soft/30">
 
-      <div className="flex-1 flex flex-col overflow-hidden ">
-        <div className="flex-1 overflow-y-auto  sm:px-4 py-3 flex flex-col gap-2  ">
+        <div className="flex-1 overflow-y-auto px-3 sm:px-6 lg:px-10 py-4 flex flex-col gap-3">
+
           {Object.values(groupedMessages).map((group, idx) => (
-            <div key={idx} className="flex flex-col gap-2">
+            <div key={idx} className="flex flex-col gap-7">
+
               <div className="flex justify-center my-2">
-                <span className="text-xs bg-gray-200 px-3 py-1 rounded-full text-gray-600">
+                <span className="text-xs px-3 py-1 rounded-full  text-text-secondary shadow-sm">
                   {group.label}
                 </span>
               </div>
@@ -145,68 +139,79 @@ const AdminRealtimeChat = () => {
                 return (
                   <div
                     key={i}
-                    className={`flex w-full px-40 ${
+                    className={`flex w-full ${
                       isAdmin ? "justify-end" : "justify-start"
                     }`}
                   >
                     <div
-                      className={`max-w-[85%] sm:max-w-[70%] px-3 mt-5 sm:px-4 py-2 text-[15px] shadow-sm break-words ${
+                      className={`max-w-[85%] sm:max-w-[65%] px-4 py-3 rounded-2xl shadow-sm transition-all duration-200 hover:shadow-md lg:mx-20 break-words ${
                         isAdmin
-                          ? "bg-bg-soft rounded-l-2xl rounded-tr-2xl text-text-primary"
-                          : "bg-white rounded-r-2xl rounded-tl-2xl text-text-secondary"
+                          ? "bg-bg-soft text-text-primary rounded-br-sm "
+                          : "bg-bg-main text-text-secondary rounded-bl-sm"
                       }`}
                     >
-                      <div className="text-[11px] text-text-muted mb-1">
-                        {isAdmin ? "You" : "User"}
+
+                      <div className="text-[11px] font-medium text-text-muted mb-1 flex justify-between items-center">
+                        <span className="px-2 py-[2px] rounded-full bg-primary/10 text-primary text-[10px]">
+                          {isAdmin ? "Admin" : "User"}
+                        </span>
                       </div>
 
-                      <div className="text-[15px] leading-snug">
+                      <div className="text-[14px] leading-relaxed">
                         {m.text}
                       </div>
 
-                      <div className="text-[10px] text-gray-400 mt-1 text-right">
+                      <div className="text-[10px] text-text-muted mt-2 text-right">
                         {formatTime(m.createdAt)}
                       </div>
+
                     </div>
                   </div>
                 );
               })}
+
             </div>
           ))}
 
           <div ref={bottomRef} />
         </div>
 
-        <div className="shrink-0  px-2 sm:px-3 py-2 flex justify-center gap-2">
-         
-          <div className="w-[70%] sm:w-[80%] md:w-[75%] bg-bg-soft rounded-full px-3 py-2 flex justify-center">
-            <input
-              value={reply}
-              onChange={(e) => setReply(e.target.value)}
-              onKeyDown={handleKeyPress}
-              placeholder="Message"
-              className="flex-1 outline-none text-[15px] text-text-primary"
-            />
+        <div className="shrink-0 px-3 sm:px-6 py-4 bg-bg-main border-t border-border-light flex justify-center">
+
+          <div className="w-full max-w-5xl flex items-center gap-3">
+
+            <div className="flex-1 bg-bg-soft border border-border-light rounded-full px-4 py-3 flex items-center focus-within:ring-4 focus-within:ring-primary/10 focus-within:border-primary transition-all">
+
+              <input
+                value={reply}
+                onChange={(e) => setReply(e.target.value)}
+                onKeyDown={handleKeyPress}
+                placeholder="Type your message..."
+                className="flex-1 bg-transparent outline-none text-lg text-text-primary placeholder:text-text-muted"
+              />
+
+            </div>
+
+            <button
+              onClick={handleReply}
+              disabled={!reply.trim()}
+              className={`w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 ${
+                reply.trim()
+                  ? "bg-primary text-white hover:scale-105 shadow-md"
+                  : "bg-bg-soft text-text-muted cursor-not-allowed"
+              }`}
+            >
+              <FaPaperPlane size={14} />
+            </button>
+
           </div>
 
-          <button
-            onClick={handleReply}
-            disabled={!reply.trim()}
-            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition ${
-              reply.trim()
-                ? "bg-primary text-white hover:bg-primary-hover"
-                : "bg-bg-soft text-text-light cursor-not-allowed"
-            }`}
-          >
-            <FaPaperPlane size={14} />
-          </button>
         </div>
+
       </div>
     </div>
   );
 };
 
 export default AdminRealtimeChat;
-
-
 

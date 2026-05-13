@@ -127,14 +127,7 @@ const bannerSlice = createSlice({
       .addCase(getBanners.pending, (state) => {
         state.loading = true;
       })
-      // .addCase(getBannersUser.fulfilled, (state, action) => {
-      //   state.loading = false;
-
-      //  state.banners = action.payload.data || [];
-      //   state.totalPages = action.payload.totalPages;
-      //   state.currentPage = action.payload.currentPage;
-      //   state.totalBanners = action.payload.totalBanners;
-      // })
+     
 .addCase(getBannersUser.pending, (state) => {
   state.loading = true;
   state.error = null;

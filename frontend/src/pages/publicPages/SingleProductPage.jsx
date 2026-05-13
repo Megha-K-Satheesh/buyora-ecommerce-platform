@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { TiStarFullOutline } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Footer from "../../components/ui/Footer";
@@ -171,6 +172,33 @@ const SingleProductPage = () => {
 
           <p className="text-text-muted mt-1 text-2xl">{product.name}</p>
 
+
+          {/* <div className="flex items-center gap-2 mt-2 text-text-primary">
+  <span className="font-semibold">
+    {product.rating?.toFixed(1) || "0.0"} ⭐
+  </span>
+
+  <span className="text-text-muted">
+    | {product.ratingCount >= 1000
+      ? `${(product.ratingCount / 1000).toFixed(1)}k`
+      : product.ratingCount || 0} Ratings
+  </span>
+</div> */}
+<div className="flex items-center gap-2 mt-2 text-text-primary text-lg">
+  <span className="font-semibold">
+    {product.rating?.toFixed(1) || "0.0"}
+  </span>
+
+  <span className="text-green-500 text-xl">
+    <TiStarFullOutline />
+  </span>
+
+  <span className="text-text-muted">
+    | {product.ratingCount >= 1000
+      ? `${(product.ratingCount / 1000).toFixed(1)}k`
+      : product.ratingCount || 0} Ratings
+  </span>
+</div>
           <p className="mt-4 text-3xl font-semibold">
             ₹{product.sellingPrice}{" "}
             <span className="line-through text-text-muted text-2xl ml-1">
@@ -180,6 +208,8 @@ const SingleProductPage = () => {
               ({product.discountPercentage}% OFF)
             </span>
           </p>
+
+{!isOutOfStock &&( 
 
           <div className="mt-6">
             <h2 className="font-bold mb-2 text-lg">SELECT SIZE</h2>
@@ -200,12 +230,10 @@ const SingleProductPage = () => {
               ))}
             </div>
 
-            {/* {!selectedSize && (
-  <p className="text-red-500 text-sm mt-3">
-    Please select a size
-  </p>
-)} */}
+ 
           </div>
+)}
+{!isOutOfStock &&(
 
           <div className="mt-4">
             <h2 className="font-bold mb-2 text-lg">SELECT COLOR</h2>
@@ -233,6 +261,7 @@ const SingleProductPage = () => {
   </p>
 )} */}
           </div>
+)}
 
           <div className="flex flex-col md:flex-row gap-4 mt-8">
 

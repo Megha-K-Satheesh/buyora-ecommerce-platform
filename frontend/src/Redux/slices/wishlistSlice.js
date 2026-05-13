@@ -141,7 +141,7 @@ const wishlistSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(moveToCart.fulfilled, (state, action) => {
+      .addCase(moveToCart.fulfilled, (state) => {
         state.loading = false;
         state.error = null;
       })

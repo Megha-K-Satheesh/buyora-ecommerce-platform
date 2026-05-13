@@ -27,13 +27,10 @@ export const verifyOtp = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       const res = await authService.verifyOtp(data);
-      // setAuthToken(res.data.token);
+     
       return res.data.data;
     } catch (err) {
-        //     const message =
-        // err.response?.data?.message ||
-        // err.response?.data?.error?.message ||
-        // 'Invalid or expired OTP';
+        
 
       return thunkAPI.rejectWithValue(err.response?.data?.error?.message || 'invalid or expired OTP');
     }
@@ -45,7 +42,7 @@ export const resendOtp = createAsyncThunk(
   async ({ userId, purpose }, thunkAPI) => {
     try {
       const res = await authService.resendOtp({ userId, purpose });
-      return res.data.message; // backend can return success message
+      return res.data.message; 
     } catch (err) {
       const message =
         err.response?.data?.message ||

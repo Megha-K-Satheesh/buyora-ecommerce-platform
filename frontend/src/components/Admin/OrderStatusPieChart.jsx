@@ -48,8 +48,8 @@ const OrderStatusPieChart = ({ data }) => {
                 nameKey="status"
                 cx="50%"
                 cy="50%"
-                innerRadius={50}   // smaller for mobile
-                outerRadius={90}   // smaller for mobile
+                innerRadius={50}   
+                outerRadius={90}   
                 labelLine={false}
                 label={renderLabel}
               >

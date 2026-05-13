@@ -30,9 +30,9 @@ const ForgetPassword = ()=>{
   const onSubmit= async (data)=>{
       try {
       const res =   await dispatch(forgotPassword(data)).unwrap()
-      console.log(res)
+    
           localStorage.setItem('otpUserId', res.data.userId);
-         navigate('/Password-ResetOtp')
+         navigate('/Password-ResetOtp',{ replace: true })
       } catch (error) {
         console.log(error)
       }

@@ -32,7 +32,7 @@ const navigate = useNavigate()
                console.log({resetToken:resetToken,newPassword:data.password})
                await dispatch(resetPassword({resetToken:resetToken,newPassword:data.password})).unwrap()
 
-                navigate('/login')
+                navigate('/login',{replace:true})
         
       } catch (error) {
       showError(error)

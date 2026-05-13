@@ -13,61 +13,7 @@ class AdminOrderService {
 
 
 
-// static async getAllOrdersAdmin({ page = 1, limit = 5, status = "", search = "" }) {
-//   const skip = (page - 1) * limit;
 
- 
-//   const orders = await Order.find()
-//     .sort({ createdAt: -1 })
-//     .populate("userId", "name email")
-//     .populate("items.productId", "name images price")
-//     .lean();
-
-
-//   const filteredOrders = orders
-//     .map(order => {
-//       let filteredItems = status
-//         ? order.items.filter(item => item.status === status)
-//         : order.items;
-
-//       if (search) {
-//         const searchLower = search.toLowerCase();
-//         filteredItems = filteredItems.filter(
-//           item =>
-//             (item.productId?.name || item.name || "")
-//               .toLowerCase()
-//               .includes(searchLower) ||
-//             (order.orderNumber || "").toLowerCase().includes(searchLower)
-//         );
-//       }
-
-//       if (filteredItems.length === 0) return null;
-
-//       return {
-//         orderId: order._id,
-//         orderNumber: order.orderNumber,
-//         totalAmount: order.totalAmount,
-//         orderStatus: order.orderStatus,
-//         paymentStatus: order.paymentStatus,
-//         createdAt: order.createdAt,
-//         items: filteredItems
-//       };
-//     })
-//     .filter(order => order !== null);
-
-
-//   const totalOrders = filteredOrders.length;
-//   const totalPages = Math.ceil(totalOrders / limit);
-//   const paginatedOrders = filteredOrders.slice(skip, skip + limit);
-
-
-//   return {
-//     orders: paginatedOrders,
-//     totalOrders,
-//     totalPages,
-//     currentPage: Number(page)
-//   };
-// }
 
 static async getAllOrdersAdmin({ page = 1, limit = 5, status = "", search = "" }) {
   const skip = (page - 1) * limit;
@@ -122,7 +68,7 @@ static async getSingleOrder(orderId) {
 
 static async updateOrderItemStatus(orderId, productId, status, variantId) {
 
-  console.log("all service updated console", orderId, productId, variantId, status);
+ 
 
   if (!productId) throw ErrorFactory.notFound("Product ID not found");
 
@@ -195,6 +141,38 @@ if (status === "RETURNED") {
   item.returnedAt = new Date();
 
  
+
+  const productDoc = await Product.findById(item.productId);
+
+  console.log("productDoc",productDoc)
+  if (!productDoc) {
+    throw ErrorFactory.notFound("Product not found for stock update");
+  }
+
+  const qty = item.quantity || 1;
+
+console.log("item variant",item.variationId)
+
+  if (item.variationId) {
+    const variant = productDoc.variations.id(item.variationId);
+
+    if (!variant) {
+      throw ErrorFactory.notFound("Variant not found");
+    }
+
+    variant.stock = (variant.stock || 0) + qty;
+  } else {
+    productDoc.stock = (productDoc.stock || 0) + qty;
+  }
+
+
+  productDoc.totalStock = productDoc.variations.reduce(
+    (sum, v) => sum + v.stock,
+    0
+  );
+
+  await productDoc.save();
+  
 
   const coupon = await Coupon.findById(order.couponId);
 

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
@@ -7,10 +8,13 @@ import FormInput from "../../components/ui/FormInput";
 import { showError, showSuccess } from "../../components/ui/Toastify";
 import { adminLogin } from "../../Redux/slices/adminAuthSlice";
 
-
+import { AiOutlineEye } from "react-icons/ai";
+import { LuEyeClosed } from "react-icons/lu";
 const  AdminLoginForm = ()=>{
      const error = useSelector((state)=>state.adminAuth.error)
      const loading = useSelector((state)=>state.adminAuth.loading)
+     const [showPassword,setShowPassword
+     ] = useState()
      const dispatch = useDispatch()
      const navigate = useNavigate()
    const {
@@ -65,9 +69,21 @@ return(
           
                     <FormInput
                       label="Password"
-                      type="password"
+                      type={showPassword?"text":"password"}
                       placeholder="Enter password"
                        required
+                       rightIcon={
+                           showPassword ? (
+                             <AiOutlineEye
+                             
+                               onClick={() => setShowPassword(false)}
+                             />
+                           ) : (
+                             <LuEyeClosed 
+                               onClick={() => setShowPassword(true)}
+                             />
+                           )
+                         }
                       {...register('password', {
                         required: 'Password is required',
                         minLength: {

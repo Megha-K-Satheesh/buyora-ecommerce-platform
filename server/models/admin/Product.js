@@ -35,7 +35,7 @@ const productSchema = new mongoose.Schema({
     }],
     variations:{
       type:[variationSchema],
-      required:true
+      default:[]
     },
     mrp:{
       type:Number,
@@ -78,18 +78,14 @@ const productSchema = new mongoose.Schema({
 
 
 
-// productSchema.pre("findOneAndUpdate", function (next) {
-//   const update = this.getUpdate();
-//   const name = update.name || update?.$set?.name;
+productSchema.pre("save", function () {
+  if (!this.isModified("variations")) return;
 
-//   if (name) {
-//     const newSlug = slugify(name, { lower: true, strict: true });
-//     if (update.$set) update.$set.slug = newSlug;
-//     else update.slug = newSlug;
-//   }
-
-//   next();
-// });
+  this.totalStock = this.variations.reduce(
+    (sum, v) => sum + v.stock,
+    0
+  );
+});
 
 productSchema.pre('save', function () {
   if (!this.isModified("name")) return;

@@ -118,11 +118,19 @@ const ProductListingPage = () => {
 
       <div className="min-h-screen mt-23 lg:mx-10 bg-bg-main">
 
-        <div className=" p-4 text-text-primary">
-          <div>{`${level1}/${level2}/${level3 || ""}`}</div>
-          <div>Total products: {products?.length}</div>
-        </div>
+<div className="p-4 text-text-primary">
 
+  {(level1 || level2 || level3) && (
+    <div>
+      {[level1, level2, level3]
+        .filter(Boolean)
+        .join("/")}
+    </div>
+  )}
+
+  <div>Total products: {products?.length}</div>
+
+</div>
         <div className="flex">
 
           <div className="flex-1 hidden lg:block">

@@ -13,6 +13,34 @@ class CheckoutService {
 
 
 
+static async reduceProductStock(orderItems) {
+  for (const item of orderItems) {
+    const product = await Product.findById(item.productId);
+    if (!product) continue;
+
+    const variation = product.variations.find(v =>
+      v._id?.toString() === item.variationId?.toString()
+    );
+
+    if (!variation) {
+      throw ErrorFactory.validation(`Invalid variation selected for ${product.name}`);
+    }
+
+    if (variation.stock < item.quantity) {
+      throw ErrorFactory.validation(`Insufficient stock for ${product.name}`);
+    }
+
+    variation.stock -= item.quantity;
+
+    product.totalStock = product.variations.reduce(
+      (sum, v) => sum + v.stock,
+      0
+    );
+
+    await product.save();
+  }
+}
+
 static async getOrderSummary(userId) {
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     throw ErrorFactory.validation("Invalid user ID");
@@ -70,15 +98,6 @@ static async getOrderSummary(userId) {
     finalAmount
   };
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -190,10 +209,13 @@ static async placeOrder(userId, data) {
   }
 }
   const now = new Date();
+   
+  console.log("variant null error",enrichedCartItems)
+
 
   const orderItems = enrichedCartItems.map(item => ({
     productId: item.productId,
-    variationId: item.variationId || null,
+  variationId: item.variationId ?? item.variantId ?? null,
     name: item.name,
     price: item.price,
     mrp: item.mrp,
@@ -240,6 +262,8 @@ static async placeOrder(userId, data) {
   await order.save();
 
   if (paymentMethod === "COD") {
+
+    await this.reduceProductStock(orderItems);
     cart.items = [];
     cart.appliedCouponId = null;
     cart.appliedCouponCode = null;
@@ -250,6 +274,7 @@ static async placeOrder(userId, data) {
   }
 
   if (paymentMethod === "ONLINE") {
+
     const razorpayOrder = await razorpay.orders.create({
       amount: finalAmount * 100,
       currency: "INR",
@@ -296,6 +321,8 @@ static async placeOrder(userId, data) {
     order.orderStatus = "PLACED";
     await order.save();
 
+await this.reduceProductStock(orderItems);
+
     cart.items = [];
     cart.appliedCouponId = null;
     cart.appliedCouponCode = null;
@@ -334,6 +361,8 @@ static async verifyPayment(userId, body) {
   order.razorpaySignature = razorpay_signature;
 
   await order.save();
+
+  await this.reduceProductStock(order.items);
 
   const cart = await Cart.findOne({ userId });
   if (cart) {

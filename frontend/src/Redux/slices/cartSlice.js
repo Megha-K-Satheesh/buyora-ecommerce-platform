@@ -83,7 +83,7 @@ export const updateCartQuantity = createAsyncThunk(
       console.log(res)
       return res.data.data; 
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data?.message || "Update quantity failed");
+      return thunkAPI.rejectWithValue(err.response?.data?.error?.message || "Update quantity failed");
     }
   }
 );
@@ -130,6 +130,7 @@ const cartSlice = createSlice({
   loading: false,
    couponLoading: false,
   error: null,
+  quantityError: null,
   },
   reducers: {
    
@@ -205,9 +206,10 @@ const cartSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      
       .addCase(updateCartQuantity.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.quantityError = null;
       })
       .addCase(updateCartQuantity.fulfilled, (state, action) => {
         state.loading = false;
@@ -220,7 +222,7 @@ const cartSlice = createSlice({
       })
       .addCase(updateCartQuantity.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+         state.quantityError = action.payload;
       })
       .addCase(addToCartBackend.pending, (state) => {
     state.loading = true;

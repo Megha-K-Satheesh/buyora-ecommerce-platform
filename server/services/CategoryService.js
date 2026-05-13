@@ -73,7 +73,7 @@ class CategoryService{
      
 
     static async getCategories() {
-    const categories = await Category.find().lean();
+    const categories = await Category.find({isVisible:true, status:"active"}).lean();
     return this.makeTree(categories);
   }
 

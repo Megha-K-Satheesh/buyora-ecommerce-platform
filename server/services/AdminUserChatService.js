@@ -7,10 +7,13 @@ class AdminChatService {
 static async sendMessage({ userId, senderId, senderRole, text }) {
   let chat = await AdminUserChat.findOne({ userId });
 
+
   const newMessage = {
     senderId,
     senderRole,
     text,
+
+  isRead: senderRole === "admin",
     createdAt: new Date(),
   };
 
@@ -57,6 +60,8 @@ static async sendMessage({ userId, senderId, senderRole, text }) {
   }
 
 
+
 }
+
 
 module.exports = AdminChatService;

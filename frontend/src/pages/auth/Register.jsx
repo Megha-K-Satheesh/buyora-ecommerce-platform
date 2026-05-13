@@ -1,5 +1,8 @@
 import { GoogleLogin } from "@react-oauth/google";
+import { useState } from "react";
 import { useForm, useWatch } from 'react-hook-form';
+import { AiOutlineEye } from "react-icons/ai";
+import { LuEyeClosed } from "react-icons/lu";
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../components/ui/Button';
@@ -9,6 +12,7 @@ import FormInput from '../../components/ui/FormInput';
 import Navbar from '../../components/ui/Navbar';
 import { showError, showSuccess } from '../../components/ui/Toastify';
 import { googleLogin, registerUser } from '../../Redux/slices/authSlice';
+
 const RegisterForm = () => {
  
   const {
@@ -25,7 +29,7 @@ const RegisterForm = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+const [showPassword,setShowPassword] = useState(false)
   
 
   const onSubmit = async (data) => {
@@ -33,7 +37,7 @@ const RegisterForm = () => {
       
       const res = await dispatch(registerUser(data)).unwrap()
       
-          navigate('/verify-otp');
+          navigate('/verify-otp',{ replace: true });
           showSuccess("Registration Successfull")
     } catch (err) {
         showError(err)
@@ -113,9 +117,21 @@ const RegisterForm = () => {
 
           <FormInput
             label="Password"
-            type="password"
+            type={showPassword?"text":"password"}
             placeholder="Enter password"
              required
+             rightIcon={
+                  showPassword ? (
+                        <AiOutlineEye
+                                            
+                         onClick={() => setShowPassword(false)}
+                           />
+                           ) : (
+                      <LuEyeClosed 
+                        onClick={() => setShowPassword(true)}
+                            />
+                           )
+                         }
             {...register('password', {
               required: 'Password is required',
               minLength: {
@@ -132,8 +148,20 @@ const RegisterForm = () => {
 
           <FormInput
             label="Confirm Password"
-            type="password"
+            type={showPassword?"text":"password"}
             required
+            rightIcon={
+                                       showPassword ? (
+                                         <AiOutlineEye
+                                         
+                                           onClick={() => setShowPassword(false)}
+                                         />
+                                       ) : (
+                                         <LuEyeClosed 
+                                           onClick={() => setShowPassword(true)}
+                                         />
+                                       )
+                                     }
             placeholder="Confirm password"
             {...register('confirmPassword', {
               required: 'Confirm password is required',

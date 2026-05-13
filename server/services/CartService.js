@@ -20,11 +20,25 @@ class CartService {
     const product = await Product.findById(cartItem.productId);
     if (!product) throw ErrorFactory.notFound("Product not found");
 
-    const variationExists = product.variations.some(v =>
-      v._id.equals(cartItem.variationId)
-    );
-    if (!variationExists) throw ErrorFactory.validation("Invalid variation for this product");
+   
 
+
+
+    const variation = product.variations.find(v =>
+  v._id.equals(cartItem.variationId)
+);
+
+if (!variation) {
+  throw ErrorFactory.validation("Invalid variation for this product");
+}
+
+    const requestedQty = cartItem.quantity || 1;
+
+if (requestedQty > variation.stock) {
+  throw ErrorFactory.validation(
+    `Only ${variation.stock} items available`
+  );
+}
     let cart = await Cart.findOne({ userId });
     if (!cart) cart = await Cart.create({ userId, items: [] });
 
@@ -32,17 +46,34 @@ class CartService {
       x => x.productId.equals(cartItem.productId) && x.variationId.equals(cartItem.variationId)
     );
 
-    // if (existingItem) existingItem.quantity += cartItem.quantity || 1;
-    if (existingItem) existingItem.quantity = cartItem.quantity || 1;
-    else cart.items.push(cartItem);
 
-   
+
+   if (existingItem) {
+
+  const newQty =
+    existingItem.quantity + requestedQty;
+
+  if (newQty > variation.stock) {
+    throw ErrorFactory.validation(
+      `Only ${variation.stock} items available`
+    );
+  }
+
+  existingItem.quantity = newQty;
+
+} else {
+
+  cart.items.push({
+    ...cartItem,
+    quantity: requestedQty
+  });
+}
     cart.appliedCouponId = null;
     cart.appliedCouponCode = null;
     cart.discountAmount = 0;
   
      cart.finalAmount = cart.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-    console.log("ccccccccccccccc",cart)
+   
     await cart.save();
     return cart;
   }
@@ -66,18 +97,46 @@ class CartService {
       variationId: new mongoose.Types.ObjectId(item.variationId),
     }));
 
-    for (const guestItem of normalizedGuestCart) {
-      const existingItem = cart.items.find(
-        x => x.variationId.equals(guestItem.variationId)
-      );
+   
+for (const guestItem of normalizedGuestCart) {
 
-      if (existingItem) {
-        existingItem.quantity += guestItem.quantity || 1;
-      } else {
-        cart.items.push(guestItem);
-      }
-    }
+  const product = await Product.findById(
+    guestItem.productId
+  );
 
+  if (!product) continue;
+
+  const variation = product.variations.find(v =>
+    v._id.equals(guestItem.variationId)
+  );
+
+  if (!variation) continue;
+
+  const guestQty = guestItem.quantity || 1;
+
+  const existingItem = cart.items.find(
+    x => x.variationId.equals(guestItem.variationId)
+  );
+
+  if (existingItem) {
+
+    const newQty =
+      existingItem.quantity + guestQty;
+
+    existingItem.quantity =
+      Math.min(newQty, variation.stock);
+
+  } else {
+
+    cart.items.push({
+      ...guestItem,
+      quantity: Math.min(
+        guestQty,
+        variation.stock
+      )
+    });
+  }
+}
   
     cart.appliedCouponId = null;
     cart.appliedCouponCode = null;
@@ -123,9 +182,35 @@ class CartService {
     const item = cart.items.find(x => x.variationId.equals(variationId));
     if (!item) throw ErrorFactory.notFound("Cart item not found");
 
-    item.quantity = quantity;
-
    
+
+   const product = await Product.findById(
+  item.productId
+);
+
+if (!product) {
+  throw ErrorFactory.notFound(
+    "Product not found"
+  );
+}
+
+const variation = product.variations.find(v =>
+  v._id.equals(item.variationId)
+);
+
+if (!variation) {
+  throw ErrorFactory.notFound(
+    "Variation not found"
+  );
+}
+
+if (quantity > variation.stock) {
+  throw ErrorFactory.validation(
+    `Only ${variation.stock} items available`
+  );
+}
+
+item.quantity = quantity;
     cart.appliedCouponId = null;
     cart.appliedCouponCode = null;
     cart.discountAmount = 0;
@@ -136,21 +221,68 @@ class CartService {
     return cart;
   }
 
-  static async getCart(userId) {
-    let cart = await Cart.findOne({ userId });
-    if (!cart) cart = await Cart.create({ userId, items: [] });
+ 
+static async getCart(userId) {
 
-  
-    const subtotal = cart.items.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-    cart.finalAmount = subtotal - (cart.discountAmount || 0);
+  let cart = await Cart.findOne({ userId });
 
-    await cart.save();
-    return cart;
+  if (!cart) {
+    cart = await Cart.create({
+      userId,
+      items: []
+    });
   }
 
+  const updatedItems = await Promise.all(
+
+    cart.items.map(async (item) => {
+
+      const product = await Product.findById(
+        item.productId
+      );
+
+      if (!product) {
+        return {
+          ...item.toObject(),
+          stock: 0,
+          isOutOfStock: true
+        };
+      }
+
+      const variation = product.variations.find(v =>
+        v._id.equals(item.variationId)
+      );
+
+      const stock = variation?.stock || 0;
+
+      return {
+        ...item.toObject(),
+
+        stock,
+
+        isOutOfStock:
+          stock === 0 ||
+          item.quantity > stock
+      };
+    })
+  );
+
+  const subtotal = updatedItems.reduce(
+    (total, item) =>
+      total + item.price * item.quantity,
+    0
+  );
+
+  cart.finalAmount =
+    subtotal - (cart.discountAmount || 0);
+
+  await cart.save();
+
+  return {
+    ...cart.toObject(),
+    items: updatedItems
+  };
+}
 
   
 }

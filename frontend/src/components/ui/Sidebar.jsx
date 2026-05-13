@@ -34,7 +34,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // const isActive = (path) => location.pathname.includes(path);
+
   const isActive = (path) => {
   if (path === "dashboard") {
     return location.pathname === "/admin/dashboard";
@@ -53,24 +53,24 @@ const Sidebar = () => {
       className={`min-h-screen flex flex-col duration-500 bg-bg-main border-r border-border
       ${open ? "lg:w-80" : "lg:w-20"} w-13`}
     >
-      <div className="px-3 py-2 h-20 mt-1 flex justify-between items-center">
-        <h1
-          className={`${
-            open ? "block" : "hidden"
-          } lg:text-4xl text-2xl font-bold text-primary ml-5 `}
-        >
-          BUYORA
-        </h1>
+      
+<div className="px-4 py-2 h-20 mt-1 flex justify-between items-center bg-bg-main border-b border-border-light backdrop-blur-md">
+  <h1
+    className={`${
+      open ? "block" : "hidden"
+    } lg:text-4xl text-2xl font-extrabold tracking-[0.10em] uppercase ml-5 transition-all duration-300 hover:tracking-[0.15em] bg-gradient-to-r from-primary via-orange-500 to-pink-500 bg-clip-text text-transparent`}
+  >
+    BUYORA
+  </h1>
 
-        <AiOutlineMenu
-          size={34}
-          className={`duration-500 cursor-pointer text-text-secondary ${
-            open && "rotate-180"
-          } hidden lg:block`}
-          onClick={() => setOpen(!open)}
-        />
-      </div>
-
+  <AiOutlineMenu
+    size={34}
+    className={`cursor-pointer text-text-secondary transition-all duration-300 hover:text-primary hover:scale-105 ${
+      open && "rotate-180"
+    } hidden lg:block`}
+    onClick={() => setOpen(!open)}
+  />
+</div>
       <div className="mt-10">
         <ul className="flex-1">
           {menuItems.map((item, index) => {

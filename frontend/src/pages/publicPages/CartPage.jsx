@@ -14,6 +14,7 @@ import {
   verifyCoupon
 } from "../../Redux/slices/cartSlice";
 import Navbar from "../../components/ui/Navbar";
+import { showInfo } from "../../components/ui/Toastify";
 
 const CartPage = () => {
   const dispatch = useDispatch();
@@ -62,14 +63,22 @@ const CartPage = () => {
     }
   };
 
-  const handleQuantityChange = (variationId, quantity) => {
+  const handleQuantityChange =async (variationId, quantity) => {
     if (quantity < 1) return;
+  
+    try {
+      
+    await  dispatch(updateCartQuantity({ variationId, quantity })).unwrap()
+  
+  
 
-    dispatch(updateCartQuantity({ variationId, quantity }));
-    if (!isAuthenticated ) {
-      dispatch(clearCoupon());
-    }
-  };
+      if (!isAuthenticated ) {
+        dispatch(clearCoupon());
+      }
+    } catch (error) {
+       
+showInfo(error)
+  }};
 
   const handleApplyCoupon = () => {
     if (!couponCode.trim()) return;
