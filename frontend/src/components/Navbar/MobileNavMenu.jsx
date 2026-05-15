@@ -49,28 +49,32 @@ const MobileNavbarMenu = ({ closeMenu }) => {
             {openCategory === level1._id &&
               level1.children.map((level2) => (
                 <div key={level2._id} className="pl-4">
-                  <div
-                    className="flex justify-between items-center py-1 cursor-pointer font-medium text-primary"
-                    onClick={() =>
-                      setOpenSubCategory(
-                        openSubCategory === level2._id ? null : level2._id
-                      )
-                    }
-                  >
-                    <span>
-                       
-                      
-                      {level2.name}
-                      </span>
-                    <span>
-                      {openSubCategory === level2._id ? (
-                        <MdOutlineKeyboardArrowDown className="w-4 h-4" />
-                      ) : (
-                        <MdKeyboardArrowRight className="w-4 h-4" />
-                      )}
-                    </span>
-                  </div>
+                 
+<div className="flex justify-between items-center py-1">
 
+  <Link
+    to={`/${level1.slug}/${level2.slug}`}
+    className="font-medium text-primary"
+    onClick={closeMenu}
+  >
+    {level2.name}
+  </Link>
+
+  <button
+    onClick={() =>
+      setOpenSubCategory(
+        openSubCategory === level2._id ? null : level2._id
+      )
+    }
+  >
+    {openSubCategory === level2._id ? (
+      <MdOutlineKeyboardArrowDown className="w-4 h-4" />
+    ) : (
+      <MdKeyboardArrowRight className="w-4 h-4" />
+    )}
+  </button>
+
+</div>
                   {/* Level 3 */}
                   {openSubCategory === level2._id &&
                     level2.children.map((level3) => (

@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import Footer from "../../components/ui/Footer";
+import HomeCardSkeleton from "../../components/ui/HomeCardSkeleton";
+import HomeHeroSkeleton from "../../components/ui/HomeHeroSkeleton";
 import Navbar from "../../components/ui/Navbar";
 import { getBannersUser } from "../../Redux/slices/admin/adminBannerSlice";
 import { heroSliderSettings, promoSliderSettings } from "../../utils/sliderSettings";
@@ -66,15 +68,14 @@ const Home = () => {
     <>
       <Navbar />
 
-      <div className="min-h-screen bg-bg-main lg:mt-24 mt-6 sm:mt-10">
+      <div className="min-h-screen bg-bg-main lg:mt-24 mt-15 sm:mt-10 md:mt-20">
 
         {/* HERO SECTION */}
-        <section className="px-3 sm:px-6 lg:px-10 py-6 sm:py-10">
+        <section className="px-3 sm:px-6  py-6 sm:py-10">
 
           {loading ? (
-            <div className="text-center text-text-muted py-20 text-sm">
-              Loading featured collections...
-            </div>
+            
+            <HomeHeroSkeleton/>
           ) : heroBanners.length > 0 ? (
             <Slider {...heroSliderSettings}>
 
@@ -98,11 +99,11 @@ const Home = () => {
                   </div>
 
 <div className="mt-5 text-center px-4">
-                    <h2 className="text-2xl md:text-4xl font-semibold uppercase text-text-primary">
+                    <h2 className="text-xl md:text-4xl font-semibold uppercase lg:5xl text-text-primary">
                      {b.title}
                     </h2>
 
-                     <p className="text-text-muted mt-2 text-sm md:text-base">
+                     <p className="text-text-muted mt-2 text-xs md:text-base lg:lg">
                       {b.subtitle}
                     </p>
 
@@ -169,7 +170,7 @@ const Home = () => {
             </Slider>
           ) : (
             <div className="text-center text-text-muted py-10">
-              No promo offers available
+              <HomeCardSkeleton/>
             </div>
           )}
         </section>
@@ -222,7 +223,7 @@ const Home = () => {
             </Slider>
           ) : (
             <div className="text-center text-text-muted py-10">
-              No trending items available
+              <HomeCardSkeleton/>
             </div>
           )}
         </section>

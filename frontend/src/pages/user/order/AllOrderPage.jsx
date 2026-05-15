@@ -89,20 +89,20 @@ const AllOrdersPage = () => {
                   <img
                     src={item.imageUrl?.[0] || "/placeholder.png"}
                     alt={item.name}
-                    className={`w-20 h-auto object-cover rounded ${
+                    className={` w-13 sm:w-15 md:w-16 lg:w-20 h-auto object-cover rounded ${
                       item.status === "CANCELLED" ? "opacity-50" : ""
                     }`}
                   />
 
-                  <div className="flex-1 mx-4">
+                  <div className="flex-1 mx-4 text-[10px] sm:text-sm lg:text:xl md:text-xl">
                     <p
                       className={`font-semibold ${
-                        item.status === "CANCELLED" ? "line-through text-text-light" : "text-text-primary"
+                        item.status === "CANCELLED" ? "line-through text-text-light" : "text-text-primary text-[10px] sm:text-sm lg:text:xl md:text-xl "
                       }`}
                     >
                       {item.name}
                     </p>
-                    <p className={item.status === "CANCELLED" ? "text-text-light" : "text-text-secondary"}>
+                    <p className={item.status === "CANCELLED" ? "text-text-light" : "text-text-secondary "}>
                       Price: ₹{item.price}
                     </p>
                     <p className={item.status === "CANCELLED" ? "text-text-light" : "text-text-secondary"}>
@@ -110,7 +110,7 @@ const AllOrdersPage = () => {
                     </p>
                   </div>
 
-                  <div className="flex flex-col items-end">
+                  <div className="flex flex-col items-end text-xs sm:text-sm  ">
                     <span
                       className={`font-semibold ${
                         item.status === "CANCELLED" ? "text-danger" : "text-success"
@@ -123,8 +123,8 @@ const AllOrdersPage = () => {
               ))}
             </div>
 
-            <div className="flex flex-col md:flex-row md:justify-between md:items-center  mt-4 gap-3">
-              <p className="font-semibold text-lg text-text-primary">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center  mt-4 gap-3 text-[12px] sm:text-sm lg:text:xl md:text-xl">
+              <p className="font-semibold  text-text-primary">
                 Total Amount: ₹{order.totalAmount}
               </p>
               <button

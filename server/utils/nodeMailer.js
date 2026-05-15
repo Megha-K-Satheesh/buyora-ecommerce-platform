@@ -14,6 +14,9 @@ const transporter = nodemailer.createTransport({
     user: config.EMAIL,
     pass: config.APP_PASSWORD
   },
+  
+
+  family: 4,
   tls: {
     rejectUnauthorized: false
   }
@@ -47,28 +50,34 @@ const generateOtp = (purpose) => {
   };
 };
 
+
 const sendOtpEmail = async (user, otp) => {
-  if (!user.email) throw new Error('User email is missing, cannot send OTP');
+  if (!user.email) {
+    logger.error("User email is missing");
+    return false;
+  }
 
   try {
     await transporter.sendMail({
       from: `"Buyora" <${config.EMAIL}>`,
       to: user.email,
-      subject: 'Verify your email',
+      subject: "Verify your email",
       html: `
         <h3>Hello ${user.name}</h3>
         <p>Your OTP is:</p>
         <h1>${otp}</h1>
-      `
+      `,
     });
 
-    logger.info('OTP email sent');
+    logger.info("OTP email sent");
+
+    return true;
   } catch (error) {
-    logger.error('OTP email failed', { error });
-    throw error;
+    logger.error("OTP email failed", { error });
+
+    return false;
   }
 };
-
 
 module.exports = {
   generateOtp,

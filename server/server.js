@@ -15,6 +15,7 @@ const { scheduleDeliveryCron } = require('./utils/corn');
 class Server {
   constructor() {
     this.app = express();
+    this.app.set("trust proxy", 1);
     this.server = http.createServer(this.app);
     this.port = config.PORT;
   }

@@ -99,7 +99,7 @@ const ProductGrid = ({ products = [] }) => {
   if (!products.length) return <p className="text-text-muted">No Products Found</p>;
 
   return (
-    <div className="grid lg:grid-cols-4 lg:gap-4 gap-3 mb-2 p-2 grid-cols-2">
+    <div className="grid lg:grid-cols-4 lg:gap-1 gap-3 mb-2 p-2 grid-cols-2">
       {products.map((product) => {
         const isInCart = cartItems.some(
           (item) => item.productId === product._id
@@ -113,14 +113,14 @@ const ProductGrid = ({ products = [] }) => {
         return (
           <div
             key={product._id}
-            className="rounded-lg lg:m-4 lg:p-4 hover:shadow-lg transition-shadow duration-300 cursor-pointer relative"
+            className="rounded-lg lg:m-4 lg:p-4 p-4 hover:shadow-lg transition-shadow duration-300 cursor-pointer relative"
             onClick={() => handleClick(product)}
           >
-            <div className="relative">
+            <div className="relative ">
               <img
                 src={product.images[0]}
                 alt={product.name}
-                className="lg:w-full lg:h-82 object-cover mb-3 rounded"
+                className="lg:w-full lg:h-auto xl:w-full xl:h-auto w-60 h-auto md:w-full md:h-auto object-cover mb-3 rounded"
               />
 
               {isOutOfStock && (
@@ -143,7 +143,7 @@ const ProductGrid = ({ products = [] }) => {
                 }}
               >
                 {isWishlisted(product._id) ? (
-                  <AiFillHeart className="text-danger" />
+                  <AiFillHeart className="text-danger " />
                 ) : (
                   <AiOutlineHeart className="text-text-light" />
                 )}
@@ -160,23 +160,23 @@ const ProductGrid = ({ products = [] }) => {
               </div>
             </div>
 
-            <p className="text-text-muted text-sm mb-1">
+            <p className="text-text-muted text-xs md:text-sm lg:text-sm mb-1">
               {product.brand.name}
             </p>
 
-            <h3 className="font-medium text-text-primary mb-2 truncate overflow-hidden whitespace-nowrap">
+            <h3 className="font-medium text-text-primary mb-2 truncate overflow-hidden whitespace-nowrap text-xs md:text-sm lg:text-sm">
               {product.name}
             </h3>
 
             <div className="flex items-center gap-2">
-              <span className="text-primary font-semibold">
+              <span className="text-primary font-semibold text-xs md:text-sm lg:text-sm">
                 ₹{product.sellingPrice}
               </span>
               <span className="text-text-muted line-through">
                 ₹{product.mrp}
               </span>
               {product.discountPercentage > 0 && (
-                <span className="text-danger font-medium text-sm">
+                <span className="text-danger font-medium text-xs md:text-sm lg:text-sm">
                   ({product.discountPercentage}% OFF)
                 </span>
               )}
@@ -207,3 +207,6 @@ const ProductGrid = ({ products = [] }) => {
 };
 
 export default ProductGrid;
+
+
+

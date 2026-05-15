@@ -1,11 +1,14 @@
 
 
+
+
 import { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { TiStarFullOutline } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Footer from "../../components/ui/Footer";
+import Loader from "../../components/ui/Loader";
 import Navbar from "../../components/ui/Navbar";
 import { showError, showSuccess } from "../../components/ui/Toastify";
 import ReviewSection from "../../components/user/ReviewSection";
@@ -120,21 +123,27 @@ const SingleProductPage = () => {
     }
   };
 
-  if (loading) return <p className="text-center mt-10 text-text-muted">Loading...</p>;
-  if (error) return <p className="text-center mt-10 text-danger">{error}</p>;
-  if (!product) return <p className="text-center mt-10 text-text-muted">Product not found</p>;
+  if (loading)
+    return <div className="text-center mt-10 text-text-muted"><Loader/></div>;
+  if (error)
+    return <p className="text-center mt-10 text-danger">{error}</p>;
+  if (!product)
+    return <p className="text-center mt-10 text-text-muted">Product not found</p>;
 
   const sizes = [...new Set(product.variations.map((v) => v.attributes.Size))];
   const colors = [...new Set(product.variations.map((v) => v.attributes.Color))];
 
   return (
-    <div className="">
+    <div>
       <Navbar />
 
-      <div className="lg:max-w-7xl  mx-auto m-20 flex flex-col md:flex-row gap-8 mt-25 p-6 bg-bg-main">
+      {/* MAIN WRAPPER */}
+      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-6 lg:gap-10 mt-20 p-4 sm:p-6 bg-bg-main">
 
+        {/* LEFT SECTION */}
         <div className="flex flex-col md:flex-row gap-4 flex-1">
 
+          {/* MAIN IMAGE */}
           <div className="order-1 md:order-2 flex-1 flex items-center justify-center rounded-lg p-2 bg-bg-main relative">
 
             {isOutOfStock && (
@@ -146,62 +155,61 @@ const SingleProductPage = () => {
             <img
               src={mainImage}
               alt={product.name}
-              className="w-full h-[400px] md:h-[500px] object-contain rounded-lg opacity-100"
+              className="w-full h-auto max-h-[300px] sm:max-h-[400px] lg:max-h-[500px] object-contain rounded-lg"
             />
           </div>
 
-          <div className="order-2  md:order-1 flex flex-row md:flex-col  gap-4 mt-3 md:mt-0">
+          {/* THUMBNAILS */}
+          <div className="order-2 md:order-1 flex flex-row md:flex-col gap-2 sm:gap-3 mt-3 md:mt-0 overflow-x-auto md:overflow-visible">
+
             {product.images.map((img, index) => (
               <img
                 key={index}
                 src={img}
                 alt={`${product.name}-${index}`}
-                className={`w-20 cursor-pointer rounded border-2 ${
-                  mainImage === img ? "border-border-primary" : "border-border-light"
+                className={`w-16 sm:w-18 md:w-20 flex-shrink-0 cursor-pointer rounded border-2 ${
+                  mainImage === img
+                    ? "border-border-primary"
+                    : "border-border-light"
                 }`}
                 onClick={() => setMainImage(img)}
               />
             ))}
           </div>
-
         </div>
 
-        <div className="flex-1 flex flex-col text-text-primary">
+        {/* RIGHT SECTION */}
+        <div className="flex-1 flex flex-col text-text-primary w-full">
 
-          <h1 className="text-3xl font-bold">{product.brand.name}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">
+            {product.brand.name}
+          </h1>
 
-          <p className="text-text-muted mt-1 text-2xl">{product.name}</p>
+          <p className="text-text-muted mt-1 text-xl sm:text-2xl">
+            {product.name}
+          </p>
 
+          {/* RATING */}
+          <div className="flex flex-wrap items-center gap-2 mt-2 text-text-primary text-base sm:text-lg">
+            <span className="font-semibold">
+              {product.rating?.toFixed(1) || "0.0"}
+            </span>
 
-          {/* <div className="flex items-center gap-2 mt-2 text-text-primary">
-  <span className="font-semibold">
-    {product.rating?.toFixed(1) || "0.0"} ⭐
-  </span>
+            <span className="text-green-500 text-xl">
+              <TiStarFullOutline />
+            </span>
 
-  <span className="text-text-muted">
-    | {product.ratingCount >= 1000
-      ? `${(product.ratingCount / 1000).toFixed(1)}k`
-      : product.ratingCount || 0} Ratings
-  </span>
-</div> */}
-<div className="flex items-center gap-2 mt-2 text-text-primary text-lg">
-  <span className="font-semibold">
-    {product.rating?.toFixed(1) || "0.0"}
-  </span>
+            <span className="text-text-muted">
+              | {product.ratingCount >= 1000
+                ? `${(product.ratingCount / 1000).toFixed(1)}k`
+                : product.ratingCount || 0} Ratings
+            </span>
+          </div>
 
-  <span className="text-green-500 text-xl">
-    <TiStarFullOutline />
-  </span>
-
-  <span className="text-text-muted">
-    | {product.ratingCount >= 1000
-      ? `${(product.ratingCount / 1000).toFixed(1)}k`
-      : product.ratingCount || 0} Ratings
-  </span>
-</div>
-          <p className="mt-4 text-3xl font-semibold">
+          {/* PRICE */}
+          <p className="mt-4 text-xl sm:text-2xl lg:text-3xl font-semibold">
             ₹{product.sellingPrice}{" "}
-            <span className="line-through text-text-muted text-2xl ml-1">
+            <span className="line-through text-text-muted text-lg sm:text-2xl ml-1">
               ₹{product.mrp}
             </span>{" "}
             <span className="text-warning ml-2">
@@ -209,66 +217,63 @@ const SingleProductPage = () => {
             </span>
           </p>
 
-{!isOutOfStock &&( 
+          {/* SIZE */}
+          {!isOutOfStock && (
+            <div className="mt-6">
+              <h2 className="font-bold mb-2 text-base sm:text-lg">
+                SELECT SIZE
+              </h2>
 
-          <div className="mt-6">
-            <h2 className="font-bold mb-2 text-lg">SELECT SIZE</h2>
-
-            <div className="flex gap-2 flex-wrap mt-3">
-              {sizes.map((size) => (
-                <button
-                  key={size}
-                  className={`px-3 py-2 border rounded ${
-                    selectedSize === size
-                      ? "text-primary border-border-primary"
-                      : "border-border-light text-text-secondary"
-                  }`}
-                  onClick={() => setSelectedSize(size)}
-                >
-                  {size}
-                </button>
-              ))}
+              <div className="grid grid-cols-4 sm:flex gap-2 flex-wrap mt-3">
+                {sizes.map((size) => (
+                  <button
+                    key={size}
+                    className={`lg:px-3  py-2 border rounded ${
+                      selectedSize === size
+                        ? "text-primary border-border-primary"
+                        : "border-border-light text-text-secondary"
+                    }`}
+                    onClick={() => setSelectedSize(size)}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
             </div>
+          )}
 
- 
-          </div>
-)}
-{!isOutOfStock &&(
+          {/* COLOR */}
+          {!isOutOfStock && (
+            <div className="mt-4">
+              <h2 className="font-bold mb-2 text-base sm:text-lg">
+                SELECT COLOR
+              </h2>
 
-          <div className="mt-4">
-            <h2 className="font-bold mb-2 text-lg">SELECT COLOR</h2>
-
-            <div className="flex gap-2 flex-wrap mt-3">
-              {colors.map((color) => (
-                <button
-                  key={color}
-                  className={`px-4 py-2 border rounded ${
-                    selectedColor === color
-                      ? "text-primary border-border-primary"
-                      : "border-border-light text-text-secondary"
-                  }`}
-                  onClick={() => setSelectedColor(color)}
-                >
-                  {color}
-                </button>
-                
-              ))}
-              
+              <div className="grid grid-cols-2 sm:flex gap-2 flex-wrap mt-3">
+                {colors.map((color) => (
+                  <button
+                    key={color}
+                    className={`px-4 py-2 border rounded ${
+                      selectedColor === color
+                        ? "text-primary border-border-primary"
+                        : "border-border-light text-text-secondary"
+                    }`}
+                    onClick={() => setSelectedColor(color)}
+                  >
+                    {color}
+                  </button>
+                ))}
+              </div>
             </div>
-            {/* {!selectedColor && (
-  <p className="text-red-500 text-sm mt-1">
-    Please select a color
-  </p>
-)} */}
-          </div>
-)}
+          )}
 
-          <div className="flex flex-col md:flex-row gap-4 mt-8">
+          {/* BUTTONS */}
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8">
 
             <button
-              disabled={isOutOfStock || isInCart }
+              disabled={isOutOfStock || isInCart}
               onClick={handleAddToCart}
-              className={`flex-1 py-3 text-xl border border-border rounded font-semibold text-white ${
+              className={`flex-1 py-3 text-base sm:text-lg lg:text-xl border border-border rounded font-semibold text-white ${
                 isOutOfStock
                   ? "bg-border cursor-not-allowed"
                   : isInCart
@@ -287,7 +292,7 @@ const SingleProductPage = () => {
 
             <button
               onClick={handleWishlistToggle}
-              className="flex items-center justify-center gap-2 flex-1 py-3 border border-border text-xl rounded text-text-primary"
+              className="flex items-center justify-center gap-2 flex-1 py-3 border border-border text-base sm:text-lg rounded text-text-primary"
             >
               {liked ? (
                 <AiFillHeart className="text-danger text-2xl" />
@@ -295,20 +300,19 @@ const SingleProductPage = () => {
                 <AiOutlineHeart className="text-text-light text-2xl" />
               )}
               {liked ? "WISHLISTED" : "WISHLIST"}
-
             </button>
-
           </div>
 
-          <div className="mt-6">
+          {/* DESCRIPTION */}
+          <div className="mt-6 w-full">
             <h2 className="font-semibold mb-2">Description</h2>
             <p className="text-text-secondary">{product.description}</p>
           </div>
-
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6">
+      {/* REVIEW */}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6">
         <ReviewSection productId={id} />
       </div>
 
@@ -318,5 +322,3 @@ const SingleProductPage = () => {
 };
 
 export default SingleProductPage;
-
-

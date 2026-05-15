@@ -103,8 +103,8 @@ const WishlistPage = () => {
     return <p className="text-center mt-10">Your wishlist is empty</p>;
 
   return (
-    <div className="p-4 max-w-full">
-      <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+    <div className="lg:p-4 max-w-full ">
+      <div className="grid gap-3 p-2   lg:gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {wishlist.map((item) => (
           <WishlistCard
             key={item._id}

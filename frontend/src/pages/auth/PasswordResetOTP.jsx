@@ -76,8 +76,8 @@ const VerifyPasswordOtp = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg-soft">
-      <div className="card bg-bg-main shadow-lg p-6 rounded-md w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl">
-       <h1 className='text-3xl sm:text-3xl md:text-4xl lg:text-5xl text-center font-bold mt-6 mb-10'>     Password Reset Verify OTP</h1>
+      <div className="card bg-bg-main shadow-lg p-6 rounded-md w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl mx-5 sm:mx-5">
+       <h1 className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center font-bold mt-6 mb-10'>     Password Reset Verify OTP</h1>
 
         <OtpInput
           length={6}
@@ -96,7 +96,7 @@ const VerifyPasswordOtp = () => {
           loading={loading}
           onClick={handleVerifyClick}
         >
-          Verify OTP
+           {loading ? "Verifying OTP..." : "Verify OTP"}
         </Button>
 
          <div className="mt-4 text-center text-lg text-gray-600">

@@ -124,14 +124,14 @@ return(
                                     
                    })}
                    label={
-                <span>
+                <span className="text-xs">
                 Remerber me{' '}
                 </span>
             }
             error={errors.agreeToTerms?.message}
             />
 
-            <p className="text-sm text-primary hover:text-primary-hover"><Link to='/forget-password'>Forget Password?</Link></p>
+            <p className="text-xs  text-primary hover:text-primary-hover mt-1.5"><Link to='/forget-password'>Forget Password?</Link></p>
                   </div>
 
 

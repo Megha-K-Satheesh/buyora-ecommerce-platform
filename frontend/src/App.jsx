@@ -69,7 +69,7 @@ const Profile = lazy(() => import("./pages/user/profile/Profile"));
 const Address = lazy(() => import("./pages/user/address/Address"));
 const AddAddress = lazy(() => import("./pages/user/address/AddAddress"));
 const EditAddress = lazy(() => import("./pages/user/address/EditAddress"));
-const ChangePassword = lazy(() => import("./pages/user/ChangePassword"));
+
 const AllOrdersPage = lazy(() => import("./pages/user/order/AllOrderPage"));
 const SingleOrderPage = lazy(() => import("./pages/user/order/SingleOrderView"));
 const CheckoutPage = lazy(() => import("./pages/user/checkout/checkout"));
@@ -78,28 +78,27 @@ const Wallet = lazy(() => import("./pages/user/wallet/walletDisplay"));
 const CouponsList = lazy(() => import("./pages/user/coupon/UserCoupons"));
 
 // UI components
-// import ChatWidget from "./components/ui/ChatWidGet";
+
 import NotFound from "./components/ui/NotFount";
 import ServerError from "./components/ui/ServerError";
-// import NavbarOrderLayout from "./layouts/OrderLayout";
+
 import Loader from "./components/ui/Loader";
 import { getCartBackend, setCart } from "./Redux/slices/cartSlice";
 import { getUserProfile } from "./Redux/slices/userSlice";
 import { connectSocket, listenUserStatus } from "./utils/socket";
-// import Brand from "./pages/admin/brand/Brand";
-// import UpdateBrand from "./pages/admin/brand/UpdateBrand";
+
 const Brand = lazy(() => import("./pages/admin/brand/Brand"));
 const UpdateBrand = lazy(() => import("./pages/admin/brand/UpdateBrand"));
 
-// import AdminRealtimeChat from "./pages/admin/contact/AdminRealtimeChat";
+
 const AdminOrderView = lazy(() =>
   import("./pages/admin/orders/AdminOrderView")
 );
-// import EditProfile from "./pages/user/profile/EditProfile";
+
 const EditProfile = lazy(() =>
   import("./pages/user/profile/EditProfile")
 );
-// import UserRealtimeChat from "./pages/user/contact/UserRealTimeChat";
+
 const AdminRealtimeChat = lazy(() =>
   import("./pages/admin/contact/AdminRealtimeChat")
 );
@@ -197,7 +196,7 @@ useEffect(() => {
             <Route path="address" element={<Address />} />
             <Route path="address/add-address" element={<AddAddress />} />
             <Route path="address/edit-address/:addressId" element={<EditAddress />} />
-            <Route path="change-password" element={<ChangePassword />} />
+           
             <Route path="all-orders" element={<AllOrdersPage />} />
             <Route path="wallet" element={<Wallet />} />
             <Route path="user-coupons" element={<CouponsList />} />

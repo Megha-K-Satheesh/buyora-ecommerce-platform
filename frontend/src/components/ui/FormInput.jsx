@@ -41,7 +41,7 @@ const FormInput = memo(
               type={type}
               placeholder={placeholder}
               className={`flex-1 py-2 focus:outline-none focus:ring-2 appearance-none
-              ${error ? 'focus:ring-red-500' : 'focus:ring-pink-500'} 
+              ${error ? 'focus:ring-red-500 placeholder:text-xs' : 'focus:ring-pink-500'} 
               ${className}`}
               {...props}
             />
@@ -65,7 +65,7 @@ const FormInput = memo(
               type={type}
               placeholder={placeholder}
               className={`w-full outline-none appearance-none
-              placeholder:text-[9px]
+             placeholder:text-xs
               placeholder:lg:text-xl
               ${className}`}
               {...props}

@@ -1,5 +1,4 @@
 
-
 import { useEffect, useRef, useState } from "react";
 import { FiUser } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,15 +16,15 @@ const ProfileDropdown = () => {
 
   const [open, setOpen] = useState(false);
   const [canHover, setCanHover] = useState(false);
+
   const dropdownRef = useRef();
 
   const handleLogout = () => {
-      disconnectSocket();
+    disconnectSocket();
     dispatch(logout());
     navigate("/login");
   };
 
- 
   useEffect(() => {
     setCanHover(window.matchMedia("(hover: hover)").matches);
   }, []);
@@ -34,35 +33,38 @@ const ProfileDropdown = () => {
     dispatch(getUserProfile());
   }, [dispatch]);
 
- 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target)
+      ) {
         setOpen(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+
+    return () =>
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
   }, []);
 
   return (
     <div
       ref={dropdownRef}
       className="relative flex flex-1 flex-col justify-center items-center cursor-pointer"
-
-      onMouseEnter={() => canHover && setOpen(true)}
-      onMouseLeave={() => canHover && setOpen(false)}
     >
       {/* Profile Icon */}
       <div
-        onClick={() => {
-          if (!canHover) setOpen((prev) => !prev);
-        }}
+        onClick={() => setOpen((prev) => !prev)}
         className="flex flex-col lg:mt-2 items-center"
       >
-        <FiUser className="sm:text-2xl  lg:text-3xl" />
-        <span className="text-sm font-medium hidden lg:block md:block">
+        <FiUser className="sm:text-2xl lg:text-3xl" />
+
+        <span className="text-sm font-medium hidden lg:block md:hidden">
           Profile
         </span>
       </div>
@@ -70,15 +72,15 @@ const ProfileDropdown = () => {
       {/* Dropdown */}
       {open && (
         <div
-          className="absolute top-20 mt-2 bg-bg-main shadow-lg z-50
-                     right-2 sm:right-0 w-72 sm:w-80
-                     rounded-md overflow-hidden
+          className="absolute top-10 text-sm sm:top-10  lg:top-20 mt-2 bg-bg-main shadow-lg z-50 lg:text-lg
+                 -right-18    lg:right-2  sm:right-0 w-67 sm:w-80
+           px-2          rounded-md overflow-hidden
                      transition-all duration-200"
         >
           {isAuthenticated ? (
             <>
               <div
-                className="px-6 py-4 text-lg font-medium cursor-pointer border-b border-border-light"
+                className="px-3 text-sm py-4 lg:text-xl font-medium  cursor-pointer border-b border-border-light"
                 onClick={() => {
                   navigate("/account");
                   setOpen(false);
@@ -91,15 +93,23 @@ const ProfileDropdown = () => {
                 <li className="px-4 py-2 transition-all duration-200 hover:bg-bg-muted hover:pl-6">
                   <Link to="/all-orders">Orders</Link>
                 </li>
+
                 <li className="px-4 py-2 transition-all duration-200 hover:bg-bg-muted hover:pl-6">
-                  <Link to="/products/wishlist">Wishlist</Link>
+                  <Link to="/products/wishlist">
+                    Wishlist
+                  </Link>
                 </li>
+
                 <li className="px-4 py-2 transition-all duration-200 hover:bg-gray-100 hover:pl-6">
                   <Link to="/user-chat">Contact Us</Link>
                 </li>
+
                 <li className="px-4 py-2 transition-all duration-200 hover:bg-gray-100 hover:pl-6">
-                  <Link to="/account/user-coupons">Coupon</Link>
+                  <Link to="/account/user-coupons">
+                    Coupon
+                  </Link>
                 </li>
+
                 <li className="px-4 py-2 transition-all duration-200 hover:bg-gray-100 hover:pl-6">
                   <Link to="/account/wallet">Wallet</Link>
                 </li>

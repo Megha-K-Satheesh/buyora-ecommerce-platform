@@ -17,7 +17,7 @@ const WishlistCard = ({
   const discountedPrice = (originalPrice * (1 - discount / 100)).toFixed(0);
 
   return (
-    <div className="relative z-0 rounded-lg p-4 shadow hover:shadow-lg transition-shadow duration-200 w-full sm:w-72 bg-bg-main flex flex-col">
+    <div className="relative z-0 rounded-lg p-6  shadow hover:shadow-lg transition-shadow duration-200 ml-10  w-full max-w-[300px]  sm:w-65  lg:w-70 bg-bg-main flex flex-col">
 
       <div className="relative w-full h-auto flex-shrink-0 overflow-hidden rounded-lg mb-4">
 
@@ -81,3 +81,4 @@ const WishlistCard = ({
 };
 
 export default WishlistCard;
+

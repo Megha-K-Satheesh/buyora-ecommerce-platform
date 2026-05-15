@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { AiOutlineEye } from "react-icons/ai";
+import { LuEyeClosed } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/ui/Button";
@@ -6,8 +9,10 @@ import FormInput from "../../components/ui/FormInput";
 import { showError } from "../../components/ui/Toastify";
 import { resetPassword } from "../../Redux/slices/authSlice";
 
-
 const ResetPassword = ()=>{
+ 
+  const [showPassword, setShowPassword] = useState(false);
+const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     
 const resetToken= useSelector((state)=>state.auth.resetToken)|| localStorage.getItem('resetToken')
 const {error} = useSelector((state)=>state.auth)
@@ -58,9 +63,21 @@ return(
            
           <FormInput
                       label="New Password"
-                      type="password"
+              
+                      type={showPassword ? "text" : "password"}
                       placeholder="Enter new password"
                        required
+                         rightIcon={
+    showPassword ? (
+      <AiOutlineEye
+        onClick={() => setShowPassword(false)}
+      />
+    ) : (
+      <LuEyeClosed
+        onClick={() => setShowPassword(true)}
+      />
+    )
+  }
                       {...register('password', {
                         required: 'Password is required',
                         minLength: {
@@ -77,7 +94,18 @@ return(
           
                     <FormInput
                       label="Confirm New Password"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
+                       rightIcon={
+    showConfirmPassword ? (
+      <AiOutlineEye
+        onClick={() => setShowConfirmPassword(false)}
+      />
+    ) : (
+      <LuEyeClosed
+        onClick={() => setShowConfirmPassword(true)}
+      />
+    )
+  }
                        required
                       placeholder="Confirm new password"
                       {...register('confirmPassword', {

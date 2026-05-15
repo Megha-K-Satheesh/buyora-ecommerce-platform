@@ -1,63 +1,50 @@
 
 
 
-
 import { FiHeart, FiShoppingBag } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import ProfileDropdown from "./ProfileDropdown";
 
 const NavbarIcons = () => {
-
- 
   const { cartItems } = useSelector((state) => state.cart);
 
   return (
-    <div className="flex flex-row h-full">
+    <div className="flex items-center gap-2 sm:gap-5 md:gap-6 lg:gap-4 h-full">
 
       {/* Profile */}
-      <ProfileDropdown />
+      <div className="flex items-center h-full">
+        <ProfileDropdown />
+      </div>
 
-  
-
-
-      <Link to="/products/wishlist">
-      <div className="flex flex-1 justify-center items-center mt-5  flex-col cursor-pointer ">
-        <FiHeart className="sm:text-2xl mt-1" />
-        <span className="text-sm mt-1 font-medium hidden lg:block md:block">
+      {/* Wishlist */}
+      <Link to="/products/wishlist" className="flex flex-col items-center justify-center h-full">
+        <FiHeart className="text-lg sm:text-xl md:text-2xl  lg:mt-3" />
+        <span className="hidden lg:block text-xs md:text-sm font-medium">
           Wishlist
         </span>
-      </div>
-    </Link>
+      </Link>
 
-      {/* Bag */}
-      <div className="flex flex-1 flex-col justify-center items-center">
-        <Link
-          to="/product/cart"
-          className="relative flex flex-col items-center"
-        >
-          {/* Bag Icon */}
-          <FiShoppingBag className="sm:text-2xl lg:text-3xl" />
+      {/* Cart */}
+      <Link
+        to="/product/cart"
+        className="relative flex flex-col items-center justify-center h-full"
+      >
+        <FiShoppingBag className="text-lg lg:mt-2 sm:text-xl md:text-2xl lg:text-3xl" />
 
-          {/* Cart Badge */}
-          {cartItems.length > 0 && (
-            <span className="absolute lg:-top-2 lg:-right-3 -top-1 -right-2  bg-danger text-white lg:text-[10px] text-[6px] font-bold lg:w-5 lg:h-5 h-3 w-3 flex items-center justify-center rounded-full">
-              {cartItems.length}
-            </span>
-          )}
-
-          {/* Label */}
-          <span className="text-sm font-medium hidden lg:block md:block">
-            Bag
+         {cartItems.length > 0 && (
+         <span className="absolute -top-1 mt-6 lg:-right-2 lg:-top-4  -right-2 md:-top-2 md:-right-3 bg-red-500 text-white text-[7px] md:text-xs font-bold w-3 h-3 md:w-5 md:h-5 flex items-center justify-center rounded-full">
+            {cartItems.length}
           </span>
-        </Link>
-      </div>
+         )} 
+
+        <span className="hidden lg:block text-xs md:text-sm font-medium">
+          Bag
+        </span>
+      </Link>
 
     </div>
   );
 };
 
 export default NavbarIcons;
-
-
-

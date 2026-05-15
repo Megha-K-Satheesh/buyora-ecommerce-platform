@@ -7,8 +7,8 @@ const WishlistLayout =()=>{
   return(
     <>
      <Navbar/>
-    <div className="mt-25 px-10">
-     <h1 className="text-3xl py-10">MY Wishlist</h1>
+    <div className="lg:mt-25 mt-10 lg:px-10 px-2">
+     <h1 className="lg:text-3xl md:text-2xl text-xl py-10">MY Wishlist</h1>
     <WishlistPage/>
     </div>
     </>
