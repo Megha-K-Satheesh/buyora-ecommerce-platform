@@ -43,6 +43,7 @@
     "pdfkit": "^0.18.0",
     "pdfmake": "^0.1.70",
     "razorpay": "^2.9.6",
+    "resend": "^6.12.3",
     "slugify": "^1.6.6",
     "socket.io": "^4.7.2",
     "winston": "^3.10.0",

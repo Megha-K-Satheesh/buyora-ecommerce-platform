@@ -3,7 +3,7 @@ const { generateUserToken, generateResetToken, verifyResetToken } = require('../
 const logger = require('../utils/logger');
 const { ConflictError, ValidationError, GenericError ,ErrorFactory} = require('../utils/errors');
 
-const { generateOtp, sendOtpEmail } = require('../utils/nodeMailer');
+const { generateOtp, sendOtpEmail } = require('../utils/emailService');
 const { verifyGoogleToken } = require('../utils/googleAuth');
 
 
@@ -75,10 +75,10 @@ class AuthService {
    static async verifyPasswordResetOtp(data){
        const {userId,otp,purpose} = data;
        
-       console.log(userId);
-       console.log(purpose,otp);
+      //  console.log(userId);
+      //  console.log(purpose,otp);
        const user = await User.findById(userId);
-       console.log("USER",user)
+      //  console.log("USER",user)
        if(!user){
         throw ErrorFactory.notFound('User not found')
        }
