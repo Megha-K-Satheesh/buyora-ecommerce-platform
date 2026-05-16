@@ -79,10 +79,10 @@ if (!sent) {
    static async verifyPasswordResetOtp(data){
        const {userId,otp,purpose} = data;
        
-      //  console.log(userId);
-      //  console.log(purpose,otp);
+       console.log(userId);
+       console.log(purpose,otp);
        const user = await User.findById(userId);
-      //  console.log("USER",user)
+       console.log("USER",user)
        if(!user){
         throw ErrorFactory.notFound('User not found')
        }

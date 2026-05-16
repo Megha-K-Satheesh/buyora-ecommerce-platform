@@ -1,6 +1,6 @@
 
 import { useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/ui/Button";
 import OtpInput from "../../components/ui/OTPInput";
@@ -16,7 +16,7 @@ const VerifyPasswordOtp = () => {
   const navigate = useNavigate();
   const otpRef = useRef();
   const rawUserId =
-    useSelector((state) => state.auth.userId) ||
+    
     localStorage.getItem("otpUserId");
   const userId = rawUserId && rawUserId !== "undefined" ? rawUserId : null;
 

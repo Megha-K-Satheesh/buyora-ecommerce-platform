@@ -25,7 +25,11 @@ const transporter = nodemailer.createTransport({
     pass: process.env.BREVO_SMTP_KEY,
   },
   connectionTimeout: 10000,
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
+
 
 const sendOtpEmail = async (user, otp) => {
   try {
