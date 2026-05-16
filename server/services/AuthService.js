@@ -28,7 +28,11 @@ class AuthService {
           await user.save();
 
           
-          sendOtpEmail(user,otpDetails.code);
+        const sent = await sendOtpEmail(user, otpDetails.code);
+
+if (!sent) {
+  throw ErrorFactory.generic("Failed to send OTP email");
+}
 
           return {
             message: 'OTP sent to your email',
@@ -86,7 +90,7 @@ class AuthService {
         throw ErrorFactory.validation('Invalid otp request')
        }
        if( user.otpDetails.purpose !== purpose  ){ 
-          console.log(user.otpDetails.purpose,purpose)
+          // console.log(user.otpDetails.purpose,purpose)
         throw ErrorFactory.validation('Invalid Purpose request')
        }
        if(Date.now() > user.otpDetails.expiresAt){
@@ -129,7 +133,11 @@ class AuthService {
     user.otpDetails = otpDetails;
     await user.save();
 
-    await sendOtpEmail(user, otpDetails.code);
+    const sent = await sendOtpEmail(user, otpDetails.code);
+
+if (!sent) {
+  throw ErrorFactory.generic("Failed to send OTP email");
+}
 
     return {
       message: 'OTP sent successfully',
@@ -150,10 +158,14 @@ static async forgotPasswordRequest(data){
        }
 
        const otpDetails = generateOtp('PASSWORD_RESET')
-       console.log(otpDetails)
+      //  console.log(otpDetails)
        user.otpDetails = otpDetails;
       await user.save()
-      await sendOtpEmail(user,otpDetails.code)
+     const sent = await sendOtpEmail(user, otpDetails.code);
+
+if (!sent) {
+  throw ErrorFactory.generic("Failed to send OTP email");
+}
      return{
         userId:user._id,
         purpose:user.otpDetails.purpose
@@ -173,7 +185,7 @@ static async forgotPasswordRequest(data){
     throw ErrorFactory.validation("Reset token and new password are required");
   }
 
-  console.log("Reset Token:", resetToken, "New Password:", newPassword);
+  // console.log("Reset Token:", resetToken, "New Password:", newPassword);
     const decoded =verifyResetToken(resetToken);
 
     if(!decoded || decoded.purpose !=='PASSWORD_RESET'){
@@ -260,7 +272,7 @@ static async googleLogin(idToken) {
   }
 
 if (user.status === 'banned') {
-  throw new Error('Your account has been banned');
+  throw new ErrorFactory.userBanned('Your account has been banned');
 }
   const token = generateUserToken({
     id: user._id,

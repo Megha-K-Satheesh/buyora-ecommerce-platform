@@ -1,15 +1,6 @@
-
-
-
-const { Resend } = require("resend");
+const nodemailer = require("nodemailer");
 const otpGenerator = require("otp-generator");
-const config = require("../config/config");
 const logger = require("./logger");
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-
-console.log("RESEND KEY LOADED:", !!process.env.RESEND_API_KEY);
 
 const generateOtp = (purpose) => {
   const otp = otpGenerator.generate(6, {
@@ -25,15 +16,25 @@ const generateOtp = (purpose) => {
   };
 };
 
-const sendOtpEmail = async (user, otp) => {
-  if (!user.email) {
-    logger.error("User email is missing");
-    return false;
-  }
+const transporter = nodemailer.createTransport({
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.BREVO_SMTP_USER,
+    pass: process.env.BREVO_SMTP_KEY,
+  },
+});
 
+const sendOtpEmail = async (user, otp) => {
   try {
-    await resend.emails.send({
-      from: "Buyora <onboarding@resend.dev>",
+    if (!user.email) {
+      logger.error("User email is missing");
+      return false;
+    }
+
+    await transporter.sendMail({
+      from: `Buyora <${process.env.EMAIL}>`,
       to: user.email,
       subject: "Verify your email",
       html: `
@@ -43,10 +44,10 @@ const sendOtpEmail = async (user, otp) => {
       `,
     });
 
-    logger.info("OTP email sent via Resend");
+    logger.info("OTP email sent via Brevo SMTP");
     return true;
   } catch (error) {
-    logger.error("OTP email failed (Resend)", { error });
+    logger.error("OTP email failed (Brevo SMTP)", { error });
     return false;
   }
 };
