@@ -129,7 +129,7 @@ const ChatWidget = () => {
     <>
       <button
         onClick={toggleChat}
-        className="fixed bottom-6 right-6 bg-pink-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg hover:bg-pink-700 transition z-50"
+        className="fixed bottom-20 right-6  lg:right-10 bg-pink-600 text-white rounded-full lg:w-16 w-10 h-10 lg:h-16 flex items-center justify-center shadow-lg hover:bg-pink-700 transition z-50"
       >
         {isOpen ? <FiX size={26} /> : <FiMessageCircle size={26} />}
       </button>

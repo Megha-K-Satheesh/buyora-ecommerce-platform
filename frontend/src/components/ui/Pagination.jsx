@@ -50,7 +50,7 @@ const Pagination = React.memo(({ currentPage, totalPages, onPageChange }) => {
   if (totalPages === 0) return null;
 
   return (
-    <div className="flex justify-center mt-4 space-x-2">
+    <div className="flex justify-center mt-4 space-x-2 text-xs lg:text-sm">
       <button
         disabled={currentPage === 1}
         onClick={handlePrev}

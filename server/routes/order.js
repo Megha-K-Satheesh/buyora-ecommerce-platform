@@ -13,6 +13,6 @@ routers.get("/get-single-order/:orderId",authenticateUser, OrderController.getSi
 routers.put("/cancel-item", authenticateUser, OrderController.cancelOrderItem);
 routers.put("/request-return", authenticateUser, OrderController.requestReturnItem);
 
-
+routers.get("/invoice/:orderId", authenticateUser, OrderController.generateInvoice);
 
 module.exports=routers

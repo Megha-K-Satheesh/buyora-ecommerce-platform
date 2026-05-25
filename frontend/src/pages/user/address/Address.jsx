@@ -1,8 +1,8 @@
 
 
 
-
 import { useEffect } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Button from "../../../components/ui/Button";
@@ -11,6 +11,7 @@ import { deleteAddress, getAddresses } from "../../../Redux/slices/userSlice";
 
 import { MdArrowBack } from "react-icons/md";
 import Swal from "sweetalert2";
+import Loader from "../../../components/ui/Loader";
 
 const Address =()=>{
   const navigate = useNavigate()
@@ -55,7 +56,7 @@ const Address =()=>{
     }
   }, [error]);
 
-  if (loading) return <p>Loading addresses...</p>;
+  if (loading) return <div><Loader/></div>;
 
   return(
        <>
@@ -74,13 +75,13 @@ const Address =()=>{
        onClick={() => navigate("/account/address/add-address")}
        className=" text-primary flex justify-start ml-5 "
        >
-       + Add Address
+      + Add Address
       </Button>
          </div>
        
 
 
-       <div className="w-[80%]  ">
+       <div className="lg:w-[80%]  ">
       {addresses.length === 0 ? (
         <p> No addresses found</p>
       ) : (
@@ -88,13 +89,13 @@ const Address =()=>{
         (addresses|| []).map((addr) => (
           <div
           key={addr._id}
-          className=" border border-border-soft shadow-lg rounded m-10    px-3 py-2
+          className=" border border-border-soft shadow-lg rounded lg:m-10 mt-5   px-5 py-2
           sm:px-4 sm:py-3
   md:px-6 md:py-4
   lg:px-8 lg:py-6 flex flex-col text-sm
   md:text-lg "
           >
-            <div className="flex text-xl ">
+            <div className="flex lg:text-xl text-sm  ">
               <div className="bg-bg-main text-text-muted flex-8 ">
 
                   <p className="text-text-muted py-3"><strong>{addr.fullName}</strong></p>
@@ -128,7 +129,7 @@ const Address =()=>{
 
              <Button  variant='text'
                  onClick={()=>handleEdit(addr._id)}
-                 className="text-2xl"
+                 className="lg:text-lg text-xs"
                  >
               EDIT
              </Button>
@@ -137,7 +138,7 @@ const Address =()=>{
 
              <Button variant='text'
               onClick={()=>handleDelete(addr._id)}
-            
+            className="lg:text-lg text-xs"
               >
               REMOVE
              </Button>

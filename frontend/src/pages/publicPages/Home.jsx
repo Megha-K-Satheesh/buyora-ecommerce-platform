@@ -82,7 +82,7 @@ const Home = () => {
               {heroBanners.map((b) => (
                 <div
                   key={b._id}
-                  className="cursor-pointer px-2"
+                  className="cursor-pointer lg:px-2"
                   onClick={() => navigate(b.redirectValue)}
                 >
                   <div className="relative overflow-hidden rounded-2xl shadow-md border border-border-light">
@@ -138,25 +138,25 @@ const Home = () => {
               {promoBanners.map((b) => (
                 <div
                   key={b._id}
-                  className="cursor-pointer px-2"
+                  className="cursor-pointer px-1"
                   onClick={() => navigate(b.redirectValue)}
                 >
-                  <div className="rounded-2xl overflow-hidden border border-border-light  shadow-sm hover:shadow-md transition">
+                  <div className="rounded-xl overflow-hidden border border-border-light  shadow-sm hover:shadow-md transition">
 
                     <img
                       src={b.image}
                       alt={b.title}
-                      className="w-full h-[300px] object-cover transition-transform duration-300 hover:scale-105"
+                      className="w-full h-[250px] lg:h-[300px] object-cover transition-transform duration-300 hover:scale-105"
                     />
 
                     <div className="p-3 text-center ">
 
-                      <h3 className="text-sm lg:text-base font-semibold text-text-primary">
+                      <h3 className=" text-[10px] sm:text-xs lg:text-base font-semibold text-text-primary">
                         {b.title}
                       </h3>
 
                       {b.discountText && (
-                        <span className="inline-block mt-1  px-3 py-1 text-xs rounded-full bg-primary/10 text-primary font-medium">
+                        <span className="inline-block text-[9px] lg:text-sm mt-1  px-3 py-1  rounded-full bg-primary/10 text-primary font-medium">
                           {b.discountText}% OFF
                         </span>
                       )}
@@ -176,7 +176,7 @@ const Home = () => {
         </section>
 
         {/* TRENDING */}
-        <section className="mt-12 px-3 sm:px-6 lg:px-10 pb-10">
+        <section className="mt-12 px-2 sm:px-6 lg:px-10 pb-10">
 
           <div className="flex items-center gap-3 mb-6">
             <div className="w-1 h-6 bg-primary rounded-full" />
@@ -204,12 +204,12 @@ const Home = () => {
 
                     <div className="p-3 text-center">
 
-                      <h3 className="text-sm lg:text-base font-semibold text-text-primary">
+                      <h3 className="text-xs lg:text-base font-semibold text-text-primary">
                         {b.title}
                       </h3>
 
                       {b.discountText && (
-                        <span className="inline-block mt-1 px-3 py-1 text-xs rounded-full bg-primary/10 text-primary font-medium">
+                        <span className="inline-block mt-1 px-3 py-1 text-[9px] lg:text-xs rounded-full bg-primary/10 text-primary font-medium">
                           {b.discountText}% OFF
                         </span>
                       )}

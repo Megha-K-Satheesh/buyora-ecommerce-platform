@@ -8,18 +8,7 @@ class BaseController {
     };
   }
 
-  // static validateRequest(schema, data) {
-  //   const { error, value } = schema.validate(data, { abortEarly: false });
-    
-  //   if (error) {
-  //     throw {
-  //       name: 'ValidationError',
-  //       details: error.details
-  //     };
-  //   }
-    
-  //   return value;
-  // }
+
   static validateRequest(schema, data) {
   const { error, value } = schema.validate(data, { abortEarly: false,    stripUnknown: true });
 

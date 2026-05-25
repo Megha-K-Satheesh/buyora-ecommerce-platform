@@ -14,7 +14,6 @@ import { FaPaperPlane } from "react-icons/fa";
 import { IoChevronBack } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Footer from "../../../components/ui/Footer";
 import {
   addMessage,
   fetchHistory,
@@ -370,7 +369,7 @@ const UserRealtimeChat = () => {
         </main>
       </div>
 
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

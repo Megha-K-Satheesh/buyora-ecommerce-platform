@@ -15,7 +15,7 @@ const ResetPassword = ()=>{
 const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     
 const resetToken= useSelector((state)=>state.auth.resetToken)|| localStorage.getItem('resetToken')
-const {error} = useSelector((state)=>state.auth)
+const {error,loading} = useSelector((state)=>state.auth)
   const dispatch = useDispatch();
 const navigate = useNavigate()
 
@@ -119,10 +119,14 @@ return(
                  
 
                 
-
-                     <Button type="submit" fullWidth className='mt-3'>
-                    Update Password 
-                  </Button>
+<Button
+  type="submit"
+  fullWidth
+  disabled={loading}
+  className='mt-3'
+>
+  {loading ? "Updating..." : "Update Password"}
+</Button>
                   
                    {/* {error} */}
 

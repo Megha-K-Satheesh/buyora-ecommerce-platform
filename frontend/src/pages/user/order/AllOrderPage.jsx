@@ -40,9 +40,9 @@ const AllOrdersPage = () => {
             className="rounded-xl p-5 mb-6 shadow-sm hover:shadow-md transition-shadow duration-200 bg-bg-main"
           >
             <div className="flex justify-between items-center mb-4 flex-wrap">
-              <p className="font-semibold text-lg text-text-primary">Order #{order.orderNumber}</p>
+              <p className="font-semibold text-sm lg:text-lg text-text-primary">Order #{order.orderNumber}</p>
 
-              <p className="text-sm mt-1 md:mt-0">
+              <p className="lg:text-sm text-xs mt-1 md:mt-0">
                 {order.items.every((i) => i.status === "CANCELLED") ? (
                   <span className="font-medium text-danger">Cancelled</span>
 
@@ -129,7 +129,7 @@ const AllOrdersPage = () => {
               </p>
               <button
                 onClick={() => navigate(`/orders/${order.orderId}`)}
-                className="px-4 py-2 rounded-lg border border-border-primary text-primary font-semibold hover:bg-bg-soft transition-colors"
+                className="px-4 py-2 lg:text-sm text-xs rounded-lg border border-border-primary text-primary font-semibold hover:bg-bg-soft transition-colors"
               >
                 View Details
               </button>

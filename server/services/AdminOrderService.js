@@ -62,14 +62,7 @@ static async getSingleOrder(orderId) {
 
 
 
-
-
-
-
 static async updateOrderItemStatus(orderId, productId, status, variantId) {
-
- 
-
   if (!productId) throw ErrorFactory.notFound("Product ID not found");
 
   const order = await Order.findById(orderId);
@@ -81,180 +74,165 @@ static async updateOrderItemStatus(orderId, productId, status, variantId) {
   let itemFound = false;
 
   for (let item of order.items) {
-
-    if (
+    const match =
       item.productId.toString() === productId.toString() &&
-      ((variantId && item.variantId?.toString() === variantId.toString()) ||
-        (!variantId && !item.variantId))
-    ) {
+      (
+        (variantId && item.variantId?.toString() === variantId.toString()) ||
+        (!variantId && !item.variantId)
+      );
 
-      item.status = status;
-      itemFound = true;
+    if (!match) continue;
 
-      // CONFIRMED
-      if (status === "CONFIRMED") {
-        item.confirmAt = new Date();
+    item.status = status;
+    itemFound = true;
+
+    if (status === "CONFIRMED") {
+      item.confirmAt = new Date();
+    }
+
+    if (status === "SHIPPED") {
+      item.shippedAt = new Date();
+    }
+
+    if (status === "DELIVERED") {
+      item.deliveredAt = new Date();
+
+      if (variantId) {
+        const updatedProduct = await Product.findOneAndUpdate(
+          {
+            _id: productId,
+            "variations._id": variantId,
+            "variations.stock": { $gte: item.quantity }
+          },
+          {
+            $inc: { "variations.$.stock": -item.quantity }
+          },
+          { new: true }
+        );
+
+        if (!updatedProduct) {
+          throw ErrorFactory.validation("Not enough stock for this variant");
+        }
+
+        updatedProduct.totalStock = updatedProduct.variations.reduce(
+          (sum, v) => sum + v.stock,
+          0
+        );
+
+        await updatedProduct.save();
+      }
+    }
+
+    if (status === "RETURNED") {
+      item.returnedAt = new Date();
+
+      const productDoc = await Product.findById(item.productId);
+      if (!productDoc) {
+        throw ErrorFactory.notFound("Product not found for stock update");
       }
 
-      // SHIPPED
-      if (status === "SHIPPED") {
-        item.shippedAt = new Date();
+      const qty = item.quantity || 1;
+
+      if (item.variantId) {
+        const variant = productDoc.variations.id(item.variantId);
+
+        if (!variant) {
+          throw ErrorFactory.notFound("Variant not found");
+        }
+
+        variant.stock = (variant.stock || 0) + qty;
+      } else {
+        productDoc.stock = (productDoc.stock || 0) + qty;
       }
 
-      // DELIVERED
-      if (status === "DELIVERED") {
+      productDoc.totalStock = productDoc.variations.reduce(
+        (sum, v) => sum + v.stock,
+        0
+      );
 
-        item.deliveredAt = new Date();
+      await productDoc.save();
 
-        if (variantId) {
+      // -------- REFUND LOGIC --------
 
-          const updatedProduct = await Product.findOneAndUpdate(
-            {
-              _id: productId,
-              "variations._id": variantId,
-              "variations.stock": { $gte: item.quantity }
-            },
-            {
-              $inc: { "variations.$.stock": -item.quantity }
-            },
-            { new: true }
-          );
+      const coupon = await Coupon.findById(order.couponId);
+      const applicableCategories =
+        coupon?.applicableCategories?.map(String) || [];
 
-          if (!updatedProduct) {
-            throw ErrorFactory.validation("Not enough stock for this variant");
-          }
+      const productIds = order.items.map(i => i.productId);
 
-          updatedProduct.totalStock = updatedProduct.variations.reduce(
-            (sum, v) => sum + v.stock,
-            0
-          );
+      const products = await Product.find({ _id: { $in: productIds } })
+        .select("_id category");
 
-          await updatedProduct.save();
+      const productCategoryMap = {};
+      products.forEach(p => {
+        productCategoryMap[p._id.toString()] = String(p.category);
+      });
+
+      const isEligible = (i) => {
+        if (order.couponScope === "GLOBAL") return true;
+
+        const cat = productCategoryMap[i.productId.toString()];
+        return applicableCategories.includes(cat);
+      };
+
+      const itemTotal = Number(item.price) * Number(item.quantity);
+
+      let totalDiscount =
+        (order.couponBreakup?.globalDiscount || 0) +
+        (order.couponBreakup?.categoryDiscount || 0);
+
+      let itemDiscount = 0;
+
+      if (isEligible(item)) {
+        const eligibleItems = order.items.filter(isEligible);
+
+        const eligibleTotal = eligibleItems.reduce(
+          (sum, i) => sum + Number(i.price) * Number(i.quantity),
+          0
+        );
+
+        if (eligibleTotal > 0) {
+          const ratio = itemTotal / eligibleTotal;
+          itemDiscount = ratio * totalDiscount;
         }
       }
 
-  
+      const refundAmount = Math.round(itemTotal - itemDiscount);
 
+      item.refundStatus = "REFUNDED";
+      item.refundAmount = refundAmount;
+      item.refundMethod = "WALLET";
+      item.refundProcessedAt = new Date();
 
+      let wallet = await Wallet.findOne({ userId: order.userId });
 
-if (status === "RETURNED") {
-  item.returnedAt = new Date();
+      if (!wallet) {
+        wallet = await Wallet.create({
+          userId: order.userId,
+          balance: 0,
+          transactions: []
+        });
+      }
 
- 
+      wallet.balance += refundAmount;
 
-  const productDoc = await Product.findById(item.productId);
+      wallet.transactions.push({
+        type: "CREDIT",
+        amount: refundAmount,
+        reason: "RETURN_REFUND",
+        orderId: order._id,
+        createdAt: new Date()
+      });
 
-  console.log("productDoc",productDoc)
-  if (!productDoc) {
-    throw ErrorFactory.notFound("Product not found for stock update");
-  }
-
-  const qty = item.quantity || 1;
-
-console.log("item variant",item.variationId)
-
-  if (item.variationId) {
-    const variant = productDoc.variations.id(item.variationId);
-
-    if (!variant) {
-      throw ErrorFactory.notFound("Variant not found");
+      await wallet.save();
     }
 
-    variant.stock = (variant.stock || 0) + qty;
-  } else {
-    productDoc.stock = (productDoc.stock || 0) + qty;
+    break;
   }
 
-
-  productDoc.totalStock = productDoc.variations.reduce(
-    (sum, v) => sum + v.stock,
-    0
-  );
-
-  await productDoc.save();
-  
-
-  const coupon = await Coupon.findById(order.couponId);
-
-  const applicableCategories =
-    coupon?.applicableCategories?.map(String) || [];
-
-  const productIds = order.items.map(i => i.productId);
-
-  const products = await Product.find({ _id: { $in: productIds } })
-    .select("_id category");
-
-  const productCategoryMap = {};
-  products.forEach(p => {
-    productCategoryMap[p._id.toString()] = String(p.category);
-  });
-
-  const isEligible = (i) => {
-    if (order.couponScope === "GLOBAL") return true;
-
-    const cat = productCategoryMap[i.productId.toString()];
-    return applicableCategories.includes(cat);
-  };
-
-  const itemTotal = Number(item.price) * Number(item.quantity);
-
-  console.log("ITEM TOTAL:", itemTotal);
-
-  let itemDiscount = 0;
-
- 
-  const totalDiscount =
-    order.couponBreakup?.globalDiscount +
-    order.couponBreakup?.categoryDiscount;
-
-  if (isEligible(item)) {
-    const eligibleItems = order.items.filter(isEligible);
-
-    const eligibleTotal = eligibleItems.reduce(
-      (sum, i) => sum + Number(i.price) * Number(i.quantity),
-      0
-    );
-
-    const ratio = itemTotal / eligibleTotal;
-
-    itemDiscount = ratio * totalDiscount;
+  if (!itemFound) {
+    throw ErrorFactory.validation("Order item not found");
   }
-
-  const refundAmount = Math.round(itemTotal - itemDiscount);
-
-
-  item.refundStatus = "REFUNDED";
-  item.refundAmount = refundAmount;
-  item.refundMethod = "WALLET";
-  item.refundProcessedAt = new Date();
-
-  let wallet = await Wallet.findOne({ userId: order.userId });
-
-  if (!wallet) {
-    wallet = await Wallet.create({
-      userId: order.userId,
-      balance: 0,
-      transactions: []
-    });
-  }
-
-  wallet.balance += refundAmount;
-
-  wallet.transactions.push({
-    type: "CREDIT",
-    amount: refundAmount,
-    reason: "RETURN_REFUND",
-    orderId: order._id,
-    createdAt: new Date()
-  });
-
-  await wallet.save();
-}
-      break;
-    }
-  }
-
-  if (!itemFound) throw ErrorFactory.validation("Order item not found");
 
   const allDelivered = order.items.every(i => i.status === "DELIVERED");
 
@@ -268,8 +246,6 @@ console.log("item variant",item.variationId)
 
   return order;
 }
-
-
 
  
 

@@ -72,12 +72,12 @@ const EditAddress = () => {
     <div className="lg:hidden block">
       <Navbar/>
     </div>
-     <div className="  lg:w-3/5 md:w-3/5   mt-25    rounded-lg s bg-bg-main  lg:ml-40 lg:mt-10 mb-20 px-20">
+     <div className="  lg:w-3/5 md:w-3/5     mt-20  rounded-lg s bg-bg-main  lg:ml-40 lg:mt-10 mb-20 lg:px-20">
 
     
         <h1 className='text-xl sm:text-xl md:text-2xl lg:text-2xl ml-10 text-text-secondary font-medium  mt-8 '>Update Your Address</h1>
 
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4  rounded ">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4 placeholder:text-xl  rounded ">
       
       <FormInput
       required
@@ -95,6 +95,7 @@ const EditAddress = () => {
       
             <FormInput
             required
+         
               label="House Number"
               placeholder="Enter house number"
               {...register("houseNumber", { required: "House number is required" })}
@@ -179,7 +180,7 @@ required
        <div className="space-y-2">
   <label className="block font-medium">Type of Address</label>
 
-  <div className="flex gap-4">
+  <div className="flex gap-4 text-xs lg:text-lg">
     <label className="flex items-center">
       <input
         type="radio"
@@ -228,10 +229,16 @@ required
      
     
       <div className="flex space-x-3 mt-4">
-        <Button type="submit" fullWidth >
-          Update Address
-        </Button>
-        <Button type="button" fullWidth variant="outline" onClick={handleCancel}>
+        <Button
+  type="submit"
+  fullWidth
+  className="text-xs lg:text-lg"
+  disabled={loading}
+>
+  {loading ? "Updating..." : "Update Address"}
+</Button>
+        <Button type="button" fullWidth variant="outline" onClick={handleCancel}
+        className="text-xs lg:text-lg">
           Cancel
         </Button>
       </div>

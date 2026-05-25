@@ -37,6 +37,24 @@ console.log(req.user._id)
     BaseController.sendSuccess(res, "RETURN REQUESTED", updatedOrder);
   });
  
+
+
+ static generateInvoice = BaseController.asyncHandler(async (req, res) => {
+  const orderId = req.params.orderId;
+
+  const pdf = await OrderService.generateInvoice(
+    req.user._id,
+    orderId
+  );
+
+  res.setHeader("Content-Type", pdf.mimeType);
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename="${pdf.fileName}"`
+  );
+
+  res.send(pdf.buffer);
+});
 }
 
 module.exports = OrderController;

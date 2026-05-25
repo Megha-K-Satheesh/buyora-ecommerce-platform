@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useForm, useWatch } from 'react-hook-form';
 import { AiOutlineEye } from "react-icons/ai";
 import { LuEyeClosed } from "react-icons/lu";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../components/ui/Button';
 import Footer from '../../components/ui/Footer';
@@ -31,11 +31,11 @@ const RegisterForm = () => {
   const navigate = useNavigate();
 const [showPassword,setShowPassword] = useState(false)
   
-
+const { loading } = useSelector((state) => state.auth)
   const onSubmit = async (data) => {
     try {
       
-      const res = await dispatch(registerUser(data)).unwrap()
+       await dispatch(registerUser(data)).unwrap()
       
           navigate('/verify-otp',{ replace: true });
           showSuccess("Registration Successfull")
@@ -59,10 +59,7 @@ const [showPassword,setShowPassword] = useState(false)
 
       <div className="     lg:px-5   bg-bg-main   rounded-r-2xl  lg:w-[40%] w-[90%] rounded-2xl mt-10">
 
-            {/* <Logo
-              
-              className="mx-auto lg:mt-2  mb-6"
-            /> */}
+           
         
 
         <h1 className='text-xl sm:text-2xl md:text-2xl lg:text-3xl text-center text-text-secondary font-medium  py-5'>Create Your Account</h1>
@@ -189,9 +186,14 @@ const [showPassword,setShowPassword] = useState(false)
             error={errors.agreeToTerms?.message}
             />
 
-          <Button type="submit" fullWidth className='lg:text-lg'>
-            Register
-          </Button>
+          <Button
+  type="submit"
+  fullWidth
+  disabled={loading}
+  className='lg:text-lg'
+>
+  {loading ? "Registering..." : "Register"}
+</Button>
             <div className="flex items-center my-3">
               <hr className="flex-grow border-gray-200" />
               <span className="lg:mx-2  sm:mx-3 text-xs sm:text-sm text-gray-500">
@@ -214,7 +216,7 @@ const [showPassword,setShowPassword] = useState(false)
       }
 
      
-      console.log("Google token:", idToken);
+      // console.log("Google token:", idToken);
 
    
       try {

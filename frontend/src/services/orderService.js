@@ -29,7 +29,11 @@ export const orderService = {
     });
   },
 
-
+downloadInvoice(orderId) {
+  return apiClient.get(`/user/order/invoice/${orderId}`, {
+    responseType: "blob"
+  });
+}
 
 };
 

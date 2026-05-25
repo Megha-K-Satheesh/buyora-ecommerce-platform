@@ -233,7 +233,8 @@ const updateProfileValidation = Joi.object({
 
   gender: Joi.string()
     .valid("MALE", "FEMALE", "OTHER")
-    .optional(),
+    .optional()
+    .allow("", null),
 
   dob: Joi.date()
     .optional()
@@ -244,6 +245,7 @@ const updateProfileValidation = Joi.object({
     .max(100)
     .trim()
     .optional()
+    .allow("", null)
 })
 .min(1)
 .messages({

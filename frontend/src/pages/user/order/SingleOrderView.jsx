@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-import { cancelOrderItem, clearOrderState, getSingleOrder, requestReturnItem } from "../../../Redux/slices/orderSlice";
+import { cancelOrderItem, clearOrderState, downloadInvoice, getSingleOrder, requestReturnItem } from "../../../Redux/slices/orderSlice";
 import Loader from "../../../components/ui/Loader";
 import Navbar from "../../../components/ui/Navbar";
 
@@ -17,6 +17,7 @@ const SingleOrderPage = () => {
   const { orderId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
   const { singleOrder, loading, error } = useSelector((state) => state.order);
 
   useEffect(() => {
@@ -29,6 +30,11 @@ const SingleOrderPage = () => {
   if (!singleOrder) return null;
 
   const { items, shippingAddress, orderStatus, paymentStatus, totalAmount } = singleOrder;
+
+
+const canDownloadInvoice = items.some(item =>
+  item.status === "DELIVERED" || item.status === "RETURN_REJECTED"
+);
 
   const handleCancelItem = async (productId) => {
     const { value: reason } = await Swal.fire({
@@ -74,20 +80,42 @@ const SingleOrderPage = () => {
     }
   };
 
+
+  
+
+const handleDownloadInvoice = async (orderId) => {
+  try {
+    const res = await dispatch(downloadInvoice(orderId)).unwrap();
+
+    const url = window.URL.createObjectURL(new Blob([res]));
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "invoice.pdf");
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.log(err);
+  }
+};
   return (
     <>
     <Navbar/>
     <div className="max-w-4xl mx-auto p-6 mt-25">
    
       <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-1 text-text-primary">Order #{singleOrder.orderNumber}</h2>
-        <div className="flex flex-wrap gap-4 text-sm text-text-secondary">
+        <h2 className="lg:text-2xl text-xl font-bold mb-1 text-text-primary">Order #{singleOrder.orderNumber}</h2>
+        <div className="flex flex-wrap gap-4 lg:text-sm text-xs text-text-secondary">
           <span>Status: <span className="font-semibold">{orderStatus}</span></span>
           <span>Payment: <span className="font-semibold">{paymentStatus}</span></span>
         </div>
       </div>
 
-      <div className="space-y-4 mb-6">
+      <div className="space-y-4 mb-6 lg:text-sm text-xs ">
         {items.map((item) => (
           <div
             key={`${item.productId}-${item.variationId}`}
@@ -98,7 +126,7 @@ const SingleOrderPage = () => {
               alt={item.name}
               className={`w-28 h-auto object-cover rounded-md mb-3 md:mb-0 ${item.status === "CANCELLED" ? "opacity-50" : ""}`}
             />
-            <div className="flex-1 md:ml-5 flex flex-col justify-between">
+            <div className="flex-1 md:ml-5 flex flex-col justify-between ">
               <div>
                 <h4 className={`font-semibold ${item.status === "CANCELLED" ? "line-through text-text-light" : "text-text-primary"}`}>
                   {item.name}
@@ -141,7 +169,7 @@ const SingleOrderPage = () => {
         ))}
       </div>
 
-      <div className="bg-bg-main p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+      <div className="bg-bg-main p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6 lg:text-sm text-xs ">
         <div className="flex flex-col gap-1">
           <p className="font-semibold text-lg text-text-primary">Total Amount: ₹{totalAmount}</p>
           <p className="text-text-secondary">Order Status: {orderStatus}</p>
@@ -157,14 +185,29 @@ const SingleOrderPage = () => {
         </div>
       </div>
 
-      <div className="text-center mt-6">
-        <button
-          onClick={() => navigate("/all-orders")}
-          className="px-5 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
-        >
-          Back to All Orders
-        </button>
-      </div>
+  
+
+      <div className="flex justify-between items-center mt-6">
+
+
+  <button
+    onClick={() => navigate("/all-orders")}
+    className="px-5 py-2 bg-primary text-white lg:text-sm text-xs rounded-lg hover:bg-primary-hover transition-colors"
+  >
+    Back to All Orders
+  </button>
+
+ 
+{canDownloadInvoice && (
+  <button
+    onClick={() => handleDownloadInvoice(orderId)}
+    className="px-5 py-2 bg-green-600 text-white rounded-lg"
+  >
+    Download Invoice
+  </button>
+)}
+
+</div>
     </div>
     </>
   );

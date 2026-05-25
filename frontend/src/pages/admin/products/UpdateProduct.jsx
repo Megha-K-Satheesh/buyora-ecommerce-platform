@@ -14,6 +14,7 @@ import { showError, showSuccess } from "../../../components/ui/Toastify";
 import { getBrandsByCategoryId } from "../../../Redux/slices/admin/brandSlice";
 import { getCategory } from "../../../Redux/slices/admin/categorySlice";
 import { updateProduct } from "../../../Redux/slices/admin/productSlice";
+import { getCartBackend } from "../../../Redux/slices/cartSlice";
 import { getProductById } from "../../../Redux/slices/general/productSlice";
 const EditProduct = () => {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const EditProduct = () => {
 
   const { categories } = useSelector((state) => state.category);
   const { brands } = useSelector((state) => state.brand);
-  const { product } = useSelector((state) => state.generalProducts);
+  const { product,loading } = useSelector((state) => state.generalProducts);
 
   const [files, setFiles] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
@@ -67,6 +68,7 @@ const EditProduct = () => {
 
     setVariants(
       existing.map((v) => ({
+            
         attributes: v.attributes,
         stock: v.stock,
         isActive: v.isActive ?? true,
@@ -204,6 +206,8 @@ const EditProduct = () => {
       await dispatch(
         updateProduct({ id, formData })
       ).unwrap();
+
+      dispatch(getCartBackend());
 
       showSuccess("Product Updated");
       navigate("/admin-dashboard/products");
@@ -645,9 +649,10 @@ const EditProduct = () => {
 
                   <Button
                     type="submit"
+                    disabled={loading}
                     className="w-full h-14 rounded-2xl text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5"
                   >
-                    Update Product
+                   {loading ? "Updating..." : "Update Product"}
                   </Button>
 
                 </div>

@@ -28,7 +28,7 @@ const Profile = ()=>{
   <h1 className="text-2xl md:text-2xl  lg:text-2xl font-semibold ml-3 text-text-primary">Profile </h1>
   </div>
  
-  <table className=" lg:w-[80%] w-[80%] mx-auto mt-10   text-xl  md:text-xl lg:text-xl bg-bg-main  p-5 ">
+  <table className=" lg:w-[80%] w-[80%] mx-auto mt-10   text-xs  md:text-xl lg:text-xl bg-bg-main  p-5 ">
     <tbody>
       <tr>
         <td className="text-text-secondary">Full Name</td>

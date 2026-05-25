@@ -102,24 +102,7 @@ otpDetails: {
 });
 
 
-// userSchema.pre('save', async function () {
-//   // try {
-    
 
-//     if (this.isModified('password') && this.password) {
-//   this.password = await bcrypt.hash(this.password, 12);
-// }
-
-//     // Hash OTP
-//     if (this.isModified('otpDetails') && this.otpDetails?.code) {
-//       this.otpDetails.code = await bcrypt.hash(this.otpDetails.code, 12);
-//     }
-
-//     // next();
-//   // } catch (error) {
-//     // next(error);
-//   // }
-// });
 
 userSchema.pre('save', async function () {
   if (this.isModified('password') && this.password) {

@@ -12,9 +12,9 @@ import {
 } from "../../../Redux/slices/checkoutSlice";
 import { getAddresses } from "../../../Redux/slices/userSlice";
 import Button from "../../../components/ui/Button";
+import Loader from "../../../components/ui/Loader";
 import { showInfo } from "../../../components/ui/Toastify";
 import { openRazorpay } from "../../../utils/razorpay";
-import Loader from "../../../components/ui/Loader";
 const CheckoutPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -93,6 +93,15 @@ const CheckoutPage = () => {
     }
   };
 
+
+  
+  if (checkoutLoading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <Loader />
+    </div>
+  );
+}
   return (
     <div className="max-w-7xl mx-auto p-6 grid lg:grid-cols-3 gap-8">
       <div className="lg:col-span-2 space-y-8">
@@ -219,7 +228,7 @@ const CheckoutPage = () => {
         <h2 className="text-lg font-bold mb-4 text-text-primary">Price Details</h2>
 
         {checkoutLoading ? (
-          <div><Loader/></div>
+           <div></div>
         ) : (
           <>
             {items.map((item) => (

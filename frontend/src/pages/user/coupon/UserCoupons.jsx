@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { IoMdCopy } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCoupons } from "../../../Redux/slices/couponSlice";
+import Loader from "../../../components/ui/Loader";
 import Navbar from "../../../components/ui/Navbar";
 import Pagination from "../../../components/ui/Pagination";
 import { showSuccess } from "../../../components/ui/Toastify";
@@ -30,7 +31,7 @@ const CouponsList = () => {
     showSuccess(`Coupon code copied: ${code}`);
   };
 
-  if (loading) return <p className="text-center py-10">Loading coupons...</p>;
+  if (loading) return <div><Loader/></div>;
   if (error) return <p className="text-center py-10 text-danger">{error}</p>;
   if (!coupons.length) return <p className="text-center py-10">No coupons available!</p>;
 
@@ -86,10 +87,10 @@ const CouponsList = () => {
           </div>
         ))}
       </div>
-
+    {totalPages > 1 && (
       <div className="mt-10">
         <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
-      </div>
+      </div>)}
     </div>
     </>
   );

@@ -62,6 +62,20 @@ export const requestReturnItem = createAsyncThunk(
 );
 
 
+export const downloadInvoice = createAsyncThunk(
+  "order/downloadInvoice",
+  async (orderId, { rejectWithValue }) => {
+    try {
+      const res = await orderService.downloadInvoice(orderId);
+      return res.data;
+    } catch (err) {
+      return rejectWithValue( err.response?.data?.error?.message ||
+        err.response?.data?.message ||
+        "Something went wrong");
+    }
+  }
+);
+
 
 const initialState = {
   allOrders: [],
@@ -127,8 +141,21 @@ const orderSlice = createSlice({
         state.loading = false; 
         state.singleOrder = action.payload; 
       })
-      .addCase(requestReturnItem.rejected, (state, action) => { state.loading = false; state.error = action.payload; });
+      .addCase(requestReturnItem.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
+
+.addCase(downloadInvoice.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(downloadInvoice.fulfilled, (state) => {
+      state.loading = false;
+    })
+    .addCase(downloadInvoice.rejected, (state) => {
+      state.loading = false;
+    });
+
   },
+
+  
 });
 
 export const { clearOrderState } = orderSlice.actions;

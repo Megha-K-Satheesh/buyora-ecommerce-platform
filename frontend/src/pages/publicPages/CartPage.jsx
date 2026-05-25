@@ -122,25 +122,25 @@ showInfo(error)
     <>
       <Navbar />
 
-      <div className="max-w-4xl mx-auto p-6 mt-25">
-        <h1 className="text-2xl font-bold mb-6 text-text-primary">
+      <div className="max-w-4xl mx-auto p-6 lg:mt-25 mt-15">
+        <h1 className="lg:text-2xl text-xl font-bold mb-6 text-text-primary">
           Shopping Cart
         </h1>
 
         {cartItems.map((item) => (
           <div
             key={item.variationId.toString()}
-            className="flex items-center justify-between border-b border-border py-4"
+            className="flex items-center justify-between border-b text-xs lg:text-lg border-border py-4"
           >
             <div className="flex items-center gap-4">
               <img
                 src={item.image}
                 alt={item.name}
-                className="lg:w-30 w-25 h-auto object-cover"
+                className="lg:w-30 w-20 h-auto object-cover"
               />
 
               <div>
-                <h2 className="font-semibold text-xl text-text-primary">
+                <h2 className="font-semibold text-sm lg:text-xl text-text-primary">
                   {item.brandName}
                 </h2>
 
@@ -181,7 +181,7 @@ showInfo(error)
               </div>
             </div>
 
-            <div className="flex flex-col items-end">
+            <div className="flex flex-col items-end ">
               <div className="font-semibold text-text-primary">
                 ₹{item.price * item.quantity}
               </div>
@@ -196,37 +196,37 @@ showInfo(error)
           </div>
         ))}
 
-        <div className="mt-6 p-4 shadow rounded bg-bg-main border border-border-light">
-          <h2 className="text-xl font-semibold mb-2 text-text-primary">
+        <div className="mt-6 p-4 shadow rounded bg-bg-main border border-border-light ">
+          <h2 className="text-sm lg:text-xl font-semibold mb-2 text-text-primary">
             Order Summary
           </h2>
 
-          <div className="flex justify-between text-text-secondary">
+          <div className="flex justify-between text-text-secondary text-xs lg:text-lg">
             <span>Total MRP:</span>
             <span>₹{totalMRP}</span>
           </div>
 
-          <div className="flex justify-between text-text-secondary">
+          <div className="flex justify-between text-text-secondary text-xs lg:text-lg">
             <span>Discount:</span>
             <span>-₹{totalDiscount}</span>
           </div>
 
-          <div className="flex justify-between text-text-secondary">
+          <div className="flex justify-between text-text-secondary text-xs lg:text-lg">
             <span>Coupon Discount:</span>
             <span>-₹{discountAmount}</span>
           </div>
 
-          <div className="flex justify-between text-text-secondary">
+          <div className="flex justify-between text-text-secondary text-xs lg:text-lg">
             <span>Platform Fee:</span>
             <span>₹{platformFee}</span>
           </div>
 
-          <div className="flex justify-between font-bold text-lg mt-2 text-text-primary">
+          <div className="flex justify-between font-bold text-sm lg:text-lg  mt-2 text-text-primary">
             <span>Total Payable:</span>
             <span>₹{totalPayable}</span>
           </div>
 
-          <div className="mt-4 flex gap-2">
+          <div className="mt-4 flex text-xs lg:text-lg gap-2">
             <input
               type="text"
               placeholder="Enter coupon code"
@@ -245,14 +245,14 @@ showInfo(error)
           </div>
 
           {error && (
-            <p className="text-danger mt-2">
+            <p className="text-danger mt-2 text-xs lg:text-sm">
               {error}
             </p>
           )}
 
           {isApplied && (
             <div className="flex justify-between items-center mt-2">
-              <p className="text-success font-semibold">
+              <p className="text-success font-semibold text-xs lg:text-sm">
                 Coupon Applied Successfully
               </p>
 
@@ -266,7 +266,7 @@ showInfo(error)
 
                   setCouponCode("");
                 }}
-                className="text-sm text-danger underline"
+                className="lg:text-sm text-xs text-danger underline"
               >
                 Remove
               </button>
@@ -274,6 +274,7 @@ showInfo(error)
           )}
 
           <button
+          type="button"
             onClick={() => {
               if (!isAuthenticated) {
                 navigate("/login", { state: { from: "/product/checkout" } });
@@ -281,7 +282,7 @@ showInfo(error)
                 navigate("/product/checkout");
               }
             }}
-            className="mt-4 w-full bg-primary text-white py-3 rounded font-bold"
+            className="mt-4 text-xs lg:text-lg w-full bg-primary text-white py-3 rounded font-bold"
           >
             Proceed to Checkout
           </button>

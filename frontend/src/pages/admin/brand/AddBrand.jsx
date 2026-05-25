@@ -20,6 +20,7 @@ const AddBrand = ()=>{
   const dispatch = useDispatch()
   const {categories} =useSelector((state)=>state.category)
   const [flattenedCategories, setFlattenedCategories] = useState([]);
+  const { loading } = useSelector((state) => state.brand)
 const navigate= useNavigate()
   const {register,handleSubmit,control,formState:{errors}} = useForm()
 
@@ -105,9 +106,13 @@ const navigate= useNavigate()
                 </div>
               </label>
             </div>
-              <Button type="submit" fullWidth>
-                Add Brand
-              </Button>
+             <Button
+  type="submit"
+  fullWidth
+  disabled={loading}
+>
+  {loading ? "Adding..." : "Add Brand"}
+</Button>
 
   </form>
     </div>

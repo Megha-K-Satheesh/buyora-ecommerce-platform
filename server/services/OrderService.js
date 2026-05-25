@@ -9,7 +9,17 @@ const Wallet = require("../models/Wallet");
 const Coupon = require("../models/admin/Coupon");
 const Product = require("../models/admin/Product");
 const Category = require("../models/admin/Category");
-
+const path = require("path");
+const PdfPrinter = require("pdfmake");
+const fonts = {
+  Helvetica: {
+    normal: 'Helvetica',
+    bold: 'Helvetica-Bold',
+    italics: 'Helvetica-Oblique',
+    bolditalics: 'Helvetica-BoldOblique'
+  }
+};
+const printer = new PdfPrinter(fonts);
 class OrderService {
 
 
@@ -103,14 +113,6 @@ class OrderService {
       itemActions 
     };
   }
-
-
-
-
-
-
-
-
 
 
 
@@ -372,6 +374,642 @@ static async requestReturn(userId, orderId, productId) {
   await order.save();
 
   return order;
+}
+
+
+
+
+
+
+
+
+static async generateInvoice(userId, orderId) {
+  if (
+    !mongoose.Types.ObjectId.isValid(userId) ||
+    !mongoose.Types.ObjectId.isValid(orderId)
+  ) {
+    throw ErrorFactory.validation("Invalid IDs");
+  }
+
+  const order = await Order.findOne({ _id: orderId, userId })
+    .populate("items.productId", "name price images")
+    .lean();
+
+  if (!order) {
+    throw ErrorFactory.notFound("Order not found");
+  }
+
+  const invoiceItems = order.items.filter((item) =>
+    ["DELIVERED", "RETURN_REJECTED"].includes(item.status)
+  );
+
+  if (invoiceItems.length === 0) {
+    throw ErrorFactory.validation(
+      "Invoice can only be generated after delivery"
+    );
+  }
+
+
+
+
+  const formatCurrency = (amount) =>
+  `Rs. ${Number(amount || 0).toLocaleString("en-IN", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+
+  const formatDate = (date) =>
+    new Date(date).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+
+  const paymentStatus = (order.paymentStatus || "PENDING").toUpperCase();
+
+  const statusColors = {
+    PAID: "#16A34A",
+    PENDING: "#EA580C",
+    FAILED: "#DC2626",
+  };
+
+  let subtotal = 0;
+
+  const productRows = invoiceItems.map((item, index) => {
+    const productName = item.productId?.name || "Product";
+    const quantity = Number(item.quantity || 0);
+    const price = Number(item.price || 0);
+    const total = quantity * price;
+
+    subtotal += total;
+
+    return [
+      {
+        text: productName,
+        style: "productName",
+        margin: [0, 6, 0, 6],
+      },
+      {
+        text: quantity.toString(),
+        alignment: "center",
+        style: "tableCell",
+      },
+      {
+        text: formatCurrency(price),
+        alignment: "right",
+        style: "tableCell",
+      },
+      {
+        text: formatCurrency(total),
+        alignment: "right",
+        style: "tableCellBold",
+      },
+    ];
+  });
+
+  const shippingCharge = Number(order.shippingCharge || 0);
+  const discount = Number(order.discountAmount || 0);
+
+  const grandTotal = subtotal + shippingCharge - discount;
+const shipping = order.shippingAddress || {};
+const customerAddress = [
+  shipping.fullName,
+  shipping.houseName,
+  shipping.street,
+  shipping.landmark,
+  shipping.city,
+  shipping.state,
+  shipping.pincode,
+  shipping.phone,
+]
+  .filter(Boolean)
+  .join(", ");
+
+  const docDefinition = {
+    pageSize: "A4",
+
+    pageMargins: [40, 45, 40, 55],
+
+    footer: function (currentPage, pageCount) {
+      return {
+        margin: [40, 10, 40, 20],
+        stack: [
+          {
+            canvas: [
+              {
+                type: "line",
+                x1: 0,
+                y1: 0,
+                x2: 515,
+                y2: 0,
+                lineWidth: 1,
+                lineColor: "#E5E7EB",
+              },
+            ],
+          },
+
+          {
+            margin: [0, 12, 0, 0],
+            columns: [
+              {
+                stack: [
+                  {
+                    text: "Thank you for shopping with BUYORA",
+                    style: "footerTitle",
+                  },
+                 
+                  
+                ],
+              },
+
+              {
+                text: `Page ${currentPage} of ${pageCount}`,
+                alignment: "right",
+                style: "footerText",
+                margin: [0, 10, 0, 0],
+              },
+            ],
+          },
+        ],
+      };
+    },
+
+    content: [
+      {
+        stack: [
+          {
+            text: "BUYORA",
+            style: "brandLogo",
+            alignment: "center",
+          },
+
+          {
+            text: "PREMIUM E-COMMERCE",
+            style: "brandTagline",
+            alignment: "center",
+            margin: [0, 2, 0, 0],
+          },
+        ],
+      },
+
+      {
+        margin: [0, 28, 0, 25],
+        columns: [
+          {
+            width: "*",
+            stack: [
+              {
+                text: "INVOICE",
+                style: "invoiceTitle",
+              },
+
+              {
+                text: "Official Tax Invoice",
+                style: "invoiceSubtitle",
+                margin: [0, 6, 0, 0],
+              },
+            ],
+          },
+
+          {
+            width: "auto",
+            stack: [
+              {
+                text: paymentStatus,
+                color: "#FFFFFF",
+                fillColor: statusColors[paymentStatus] || "#EA580C",
+                bold: true,
+                fontSize: 10,
+                alignment: "center",
+                margin: [14, 8, 14, 8],
+              },
+            ],
+          },
+        ],
+      },
+
+      {
+        margin: [0, 0, 0, 25],
+        table: {
+          widths: ["*", "*"],
+
+          body: [
+            [
+              {
+                stack: [
+                  {
+                    text: "Invoice Details",
+                    style: "sectionTitle",
+                    margin: [0, 0, 0, 14],
+                  },
+
+                  {
+                    columns: [
+                      {
+                        width: 120,
+                        text: "Invoice Number",
+                        style: "label",
+                      },
+                      {
+                        text: `INV-${order.orderNumber}`,
+                        style: "value",
+                      },
+                    ],
+                    margin: [0, 0, 0, 10],
+                  },
+
+                  {
+                    columns: [
+                      {
+                        width: 120,
+                        text: "Order Number",
+                        style: "label",
+                      },
+                      {
+                        text: order.orderNumber,
+                        style: "value",
+                      },
+                    ],
+                    margin: [0, 0, 0, 10],
+                  },
+
+                  {
+                    columns: [
+                      {
+                        width: 120,
+                        text: "Order Date",
+                        style: "label",
+                      },
+                      {
+                        text: formatDate(order.createdAt),
+                        style: "value",
+                      },
+                    ],
+                    margin: [0, 0, 0, 10],
+                  },
+
+                  {
+                    columns: [
+                      {
+                        width: 120,
+                        text: "Payment Method",
+                        style: "label",
+                      },
+                      {
+                        text: order.paymentMethod || "Online Payment",
+                        style: "value",
+                      },
+                    ],
+                    margin: [0, 0, 0, 10],
+                  },
+
+                  {
+                    columns: [
+                      {
+                        width: 120,
+                        text: "Payment Status",
+                        style: "label",
+                      },
+                      {
+                        text: paymentStatus,
+                        style: "value",
+                      },
+                    ],
+                  },
+                ],
+                fillColor: "#FFFFFF",
+                margin: [18, 18, 18, 18],
+              },
+
+              {
+                stack: [
+                  {
+                    text: "Shipping Address",
+                    style: "sectionTitle",
+                    margin: [0, 0, 0, 14],
+                  },
+
+                  {
+                    text: customerAddress,
+                    style: "addressText",
+                    lineHeight: 1.6,
+                  },
+                ],
+                fillColor: "#FFFFFF",
+                margin: [18, 18, 18, 18],
+              },
+            ],
+          ],
+        },
+
+        layout: {
+          hLineWidth: () => 0,
+          vLineWidth: () => 0,
+          fillColor: () => "#F8FAFC",
+          paddingLeft: () => 0,
+          paddingRight: () => 0,
+          paddingTop: () => 0,
+          paddingBottom: () => 0,
+        },
+      },
+
+      {
+        text: "Order Items",
+        style: "sectionHeading",
+        margin: [0, 0, 0, 14],
+      },
+
+      {
+        table: {
+          headerRows: 1,
+          dontBreakRows: true,
+
+          widths: ["*", 55, 110, 110],
+
+          body: [
+            [
+              {
+                text: "Product",
+                style: "tableHeader",
+              },
+              {
+                text: "Qty",
+                style: "tableHeaderCenter",
+              },
+              {
+                text: "Unit Price",
+                style: "tableHeaderRight",
+              },
+              {
+                text: "Total",
+                style: "tableHeaderRight",
+              },
+            ],
+
+            ...productRows,
+          ],
+        },
+
+        layout: {
+          fillColor: function (rowIndex) {
+            if (rowIndex === 0) {
+              return "#0F172A";
+            }
+
+            return rowIndex % 2 === 0 ? "#F8FAFC" : "#FFFFFF";
+          },
+
+          hLineColor: () => "#E5E7EB",
+          vLineColor: () => "#E5E7EB",
+
+          hLineWidth: () => 1,
+          vLineWidth: () => 1,
+
+          paddingLeft: () => 14,
+          paddingRight: () => 14,
+          paddingTop: () => 10,
+          paddingBottom: () => 10,
+        },
+      },
+
+      {
+        margin: [0, 28, 0, 0],
+        columns: [
+          {
+            width: "*",
+            text: "",
+          },
+
+          {
+            width: 240,
+
+            table: {
+              widths: ["*", "auto"],
+
+              body: [
+                [
+                  {
+                    text: "Subtotal",
+                    style: "summaryLabel",
+                  },
+                  {
+                    text: formatCurrency(subtotal),
+                    style: "summaryValue",
+                  },
+                ],
+
+                [
+                  {
+                    text: "Discount",
+                    style: "summaryLabel",
+                  },
+                  {
+                    text: `- ${formatCurrency(discount)}`,
+                    style: "summaryDiscount",
+                  },
+                ],
+
+                [
+                  {
+                    text: "Shipping",
+                    style: "summaryLabel",
+                  },
+                  {
+                    text: formatCurrency(shippingCharge),
+                    style: "summaryValue",
+                  },
+                ],
+
+                [
+                  {
+                    text: "Grand Total",
+                    style: "grandTotalLabel",
+                  },
+                  {
+                    text: formatCurrency(grandTotal),
+                    style: "grandTotalValue",
+                  },
+                ],
+              ],
+            },
+
+            layout: {
+              fillColor: function (rowIndex) {
+                return rowIndex === 3 ? "#EEF2FF" : "#FFFFFF";
+              },
+
+              hLineColor: () => "#E5E7EB",
+              vLineColor: () => "#FFFFFF",
+
+              paddingLeft: () => 16,
+              paddingRight: () => 16,
+              paddingTop: () => 12,
+              paddingBottom: () => 12,
+            },
+          },
+        ],
+      },
+    ],
+
+    styles: {
+      brandLogo: {
+        fontSize: 30,
+        bold: true,
+        color: "#0F172A",
+        characterSpacing: 2,
+      },
+
+      brandTagline: {
+        fontSize: 9,
+        color: "#64748B",
+        characterSpacing: 1.5,
+      },
+
+      invoiceTitle: {
+        fontSize: 28,
+        bold: true,
+        color: "#0F172A",
+      },
+
+      invoiceSubtitle: {
+        fontSize: 11,
+        color: "#64748B",
+      },
+
+      sectionTitle: {
+        fontSize: 13,
+        bold: true,
+        color: "#111827",
+      },
+
+      sectionHeading: {
+        fontSize: 16,
+        bold: true,
+        color: "#0F172A",
+      },
+
+      label: {
+        fontSize: 10,
+        color: "#6B7280",
+      },
+
+      value: {
+        fontSize: 10,
+        bold: true,
+        color: "#111827",
+      },
+
+      addressText: {
+        fontSize: 10.5,
+        color: "#1F2937",
+      },
+
+      tableHeader: {
+        color: "#FFFFFF",
+        bold: true,
+        fontSize: 11,
+      },
+
+      tableHeaderCenter: {
+        color: "#FFFFFF",
+        bold: true,
+        fontSize: 11,
+        alignment: "center",
+      },
+
+      tableHeaderRight: {
+        color: "#FFFFFF",
+        bold: true,
+        fontSize: 11,
+        alignment: "right",
+      },
+
+      tableCell: {
+        fontSize: 10.5,
+        color: "#1F2937",
+      },
+
+      tableCellBold: {
+        fontSize: 10.5,
+        bold: true,
+        color: "#111827",
+      },
+
+      productName: {
+        fontSize: 11,
+        bold: true,
+        color: "#0F172A",
+      },
+
+      summaryLabel: {
+        fontSize: 11,
+        color: "#4B5563",
+      },
+
+      summaryValue: {
+        fontSize: 11,
+        bold: true,
+        color: "#111827",
+        alignment: "right",
+      },
+
+      summaryDiscount: {
+        fontSize: 11,
+        bold: true,
+        color: "#16A34A",
+        alignment: "right",
+      },
+
+      grandTotalLabel: {
+        fontSize: 13,
+        bold: true,
+        color: "#0F172A",
+      },
+
+      grandTotalValue: {
+        fontSize: 14,
+        bold: true,
+        color: "#2563EB",
+        alignment: "right",
+      },
+
+      footerTitle: {
+        fontSize: 10,
+        bold: true,
+        color: "#111827",
+      },
+
+      footerText: {
+        fontSize: 9,
+        color: "#6B7280",
+        margin: [0, 3, 0, 0],
+      },
+    },
+
+    defaultStyle: {
+      font: "Helvetica",
+    },
+  };
+
+  const pdfDoc = printer.createPdfKitDocument(docDefinition);
+
+  const chunks = [];
+
+  return new Promise((resolve, reject) => {
+    pdfDoc.on("data", (chunk) => chunks.push(chunk));
+
+    pdfDoc.on("end", () => {
+      resolve({
+        buffer: Buffer.concat(chunks),
+        fileName: `BUYORA_Invoice_${order.orderNumber}.pdf`,
+        mimeType: "application/pdf",
+      });
+    });
+
+    pdfDoc.on("error", reject);
+
+    pdfDoc.end();
+  });
 }
 
 

@@ -14,7 +14,7 @@ import { getUserProfile, updateUserProfile } from "../../../Redux/slices/userSli
 const EditProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.user);
+  const { user,loading } = useSelector((state) => state.user);
 
   const {
     register,
@@ -67,10 +67,10 @@ const EditProfile = () => {
 
   return (
     <>
-    <div className="lg:hidden block">
+    <div className="lg:hidden block ">
       <Navbar/>
     </div>
-    <div className="lg:w-3/5 md:w-3/5 bg-bg-main lg:ml-40  mt-25  lg:mt-10 mb-20 px-20 rounded-lg">
+    <div className="lg:w-3/5 md:w-3/5  bg-bg-main lg:ml-40   mt-25  lg:mt-10 mb-20 lg:px-20 rounded-lg">
       <h1 className="text-2xl font-medium mt-8 ml-10 text-text-primary">
         Edit Profile
       </h1>
@@ -84,25 +84,37 @@ const EditProfile = () => {
         />
         <FormInput
           label="Email"
+            readOnly
           {...register("email", { required: "Email is required" })}
           error={errors.email?.message}
         />
 
         <FormInput
           label="Mobile Number"
-          {...register("mobile")}
+           {...register("mobile", {
+    required: "Mobile number is required",
+    pattern: {
+      value: /^[6-9]\d{9}$/,
+      message: "Enter valid 10-digit mobile number"
+    }
+  })}
           error={errors.mobile?.message}
         />
 
-       <div className="space-y-2">
-  <label className="block font-medium text-text-primary">Gender</label>
+      
+<div className="space-y-2">
+  <label className="block font-medium text-text-primary">
+    Gender
+  </label>
 
   <div className="flex gap-4">
     <label className="flex items-center">
       <input
         type="radio"
         value="MALE"
-        {...register("gender")}
+        {...register("gender", {
+          required: "Gender is required"
+        })}
         className="mr-1"
       />
       Male
@@ -112,7 +124,9 @@ const EditProfile = () => {
       <input
         type="radio"
         value="FEMALE"
-        {...register("gender")}
+        {...register("gender", {
+          required: "Gender is required"
+        })}
         className="mr-1"
       />
       Female
@@ -122,14 +136,21 @@ const EditProfile = () => {
       <input
         type="radio"
         value="OTHER"
-        {...register("gender")}
+        {...register("gender", {
+          required: "Gender is required"
+        })}
         className="mr-1"
       />
       Other
     </label>
   </div>
-</div>
 
+  {errors.gender && (
+    <p className="text-red-500 text-sm">
+      {errors.gender.message}
+    </p>
+  )}
+</div>
         <FormInput
           label="Date of Birth"
           type="date"
@@ -139,17 +160,23 @@ const EditProfile = () => {
         <FormInput
           label="Location"
           {...register("location")}
+          
         />
 
         <FormInput
+            
           label="Alternate Mobile"
           {...register("altMobile")}
         />
 
         <div className="flex gap-3 mt-4">
-          <Button type="submit" fullWidth>
-            Save Changes
-          </Button>
+          <Button
+  type="submit"
+  fullWidth
+  disabled={loading}
+>
+  {loading ? "Saving..." : "Save Changes"}
+</Button>
 
           <Button
             type="button"

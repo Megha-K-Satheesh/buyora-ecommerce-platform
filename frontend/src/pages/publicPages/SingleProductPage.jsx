@@ -123,6 +123,10 @@ const SingleProductPage = () => {
     }
   };
 
+
+
+
+  
   if (loading)
     return <div className="text-center mt-10 text-text-muted"><Loader/></div>;
   if (error)

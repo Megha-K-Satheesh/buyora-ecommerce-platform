@@ -95,6 +95,9 @@ const validatedData = BaseController.validateRequest(
 static updateProduct = BaseController.asyncHandler(async (req, res) => {
 
   const { id } = req.params;
+
+  console.log("debug for the update product admin",id)
+  
   BaseController.validateRequest(objectId, id);
 
   let existingImages = req.body.existingImages;

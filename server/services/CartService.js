@@ -173,57 +173,67 @@ for (const guestItem of normalizedGuestCart) {
     return cart;
   }
 
-  static async updateCartQuantity(userId, variationId, quantity) {
-    if (quantity < 1) throw ErrorFactory.validation("Quantity must be at least 1");
 
-    const cart = await Cart.findOne({ userId });
-    if (!cart) throw ErrorFactory.notFound("Cart not found");
+static async updateCartQuantity(userId, variationId, quantity) {
+  console.log("debug code", userId, variationId, quantity);
 
-    const item = cart.items.find(x => x.variationId.equals(variationId));
-    if (!item) throw ErrorFactory.notFound("Cart item not found");
-
-   
-
-   const product = await Product.findById(
-  item.productId
-);
-
-if (!product) {
-  throw ErrorFactory.notFound(
-    "Product not found"
-  );
-}
-
-const variation = product.variations.find(v =>
-  v._id.equals(item.variationId)
-);
-
-if (!variation) {
-  throw ErrorFactory.notFound(
-    "Variation not found"
-  );
-}
-
-if (quantity > variation.stock) {
-  throw ErrorFactory.validation(
-    `Only ${variation.stock} items available`
-  );
-}
-
-item.quantity = quantity;
-    cart.appliedCouponId = null;
-    cart.appliedCouponCode = null;
-    cart.discountAmount = 0;
-    
-     cart.finalAmount = cart.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-
-    await cart.save();
-    return cart;
+  if (quantity < 1) {
+    throw ErrorFactory.validation("Quantity must be at least 1");
   }
 
- 
-static async getCart(userId) {
+  const cart = await Cart.findOne({ userId });
 
+  if (!cart) {
+    throw ErrorFactory.notFound("Cart not found");
+  }
+
+  const item = cart.items.find(x =>
+    x.variationId?.toString() === variationId?.toString()
+  );
+
+  if (!item) {
+    throw ErrorFactory.notFound("Cart item not found");
+  }
+
+  const product = await Product.findById(item.productId);
+
+  if (!product) {
+    throw ErrorFactory.notFound("Product not found");
+  }
+
+  const variation = product.variations?.find(
+    v => v._id?.toString() === item.variationId.toString()
+  );
+
+  if (!variation) {
+    throw ErrorFactory.notFound(
+      "This product variant is no longer available"
+    );
+  }
+
+  if (quantity > variation.stock) {
+    throw ErrorFactory.validation(
+      `Only ${variation.stock} items available`
+    );
+  }
+
+  item.quantity = quantity;
+
+  cart.appliedCouponId = null;
+  cart.appliedCouponCode = null;
+  cart.discountAmount = 0;
+
+  cart.finalAmount = cart.items.reduce((sum, i) => {
+    return sum + (i.price || 0) * (i.quantity || 0);
+  }, 0);
+
+  await cart.save();
+
+  return cart;
+}
+ 
+
+static async getCart(userId) {
   let cart = await Cart.findOne({ userId });
 
   if (!cart) {
@@ -234,56 +244,46 @@ static async getCart(userId) {
   }
 
   const updatedItems = await Promise.all(
-
     cart.items.map(async (item) => {
 
-      const product = await Product.findById(
-        item.productId
-      );
+      const product = await Product.findById(item.productId);
 
-      if (!product) {
-        return {
-          ...item.toObject(),
-          stock: 0,
-          isOutOfStock: true
-        };
-      }
+      if (!product) return null;
 
       const variation = product.variations.find(v =>
-        v._id.equals(item.variationId)
+        v._id.toString() === item.variationId.toString()
       );
 
-      const stock = variation?.stock || 0;
+      if (!variation) return null;
+
+      const stock = variation.stock || 0;
 
       return {
         ...item.toObject(),
-
         stock,
-
-        isOutOfStock:
-          stock === 0 ||
-          item.quantity > stock
+        isOutOfStock: stock === 0 || item.quantity > stock
       };
     })
   );
 
-  const subtotal = updatedItems.reduce(
-    (total, item) =>
-      total + item.price * item.quantity,
+  const cleanedItems = updatedItems.filter(Boolean);
+
+  cart.items = cleanedItems;
+
+  const subtotal = cleanedItems.reduce(
+    (total, item) => total + (item.price || 0) * (item.quantity || 0),
     0
   );
 
-  cart.finalAmount =
-    subtotal - (cart.discountAmount || 0);
+  cart.finalAmount = subtotal - (cart.discountAmount || 0);
 
   await cart.save();
 
   return {
     ...cart.toObject(),
-    items: updatedItems
+    items: cleanedItems
   };
 }
-
   
 }
 

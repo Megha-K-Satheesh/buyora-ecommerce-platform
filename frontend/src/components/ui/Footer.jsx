@@ -1,8 +1,8 @@
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-50 text-black  w-full">
-      <div className="max-w-7xl mx-auto px-6 py-10">
+    <footer className="bg-gray-50  text-black  w-full">
+      <div className="max-w-7xl  mx-auto px-6 py-3 lg:py-10">
         
  
 
@@ -17,3 +17,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

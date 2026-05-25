@@ -1,9 +1,9 @@
 
 
-
 import confetti from "canvas-confetti";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
+import { GiCheckMark } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -57,7 +57,7 @@ const OrderSuccessPage = () => {
           <div className="relative">
             <div className="absolute inset-0 rounded-full bg-success/20 blur-xl" />
             <div className="relative bg-success text-white w-20 h-20 rounded-full flex items-center justify-center text-4xl shadow-lg">
-              ✓
+              <GiCheckMark />
             </div>
           </div>
         </motion.div>

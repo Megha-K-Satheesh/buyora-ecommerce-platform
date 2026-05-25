@@ -92,7 +92,7 @@ const VerifyOtpPage = () => {
           loading={loading}
           onClick={handleVerifyClick}
         >
-          Verify OTP
+        {loading ? "Verifying..." : "Verify OTP"}
         </Button>
          <div className="mt-4 text-center text-lg text-text-secondary">
                Haven’t received the OTP yet?{" "}
