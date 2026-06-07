@@ -27,7 +27,7 @@ const CategoryTable = memo(({
         </thead>
 
         <tbody>
-             {loading && <TableLoader rows={5} columns={8} />}
+             {loading && <TableLoader rows={5} columns={6} />}
 
           {!loading && tableData.length === 0 && (
             <tr className="border border-border-light">

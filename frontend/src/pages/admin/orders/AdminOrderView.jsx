@@ -10,6 +10,7 @@ import {
   getAdminSingleOrder
 } from "../../../Redux/slices/admin/adminOrderSlice";
 import AdminOutletHead from "../../../components/Admin/AdminOutletHead";
+import Loader from "../../../components/ui/Loader";
 
 const AdminOrderView = () => {
   const { orderId } = useParams();
@@ -28,7 +29,7 @@ const AdminOrderView = () => {
     };
   }, [dispatch, orderId]);
 
-  if (loading) return <p className="text-center mt-10">Loading order...</p>;
+  if (loading) return <div className="text-center mt-10"><Loader/></div>;
   if (error) return <p className="text-center mt-10 text-danger">{error}</p>;
   if (!singleOrder) return null;
 

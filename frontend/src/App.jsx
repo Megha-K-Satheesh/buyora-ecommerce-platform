@@ -10,9 +10,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
-// Redux slices
 
-// Protected routes
 import { AdminRoute, UserRoute } from "./components/protectedRoutes/ProtectedRoutes";
 
 

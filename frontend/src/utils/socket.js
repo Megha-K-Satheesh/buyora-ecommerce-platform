@@ -21,7 +21,7 @@ export const connectSocket = () => {
 
   socket.on("disconnect", () => {
     console.log("Socket disconnected");
-    socket = null;
+    // socket = null;
   });
 
   socket.on("connect_error", (err) => {
@@ -34,7 +34,7 @@ export const connectSocket = () => {
 export const disconnectSocket = () => {
   if (socket) {
     socket.disconnect();
-    socket = null;
+    // socket = null;
   }
 };
 

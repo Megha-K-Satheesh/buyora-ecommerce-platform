@@ -18,7 +18,7 @@ const UsersTable = memo(({ loading, tableData, total, onBan, onUnban }) => {
         </thead>
 
         <tbody>
-            {loading && <TableLoader rows={5} columns={8} />}
+            {loading && <TableLoader rows={5} columns={7} />}
 
           {!loading && tableData.length === 0 && (
             <tr>

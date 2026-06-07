@@ -18,7 +18,7 @@ const BrandTable = memo(({ loading, tableData, onEdit, onDelete, total }) => {
         </thead>
 
         <tbody>
-            {loading && <TableLoader rows={5} columns={8} />}
+            {loading && <TableLoader rows={5} columns={4} />}
 
           {!loading && tableData.length === 0 && (
             <tr>

@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   addMessage,
-  fetchHistory,
+  fetchHistory
 } from "../../../Redux/slices/userChatSlice";
 import { listenMessages, sendMessage } from "../../../utils/socket";
 
@@ -143,6 +143,7 @@ const UserRealtimeChat = () => {
     return cleanup;
   }, [dispatch]);
 
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
       behavior: "smooth",
@@ -243,6 +244,8 @@ const UserRealtimeChat = () => {
     }, {});
   }, [messages, formatChatDate, getDateKey]);
 
+
+
   return (
     <>
       <div className="flex h-screen flex-col overflow-hidden bg-bg-main">
@@ -296,6 +299,8 @@ const UserRealtimeChat = () => {
                     <DateSeparator label={group.label} />
 
                     {group.messages.map((msg, i) => {
+
+                        
                       const isUser = msg.type === "user";
 
                       return (
@@ -369,7 +374,7 @@ const UserRealtimeChat = () => {
         </main>
       </div>
 
-      {/* <Footer /> */}
+    
     </>
   );
 };
